@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "846003948258",
+    "firebase_url": "https://farmers-market-438f5.firebaseio.com",
+    "project_id": "farmers-market-438f5",
+    "storage_bucket": "farmers-market-438f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846003948258:android:736713cad3142bf35b2cbb",
+        "android_client_info": {
+          "package_name": "com.ilatyphi95.farmersmarket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "846003948258-ckn60d1mbrsrhjeb78jjjjn94las1dgt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvS_UAtOtGao19ai7UTP0WX5GAmIaG3NU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "846003948258-ckn60d1mbrsrhjeb78jjjjn94las1dgt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
