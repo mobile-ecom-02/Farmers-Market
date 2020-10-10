@@ -81,7 +81,7 @@ class LoginActivity : AppCompatActivity() {
             return false
         }
         if(!emailTextInputLayout.editText?.text.toString().matches("[a-zA-z0-9.]+@[a-zA-Z-]+\\.(com|net|edu)".toRegex())){
-            val invalidEmailMsg = "Email patter is invalid"
+            val invalidEmailMsg = "Email pattern is invalid"
             emailTextInputLayout.error = invalidEmailMsg
             return false
         }
