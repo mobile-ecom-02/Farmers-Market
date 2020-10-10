@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Farmer\'s Market</string>
+    <string name="welcome">Welcome!</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="sign_up_text">Not a member? Sign Up</string>
 </resources>
