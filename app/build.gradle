@@ -34,7 +34,10 @@ dependencies {
 
     // Joda money dependency
     implementation 'org.joda:joda-money:1.0.1'
-    
+
+    // threeten -time library
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
+
     testImplementation 'junit:junit:4.12'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
