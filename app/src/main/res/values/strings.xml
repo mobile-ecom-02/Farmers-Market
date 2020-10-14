@@ -6,4 +6,11 @@
     <string name="login">Login</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="sign_up_text">Not a member? Sign Up</string>
+    <string name="login_text">Already a member? Login</string>
+    <string name="create_new_account">Create New Account</string>
+    <string name="fullname">Full Name</string>
+    <string name="lastName">LastName</string>
+    <string name="sign_up">Sign Up</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

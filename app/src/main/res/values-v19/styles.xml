@@ -4,5 +4,8 @@
     <style name="SplashTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">true</item>
+        <item name="colorPrimaryDark">@color/green_shade_1</item>
+        <item name="colorAccent">@color/green_shade_1</item>
+        <item name="colorPrimary">@color/green_shade_1</item>
     </style>
 </resources>
