@@ -1,5 +1,6 @@
 package com.ilatyphi95.farmersmarket.utils
 
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -26,4 +27,12 @@ fun setRecyclerViewItems(
     adapter.submitList(
         items.orEmpty()
     )
+}
+
+@BindingAdapter("loadImage")
+fun ImageView.loadImage(imageUrl: String?) {
+    if (imageUrl != null) {
+
+    }
+
 }
