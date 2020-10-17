@@ -15,6 +15,20 @@ class ProductSmallBannerViewModel(val product: Product) {
 
 fun ProductSmallBannerViewModel.toRecyclerItem() = RecyclerItem(
     data = this,
-    layoutId = R.layout.similar_item_banner,
-    variableId = BR.product
+    layoutId = R.layout.small_product_item,
+    variableId = BR.viewModel
+)
+
+class ProductPicture(val imageUrl: String) {
+    lateinit var itemClickHandler: (imageUrl: String) -> Unit
+
+    fun onItemClick() {
+        itemClickHandler(imageUrl)
+    }
+}
+
+fun ProductPicture.toRecyclerItem() = RecyclerItem(
+    data = this,
+    layoutId = R.layout.picture_item,
+    variableId = BR.viewModel
 )
