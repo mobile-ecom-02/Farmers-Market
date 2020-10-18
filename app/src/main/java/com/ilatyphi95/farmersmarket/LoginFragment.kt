@@ -19,6 +19,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
+import com.ilatyphi95.farmersmarket.databinding.FragmentChatBinding
 import com.ilatyphi95.farmersmarket.databinding.FragmentLoginBinding
 
 
