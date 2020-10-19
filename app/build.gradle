@@ -1,11 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-<<<<<<< HEAD
-apply plugin: 'com.google.gms.google-services'
-=======
 apply plugin: 'kotlin-kapt'
->>>>>>> c4370638aa0c689069b422eba714968d83aa00cb
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -15,6 +12,7 @@ android {
         applicationId "com.ilatyphi95.farmersmarket"
         minSdkVersion 16
         targetSdkVersion 29
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
 
@@ -46,7 +44,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     def lifecycle_version = "2.2.0"
     def nav_version = "2.3.0"
-
+    def multidex_version = "2.0.1"
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -55,17 +53,13 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "androidx.activity:activity-ktx:1.1.0"
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
-<<<<<<< HEAD
-    implementation 'com.google.firebase:firebase-auth:19.4.0'
-    implementation 'com.google.firebase:firebase-database:19.5.0'
-    implementation 'com.google.firebase:firebase-storage:19.2.0'
-    implementation 'com.google.firebase:firebase-messaging:20.3.0'
-    implementation 'com.google.firebase:firebase-analytics:17.6.0'
-=======
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation 'com.google.android.material:material:1.2.0'
+
+    //multidex support library
+    implementation "androidx.multidex:multidex:$multidex_version"
 
     // Joda money dependency
     implementation 'org.joda:joda-money:1.0.1'
@@ -73,15 +67,11 @@ dependencies {
     // threeten -time library
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
 
->>>>>>> c4370638aa0c689069b422eba714968d83aa00cb
     testImplementation 'junit:junit:4.12'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-<<<<<<< HEAD
-}
-=======
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'androidx.navigation:navigation-fragment:2.3.0'
@@ -90,5 +80,20 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
 
+    // Declare the dependency for the Firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-analytics:17.6.0'
+
+    //Firebase Database dependency
+    implementation 'com.google.firebase:firebase-database:19.5.0'
+
+    //Firebase Authentication dependency
+    implementation 'com.google.firebase:firebase-analytics:17.6.0'
+
+    //Firebasee Messaging dependency
+    implementation 'com.google.firebase:firebase-messaging:20.3.0'
+
+    //Firebase Storage dependency
+    implementation 'com.google.firebase:firebase-analytics:17.6.0'
+
+
 }
->>>>>>> c4370638aa0c689069b422eba714968d83aa00cb
