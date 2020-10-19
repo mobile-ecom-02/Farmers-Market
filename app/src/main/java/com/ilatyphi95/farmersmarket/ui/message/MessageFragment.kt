@@ -29,11 +29,6 @@ class MessageFragment : Fragment() {
             textView.text = it
         })
 
-        root.findViewById<Button>(R.id.btnProduct).setOnClickListener {
-            findNavController().navigate(MessageFragmentDirections.actionNavigationMessageToProductFragment(
-               ProductGenerator.getList()[0])
-            )
-        }
         return root
     }
 }
