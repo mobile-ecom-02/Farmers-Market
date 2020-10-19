@@ -8,11 +8,17 @@ import com.bumptech.glide.Glide
 import com.ilatyphi95.farmersmarket.FarmersMarketApplication
 import com.ilatyphi95.farmersmarket.data.universaladapter.DataBindingRecyclerAdapter
 import com.ilatyphi95.farmersmarket.R
+import com.ilatyphi95.farmersmarket.data.entities.CloseByProduct
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 
 @BindingAdapter("app:availableText")
 fun TextView.availableText(qty: Int) {
     text = this.context.getString(R.string.availableText, qty)
+}
+
+@BindingAdapter("app:distanceMiles")
+fun TextView.distanceMiles(closeByProduct: CloseByProduct) {
+    text = this.context.getString(R.string.distanceMiles, closeByProduct.distance)
 }
 
 @BindingAdapter("items")
@@ -43,7 +49,6 @@ fun ImageView.loadImage(imageUrl: String?) {
                 .into(this)
         }
     }
-
 }
 
 @BindingAdapter("loadFirst")

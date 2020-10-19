@@ -24,7 +24,11 @@
     <string name="fullname">Full Name</string>
     <string name="lastName">LastName</string>
     <string name="sign_up">Sign Up</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="product">Product</string>
+    <string name="recently_viewed">Your recently viewed products</string>
+    <string name="close_by">Nearby products</string>
+    <string name="sample_miles">30 miles</string>
+    <string name="distanceMiles">%d miles</string>
+    <string name="search">Search</string>
+    <string name="search_product">Search products</string>
 </resources>
