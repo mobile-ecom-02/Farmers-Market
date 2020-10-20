@@ -32,6 +32,7 @@ class LoginFragment : Fragment() {
 
     companion object{
         val TAG = "LOGIN"
+        val languageCode = "en"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +43,10 @@ class LoginFragment : Fragment() {
 
         loginButton.setOnClickListener {
             loginUser()
+        }
+
+        forgotPasswordTextView.setOnClickListener {
+            resetPassword()
         }
 
     }
@@ -139,6 +144,30 @@ class LoginFragment : Fragment() {
                 if(!it.isSuccessful) return@addOnCompleteListener
 
                 Log.d(TAG, "logged in user ${it.result?.user?.uid}")
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "${it.message}")
+                Toast.makeText(context, "${it.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    //reset password
+
+    private fun resetPassword(){
+        val email = emailEditText.text.toString()
+
+        if(email.isEmpty()){
+            Toast.makeText(context, "email field cannot be empty", Toast.LENGTH_SHORT).show()
+            return
+        }
+        FirebaseAuth.getInstance().setLanguageCode(languageCode)
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+            .addOnCompleteListener {
+                //receivess response from firebase
+            }
+            .addOnSuccessListener {
+                Log.d(TAG, "email sent successfully to $email")
+                Toast.makeText(context, "password reset email sent", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {
                 Log.d(TAG, "${it.message}")

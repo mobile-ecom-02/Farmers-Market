@@ -8,6 +8,7 @@ import androidx.multidex.MultiDex
 import androidx.navigation.NavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
@@ -40,6 +41,8 @@ class MainActivity : AppCompatActivity() {
         val uid = FirebaseAuth.getInstance().uid
 
         if(uid == null){
+            val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val navController = navHostFragment.navController
 
         }else{
             // Passing each menu ID as a set of Ids because each
