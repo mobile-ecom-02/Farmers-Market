@@ -61,3 +61,32 @@ fun CloseProductViewModel.toRecyclerItem() = RecyclerItem(
     layoutId = R.layout.close_product_item,
     variableId = BR.viewModel
 )
+
+sealed class PictureIconViewModel(val imageUrl: String) {
+    lateinit var removeItemHandler: (imageUrl: String) -> Unit
+    lateinit var addItemHandler: () -> Unit
+    open fun addItem() { addItemHandler() }
+    open fun removeItem() { removeItemHandler(imageUrl)}
+}
+
+fun PictureIconViewModel.toRecyclerItem() = RecyclerItem(
+    data = this,
+    layoutId = when(this) {
+        is AddIcon -> R.layout.add_icon
+        is AddedProductPicture -> R.layout.product_picture_layout },
+    variableId = BR.viewModel
+)
+
+class AddIcon : PictureIconViewModel("") {
+    // do nothing
+    override fun removeItem() {
+    }
+}
+
+class AddedProductPicture(imageUrl: String) : PictureIconViewModel(imageUrl) {
+
+    // do nothing
+    override fun addItem() {
+    }
+}
+

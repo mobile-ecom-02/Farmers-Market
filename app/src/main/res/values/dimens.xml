@@ -3,4 +3,6 @@
     <dimen name="normal_margin">16dp</dimen>
     <dimen name="small_margin">8dp</dimen>
     <dimen name="normal_card_radius">5dp</dimen>
+    <dimen name="picture_size">128dp</dimen>
+    <dimen name="picture_inset_size">48dp</dimen>
 </resources>
