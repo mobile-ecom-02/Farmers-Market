@@ -9,29 +9,38 @@ import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
+import com.google.firebase.auth.FirebaseAuth
 import com.ilatyphi95.farmersmarket.databinding.FragmentLoginBinding
+import kotlinx.android.synthetic.main.fragment_login.*
 
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
+    companion object{
+        val TAG = "LOGIN"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.shared_transition)
+
+        loginButton.setOnClickListener {
+            loginUser()
+        }
 
     }
 
@@ -111,6 +120,28 @@ class LoginFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    //login user
+    private fun loginUser(){
+        val email = emailEditText.text.toString()
+        val password = passwordEditText.text.toString()
+
+        if(email.isEmpty() || password.isEmpty()){
+            Toast.makeText(context, "cannot have empty fields", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { 
+                if(!it.isSuccessful) return@addOnCompleteListener
+
+                Log.d(TAG, "logged in user ${it.result?.user?.uid}")
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "${it.message}")
+                Toast.makeText(context, "${it.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
 }
