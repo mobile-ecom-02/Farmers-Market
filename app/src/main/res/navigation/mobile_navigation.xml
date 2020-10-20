@@ -9,7 +9,11 @@
         android:id="@+id/navigation_home"
         android:name="com.ilatyphi95.farmersmarket.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_productFragment"
+            app:destination="@id/productFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_message"
@@ -22,4 +26,19 @@
         android:name="com.ilatyphi95.farmersmarket.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" />
+
+<!--    for testing purpose don't forget to remove it-->
+    <fragment
+        android:id="@+id/productFragment"
+        android:name="com.ilatyphi95.farmersmarket.ProductFragment"
+        android:label="ProductFragment" >
+        <action
+            android:id="@+id/action_productFragment_self"
+            app:destination="@id/productFragment"
+            app:popUpTo="@id/navigation_message"
+            app:popUpToInclusive="false" />
+        <argument
+            android:name="product"
+            app:argType="com.ilatyphi95.farmersmarket.data.entities.Product" />
+    </fragment>
 </navigation>
