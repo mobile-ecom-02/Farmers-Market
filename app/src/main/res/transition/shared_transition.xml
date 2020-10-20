@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="200"
+    android:transitionOrdering="together">
+    <changeBounds>
+
+    </changeBounds>
+    <changeTransform
+        android:reparentWithOverlay="false"
+        android:reparent="false">
+    </changeTransform>
+    <changeClipBounds></changeClipBounds>
+    <changeImageTransform></changeImageTransform>
+
+    <fade
+        android:duration="200"
+        android:fadingMode="fade_in"
+        android:startDelay="1000">
+        <targets>
+            <target android:targetId="@+id/emailTextLayout"/>
+            <target android:targetId="@+id/emailEditText"/>
+            <target android:targetId="@+id/welcomeTextView"/>
+            <target android:targetId="@+id/signUpTextView"/>
+        </targets>
+    </fade>
+
+
+
+</transitionSet>

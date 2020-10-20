@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorPrimary">#93B193</color>
+    <color name="colorPrimaryDark">#CDD8CD</color>
+    <color name="colorAccent">#93B193</color>
+
+    <item name="white" type="color">#CDD8CD</item>
+    <item name="light_green" type="color">#DBDFDB</item>
+    <item name="green_shade_1" type="color">#485C48</item>
+    <item name="green_shade_2" type="color">#93B193</item>
+    <item name="green_shade_3" type="color">#6D7A6D</item>
+    <item name="green_shade_4" type="color">#596559</item>
 </resources>
