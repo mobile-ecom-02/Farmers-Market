@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
@@ -26,7 +28,7 @@ import com.ilatyphi95.farmersmarket.databinding.FragmentLoginBinding
 import kotlinx.android.synthetic.main.fragment_login.*
 
 
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(), View.OnClickListener {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
@@ -40,15 +42,6 @@ class LoginFragment : Fragment() {
 
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.shared_transition)
-
-        loginButton.setOnClickListener {
-            loginUser()
-        }
-
-        forgotPasswordTextView.setOnClickListener {
-            resetPassword()
-        }
-
     }
 
     override fun onCreateView(
@@ -61,6 +54,13 @@ class LoginFragment : Fragment() {
         spanText()
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        view.findViewById<Button>(R.id.loginButton).setOnClickListener(this)
+        view.findViewById<TextView>(R.id.forgotPasswordTextView).setOnClickListener(this)
     }
 
 
@@ -145,6 +145,9 @@ class LoginFragment : Fragment() {
 
                 Log.d(TAG, "logged in user ${it.result?.user?.uid}")
             }
+            .addOnSuccessListener {
+                //code to go to home screen
+            }
             .addOnFailureListener {
                 Log.d(TAG, "${it.message}")
                 Toast.makeText(context, "${it.message}", Toast.LENGTH_SHORT).show()
@@ -152,7 +155,6 @@ class LoginFragment : Fragment() {
     }
 
     //reset password
-
     private fun resetPassword(){
         val email = emailEditText.text.toString()
 
@@ -161,9 +163,10 @@ class LoginFragment : Fragment() {
             return
         }
         FirebaseAuth.getInstance().setLanguageCode(languageCode)
-        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+        FirebaseAuth.getInstance()
+            .sendPasswordResetEmail(email)
             .addOnCompleteListener {
-                //receivess response from firebase
+                //receives response from firebase
             }
             .addOnSuccessListener {
                 Log.d(TAG, "email sent successfully to $email")
@@ -173,6 +176,15 @@ class LoginFragment : Fragment() {
                 Log.d(TAG, "${it.message}")
                 Toast.makeText(context, "${it.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    override fun onClick(p0: View?) {
+        if (p0 != null) {
+            when(p0.id){
+                R.id.loginButton -> loginUser()
+                R.id.forgotPasswordTextView -> resetPassword()
+            }
+        }
     }
 
 }
