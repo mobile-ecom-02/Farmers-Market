@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'androidx.navigation.safeargs'
 
 android {
     compileSdkVersion 29
@@ -26,6 +27,10 @@ android {
         }
     }
 
+    dataBinding {
+        enabled = true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -41,6 +46,9 @@ android {
 }
 
 dependencies {
+
+    kapt 'com.github.bumptech.glide:compiler:4.11.0'
+
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     def lifecycle_version = "2.2.0"
     def nav_version = "2.3.0"
@@ -66,6 +74,17 @@ dependencies {
 
     // threeten -time library
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.4'
+
+    // lorem ipsum generator
+    implementation 'com.thedeanda:lorem:2.1'
+
+    // Glide image Loader
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.google.android.material:material:1.2.1'
 
     testImplementation 'junit:junit:4.12'
 
@@ -94,6 +113,4 @@ dependencies {
 
     //Firebase Storage dependency
     implementation 'com.google.firebase:firebase-analytics:17.6.0'
-
-
 }
