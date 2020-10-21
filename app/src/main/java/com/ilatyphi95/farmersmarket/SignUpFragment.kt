@@ -27,7 +27,7 @@ import com.ilatyphi95.farmersmarket.databinding.FragmentSignUpBinding
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 
 
-class SignUpFragment : Fragment(), View.OnClickListener {
+class SignUpFragment : Fragment(){
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
     private var email : String? = null
@@ -58,7 +58,11 @@ class SignUpFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<Button>(R.id.signUpButton).setOnClickListener(this)
+        binding.signUpButton.setOnClickListener {
+            signUpNewUser()
+        }
+
+        //view.findViewById<Button>(R.id.signUpButton).setOnClickListener(this)
     }
 
     private fun spanText() {
@@ -126,7 +130,7 @@ class SignUpFragment : Fragment(), View.OnClickListener {
         _binding = null
     }
 
-
+/**
     override fun onClick(view: View?) {
         if (view != null) {
             when(view.id){
@@ -134,6 +138,7 @@ class SignUpFragment : Fragment(), View.OnClickListener {
             }
         }
     }
+    */
 
     //sign up new user
     private fun signUpNewUser(){

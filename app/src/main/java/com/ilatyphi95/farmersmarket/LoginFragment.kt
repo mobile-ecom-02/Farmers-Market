@@ -28,7 +28,7 @@ import com.ilatyphi95.farmersmarket.databinding.FragmentLoginBinding
 import kotlinx.android.synthetic.main.fragment_login.*
 
 
-class LoginFragment : Fragment(), View.OnClickListener {
+class LoginFragment : Fragment(){
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
@@ -59,8 +59,18 @@ class LoginFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.loginButton.setOnClickListener {
+            loginUser()
+        }
+
+        binding.forgotPasswordTextView.setOnClickListener{
+            resetPassword()
+        }
+
+        /**
         view.findViewById<Button>(R.id.loginButton).setOnClickListener(this)
         view.findViewById<TextView>(R.id.forgotPasswordTextView).setOnClickListener(this)
+        **/
     }
 
 
@@ -178,6 +188,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
             }
     }
 
+    /**
     override fun onClick(p0: View?) {
         if (p0 != null) {
             when(p0.id){
@@ -186,5 +197,6 @@ class LoginFragment : Fragment(), View.OnClickListener {
             }
         }
     }
+    */
 
 }
