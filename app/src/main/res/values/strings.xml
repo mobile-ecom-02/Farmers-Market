@@ -37,4 +37,9 @@
     <string name="product_picture">Product picture</string>
     <string name="delete_picture">delete picture</string>
     <string name="post_ad">Post Ad</string>
+    <string name="title">Title</string>
+    <string name="price">Price</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone_number">Phone Number</string>
 </resources>

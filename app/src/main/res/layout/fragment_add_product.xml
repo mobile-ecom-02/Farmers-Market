@@ -32,45 +32,52 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:items="@{viewModel.pictures}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/spinnerCategory"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="10"
                 tools:listitem="@layout/product_picture_layout" />
 
             <EditText
                 android:id="@+id/etName"
+                style="@style/add_product_field_style"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:hint="@string/title"
+                android:text="@={viewModel.title}"
                 android:inputType="textPersonName"
-                android:text="Name"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recyclerView"
-                style="@style/add_product_field_style" />
+                app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 
             <Spinner
                 android:id="@+id/spinnerRegion"
-                app:layout_constraintTop_toBottomOf="@+id/etName"
-                style="@style/add_product_field_style" />
+                style="@style/add_product_field_style"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etName" />
 
             <EditText
                 android:id="@+id/edDesc"
+                style="@style/add_product_field_style"
                 android:gravity="start|top"
+                android:hint="@string/description"
+                android:text="@={viewModel.description}"
                 android:inputType="textMultiLine"
                 app:layout_constraintEnd_toEndOf="@+id/spinnerRegion"
                 app:layout_constraintStart_toStartOf="@+id/spinnerRegion"
-                app:layout_constraintTop_toBottomOf="@+id/spinnerRegion"
-                style="@style/add_product_field_style" />
+                app:layout_constraintTop_toBottomOf="@+id/spinnerRegion" />
 
             <EditText
                 android:id="@+id/edPrice"
                 style="@style/add_product_field_style"
                 android:layout_width="137dp"
-                android:layout_height="29dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:hint="@string/price"
                 android:inputType="numberDecimal"
+                android:text="@={viewModel.price}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edDesc" />
 
@@ -78,7 +85,6 @@
                 android:id="@+id/tvCurrency"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 app:layout_constraintBottom_toBottomOf="@+id/edPrice"
                 app:layout_constraintEnd_toStartOf="@+id/edPrice"
                 app:layout_constraintStart_toStartOf="parent"
@@ -86,33 +92,38 @@
 
             <EditText
                 android:id="@+id/edFirstName"
+                style="@style/add_product_field_style"
+                android:hint="@string/first_name"
                 android:inputType="textPersonName"
-                android:text="Name"
+                android:text="@={viewModel.firstName}"
                 app:layout_constraintEnd_toEndOf="@+id/edPrice"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edPrice"
-                style="@style/add_product_field_style" />
+                app:layout_constraintTop_toBottomOf="@+id/edPrice" />
 
             <EditText
                 android:id="@+id/edLastName"
+                android:layout_height="wrap_content"
+                android:hint="@string/last_name"
                 android:inputType="textPersonName"
-                android:text="Name"
+                android:text="@={viewModel.lastName}"
                 app:layout_constraintEnd_toEndOf="@+id/edPrice"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edFirstName" />
+                app:layout_constraintTop_toBottomOf="@+id/edFirstName"
+                android:layout_width="match_parent" />
 
             <EditText
                 android:id="@+id/edPhone"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
+                android:hint="@string/phone_number"
+                android:text="@={viewModel.phone}"
+                android:inputType="phone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/edLastName"
                 app:layout_constraintTop_toBottomOf="@+id/edLastName" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/submit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="66dp"

@@ -11,20 +11,26 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="@{() -> viewModel.addItem()}"
-        android:paddingLeft="@dimen/normal_margin"
-        android:paddingRight="@dimen/small_margin">
+        android:layout_width="@dimen/picture_size"
+        android:layout_height="@dimen/picture_size"
+        android:layout_marginLeft="@dimen/normal_margin"
+        android:layout_marginRight="@dimen/small_margin"
+        android:layout_marginStart="@dimen/normal_margin"
+        android:layout_marginEnd="@dimen/small_margin">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/imageView4"
-            android:layout_width="@dimen/picture_size"
-            android:layout_height="@dimen/picture_size"
+            android:id="@+id/image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:background="@color/green_shade_1"
-            app:layout_constraintCircleRadius="@dimen/small_margin"
+            android:clickable="true"
+            android:focusable="true"
+            android:tint="@color/light_green"
+            android:onClick="@{() -> viewModel.addItem()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_add" />
+            app:srcCompat="@android:drawable/ic_input_add" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

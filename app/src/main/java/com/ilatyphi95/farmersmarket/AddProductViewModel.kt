@@ -1,38 +1,63 @@
 package com.ilatyphi95.farmersmarket
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
+import android.net.Uri
+import androidx.lifecycle.*
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
-import com.ilatyphi95.farmersmarket.utils.AddIcon
-import com.ilatyphi95.farmersmarket.utils.AddedProductPicture
-import com.ilatyphi95.farmersmarket.utils.toRecyclerItem
+import com.ilatyphi95.farmersmarket.utils.*
 
-class AddProductViewModel() : ViewModel() {
-    private val _pictures = MutableLiveData(listOf(""))
+const val ADD_PICTURES = 100
+class AddProductViewModel(repository: IRepository) : ViewModel() {
+    val title = MutableLiveData<String>()
+    val firstName = MutableLiveData<String>()
+    val lastName = MutableLiveData<String>()
+    val price = MutableLiveData<String>()
+    val phone = MutableLiveData<String>()
+    val description = MutableLiveData<String>()
+
+    private val _events = MutableLiveData<Event<Int>>()
+    val events : LiveData<Event<Int>>
+        get() = _events
+
+
+    private val _pictures = MutableLiveData<List<Uri?>>(listOf(null))
     val pictures: LiveData<List<RecyclerItem>> = _pictures.map {list ->
-        list.map {
+        list.map { pictureUri ->
             var item: RecyclerItem? = null
 
-            if (it == "") {
+            if (pictureUri == null) {
                 item = AddIcon().apply {
                     addItemHandler = { addPicture() }
                 }.toRecyclerItem()
             } else {
-                item = AddedProductPicture(it).apply {
-                    removeItemHandler = { removePicture(it) }
+                item = AddedProductPicture(pictureUri).apply {
+                    removeItemHandler = { removePicture(pictureUri) }
                 }.toRecyclerItem()
             }
             item
         }
     }
 
-    private fun removePicture(it: String) {
-        TODO("Not yet implemented")
+    private fun removePicture(imageUri: Uri?) {
+        val oldList = _pictures.value.orEmpty().toMutableList()
+        oldList.remove(imageUri)
+        _pictures.value = oldList
+
     }
 
     private fun addPicture() {
-        TODO("Not yet implemented")
+        _events.value = Event(ADD_PICTURES)
     }
+
+    fun addImages(imageList: List<Uri>) {
+        val oldList = _pictures.value.orEmpty().toMutableList()
+        oldList.addAll(imageList)
+        _pictures.value = oldList
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
+class AddProductViewModelFactory(private val repository: IRepository) : ViewModelProvider.NewInstanceFactory() {
+
+    override fun <T : ViewModel?> create(modelClass: Class<T>) =
+        (AddProductViewModel(repository) as T)
 }
