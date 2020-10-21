@@ -26,6 +26,9 @@
             app:destination="@id/signUpFragment"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_loginFragment_to_homeActivity"
+            app:destination="@id/homeActivity" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -38,4 +41,9 @@
             app:popUpTo="@id/signUpFragment"
             app:popUpToInclusive="true"/>
     </fragment>
+    <activity
+        android:id="@+id/homeActivity"
+        android:name="com.ilatyphi95.farmersmarket.HomeActivity"
+        android:label="activity_home"
+        tools:layout="@layout/activity_home" />
 </navigation>

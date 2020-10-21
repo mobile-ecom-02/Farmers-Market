@@ -38,9 +38,9 @@ class LoginFragment : Fragment() {
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.shared_transition)
 
-        loginButton.setOnClickListener {
-            loginUser()
-        }
+//        loginButton.setOnClickListener {
+//            loginUser()
+//        }
 
     }
 
@@ -54,6 +54,14 @@ class LoginFragment : Fragment() {
         spanText()
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.loginButton.setOnClickListener {
+            findNavController().navigate(R.id.homeActivity)
+            activity?.finish()
+        }
     }
 
 
