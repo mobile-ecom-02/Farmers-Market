@@ -10,4 +10,6 @@
     <item name="green_shade_2" type="color">#93B193</item>
     <item name="green_shade_3" type="color">#6D7A6D</item>
     <item name="green_shade_4" type="color">#596559</item>
+    <item name="green_shade_5" type="color">#177117</item>
+    <item name="green_shade_6" type="color">#505C50</item>
 </resources>
