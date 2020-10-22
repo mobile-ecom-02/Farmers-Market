@@ -130,16 +130,6 @@ class SignUpFragment : Fragment(){
         _binding = null
     }
 
-/**
-    override fun onClick(view: View?) {
-        if (view != null) {
-            when(view.id){
-                R.id.signUpButton -> signUpNewUser()
-            }
-        }
-    }
-    */
-
     //sign up new user
     private fun signUpNewUser(){
         username =  fullNameEditText.text.toString()
