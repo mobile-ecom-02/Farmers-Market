@@ -41,9 +41,9 @@ class SignUpFragment : Fragment() {
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.shared_transition)
 
-        signUpButton.setOnClickListener {
-            SignUpNewUser()
-        }
+//        signUpButton.setOnClickListener {
+//            SignUpNewUser()
+//        }
     }
 
     override fun onCreateView(
