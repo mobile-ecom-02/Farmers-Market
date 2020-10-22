@@ -1,6 +1,8 @@
 package com.ilatyphi95.farmersmarket
 
 import `in`.galaxyofandroid.spinerdialog.SpinnerDialog
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.ilatyphi95.farmersmarket.databinding.FragmentAddProductBinding
 import com.ilatyphi95.farmersmarket.utils.EventObserver
+import com.ilatyphi95.farmersmarket.utils.LocationProvider
 import com.ilatyphi95.farmersmarket.utils.SampleRepository
 
 /**
@@ -27,7 +30,8 @@ class AddProductFragment : Fragment() {
     }
 
     private val handlePictures = registerForActivityResult(
-        ActivityResultContracts.GetMultipleContents()){ imageList ->
+        ActivityResultContracts.GetMultipleContents()
+    ) { imageList ->
         viewmodel.addImages(imageList)
     }
 
@@ -47,21 +51,46 @@ class AddProductFragment : Fragment() {
             viewModel = viewmodel
         }
 
+        LocationProvider(requireActivity()) { isSucessful, address ->
+            if (isSucessful) {
+                viewmodel.updateAddress(address)
+            }
+            //handle failure case
+
+        }
+
         viewmodel.apply {
-            events.observe(viewLifecycleOwner, EventObserver{
-                Toast.makeText(context, "this got called", Toast.LENGTH_SHORT).show()
-                when(it) {
-                    ADD_PICTURES -> handlePictures.launch("image/*")
+            events.observe(viewLifecycleOwner, EventObserver {
+
+                finishLoading()
+
+                when (it) {
+                    Loads.ADD_PICTURES -> handlePictures.launch("image/*")
+
+                    Loads.LOAD_CURRENCY -> (setupSpinnerDialog(R.string.search_currency)
+                    { position -> viewmodel.updateCurrency(position) }).showSpinerDialog()
+
+                    Loads.LOAD_CATEGORY -> (setupSpinnerDialog(R.string.search_currency)
+                    { position -> viewmodel.selectCategory(position) }).showSpinerDialog()
                 }
             })
+
+
+            isLoading.observe(viewLifecycleOwner, {
+                it
+            })
+
+
         }
         return binding.root
     }
 
-    private fun setupSpinnerDialog(list : List<String>?, @StringRes noList: Int,
-                                   usePosition: (Int) -> Unit) : SpinnerDialog {
-        val myList = list ?: listOf(getString(noList))
-        val spinnerDialog = SpinnerDialog(activity, ArrayList(myList), getString(R.string.search) )
+    private fun setupSpinnerDialog(
+        @StringRes searchName: Int, @StringRes noList: Int = R.string.no_items,
+        usePosition: (Int) -> Unit
+    ): SpinnerDialog {
+        val myList = viewmodel.loadedList ?: listOf(getString(noList))
+        val spinnerDialog = SpinnerDialog(activity, ArrayList(myList), getString(searchName))
         spinnerDialog.setCancellable(true)
         spinnerDialog.setShowKeyboard(false)
 

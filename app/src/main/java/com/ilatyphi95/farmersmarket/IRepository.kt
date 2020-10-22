@@ -10,4 +10,5 @@ interface IRepository {
     suspend fun getUser(sellerId: String): User
     suspend fun getRecentProducts(): List<Product>
     suspend fun getCloseByProduct(): List<CloseByProduct>
+    suspend fun getCategory() : List<String>
 }

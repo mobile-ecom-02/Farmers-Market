@@ -42,4 +42,10 @@
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="phone_number">Phone Number</string>
+    <string name="no_items">No items available</string>
+    <string name="search_currency">Search currency</string>
+    <string name="select_category">Select category</string>
+    <string name="sample_currrency">USD</string>
+    <string name="select_region">Select region</string>
+    <string name="update_location">Updating location...</string>
 </resources>

@@ -34,4 +34,9 @@ class SampleRepository : IRepository {
         }
         return list.sortedBy { it.distance }
     }
+
+    override suspend fun getCategory(): List<String> {
+        delay(2000)
+        return listOf("Crop", "Livestock", "Poultry")
+    }
 }

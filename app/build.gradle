@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.ilatyphi95.farmersmarket"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 29
         multiDexEnabled true
         versionCode 1
@@ -116,7 +116,13 @@ dependencies {
     //Firebase Storage dependency
     implementation 'com.google.firebase:firebase-analytics:17.6.0'
 
+    // Google Play Services
+    implementation "com.google.android.gms:play-services-location:17.1.0"
+
     //Spinner Dialogue
     implementation "com.github.MdFarhanRaja:SearchableSpinner:2.0"
+
+    //Smooth progress bar dependency
+    implementation "com.github.castorflex.smoothprogressbar:library:1.1.0"
 
 }
