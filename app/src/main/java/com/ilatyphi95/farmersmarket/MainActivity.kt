@@ -29,9 +29,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        navView = findViewById(R.id.nav_view)
-
-        navController = findNavController(R.id.nav_host_fragment)
+//        navView = findViewById(R.id.nav_view)
+//
+//        navController = findNavController(R.id.nav_host_fragment)
 
         NetworkAvailabilityUtils.setNetworkAvailabilityListener(this){
 
