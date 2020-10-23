@@ -32,16 +32,20 @@
                     android:id="@+id/spinnerCategory"
                     style="@style/add_product_field_style"
                     android:onClick="@{() -> viewModel.onClickCategory()}"
+                    android:paddingTop="@dimen/small_margin"
+                    android:paddingBottom="@dimen/normal_margin"
                     android:text="@{viewModel.category}"
+                    android:textSize="18sp"
+                    app:drawableRightCompat="@drawable/ic_baseline_arrow_drop_down_24"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:drawableRightCompat="@android:drawable/arrow_down_float" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/small_margin"
                     android:orientation="horizontal"
                     app:items="@{viewModel.pictures}"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -66,10 +70,13 @@
                 <TextView
                     android:id="@+id/spinnerRegion"
                     style="@style/add_product_field_style"
+                    android:paddingBottom="@dimen/normal_margin"
                     android:text="@{viewModel.address}"
+                    android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/etName" />
+                    app:layout_constraintTop_toBottomOf="@+id/etName"
+                    tools:text="@string/sample_address" />
 
                 <EditText
                     android:id="@+id/edDesc"
@@ -85,26 +92,42 @@
                 <EditText
                     android:id="@+id/edPrice"
                     style="@style/add_product_field_style"
-                    android:layout_width="137dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="@string/price"
                     android:inputType="numberDecimal"
+                    android:minEms="5"
                     android:text="@={viewModel.price}"
+                    android:textAlignment="viewEnd"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/edDesc" />
+
+                <EditText
+                    android:id="@+id/qtyAvail"
+                    style="@style/add_product_field_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/available_qty"
+                    android:inputType="numberDecimal"
+                    android:minEms="5"
+                    android:text="@={viewModel.quantityAvailable}"
+                    android:textAlignment="viewEnd"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edPrice" />
 
                 <TextView
                     android:id="@+id/tvCurrency"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="@{() -> viewModel.onClickCurrency()}"
+                    android:padding="@dimen/small_margin"
                     android:text="@{viewModel.currency.symbol}"
-                    app:layout_constraintBottom_toBottomOf="@+id/edPrice"
+                    android:textSize="18sp"
+                    app:drawableLeftCompat="@drawable/ic_baseline_arrow_drop_down_24"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/edPrice"
                     app:layout_constraintEnd_toStartOf="@+id/edPrice"
-                    app:layout_constraintTop_toTopOf="@+id/edPrice"
-                    tools:text="@string/sample_currrency"
-                    app:drawableRightCompat="@android:drawable/arrow_down_float" />
+                    tools:text="@string/sample_currrency" />
 
                 <EditText
                     android:id="@+id/edFirstName"
@@ -114,42 +137,49 @@
                     android:text="@={viewModel.firstName}"
                     app:layout_constraintEnd_toEndOf="@+id/edPrice"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edPrice" />
+                    app:layout_constraintTop_toBottomOf="@+id/qtyAvail" />
 
                 <EditText
                     android:id="@+id/edLastName"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/small_margin"
                     android:hint="@string/last_name"
                     android:inputType="textPersonName"
                     android:text="@={viewModel.lastName}"
                     app:layout_constraintEnd_toEndOf="@+id/edPrice"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/edFirstName"
                     app:layout_constraintTop_toBottomOf="@+id/edFirstName" />
 
                 <EditText
                     android:id="@+id/edPhone"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/small_margin"
                     android:hint="@string/phone_number"
                     android:inputType="phone"
                     android:text="@={viewModel.phone}"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/edLastName"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="@+id/edLastName"
                     app:layout_constraintTop_toBottomOf="@+id/edLastName" />
 
                 <Button
-                    android:id="@+id/submit"
+                    android:id="@+id/btSubmit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="66dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="@dimen/normal_margin"
                     android:text="@string/post_ad"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/edPhone"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/edPhone"
                     app:layout_constraintTop_toBottomOf="@+id/edPhone" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
+
         <include layout="@layout/progress_view"
             android:layout_height="match_parent"
             android:layout_width="match_parent"

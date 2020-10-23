@@ -47,5 +47,16 @@
     <string name="select_category">Select category</string>
     <string name="sample_currrency">USD</string>
     <string name="select_region">Select region</string>
-    <string name="update_location">Updating location...</string>
+    <string name="update_location">Updating location…</string>
+    <string name="no_title">Title cannot be empty</string>
+    <string name="no_desc">Description of product cannot be empty</string>
+    <string name="no_price">Fill price for item</string>
+    <string name="turn_on_location">Turn on location</string>
+    <string name="acquiring_location">Acquiring location…</string>
+    <string name="upload_min_1_picture">Upload at least a picture</string>
+    <string name="default_currency">USD</string>
+    <string name="sample_address">Memphis, Atlanta</string>
+    <string name="add_pictures">Add pictures</string>
+    <string name="available_qty">Available quantity</string>
+    <string name="no_avail_specify">No available quantity specified</string>
 </resources>

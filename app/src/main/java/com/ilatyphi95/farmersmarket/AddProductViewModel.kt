@@ -2,6 +2,8 @@ package com.ilatyphi95.farmersmarket
 
 import android.net.Uri
 import androidx.lifecycle.*
+import com.ilatyphi95.farmersmarket.data.entities.Product
+import com.ilatyphi95.farmersmarket.data.entities.User
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 import com.ilatyphi95.farmersmarket.utils.*
 import kotlinx.coroutines.*
@@ -17,8 +19,9 @@ class AddProductViewModel(private val repository: IRepository) : ViewModel() {
     private val job = Job()
     private val uiScope = CoroutineScope(job + Dispatchers.Main)
 
+    var user: User = repository.getCurrentUser()
     private val _category = MutableLiveData<String>()
-    val category : LiveData<String>
+    val category: LiveData<String>
         get() = _category
 
     val title = MutableLiveData<String>()
@@ -26,12 +29,13 @@ class AddProductViewModel(private val repository: IRepository) : ViewModel() {
     val lastName = MutableLiveData<String>()
     val price = MutableLiveData<String>()
     val currency = MutableLiveData<Currency>()
+    val quantityAvailable = MutableLiveData<String>()
     val phone = MutableLiveData<String>()
     val description = MutableLiveData<String>()
 
     private val _address = MutableLiveData<List<String>>()
-    val address : LiveData<String> = _address.map {
-        "${it[2]}, ${it[4]}"
+    val address: LiveData<String> = _address.map {
+            "${it[2]}, ${it[4]}"
     }
 
     var loadedList: List<String>? = emptyList()
@@ -72,7 +76,7 @@ class AddProductViewModel(private val repository: IRepository) : ViewModel() {
                 val user = repository.getUser("")
 
                 if (user.firstName.isNotBlank()) firstName.postValue(user.firstName)
-                if (user.lastName.isNotBlank()) firstName.postValue(user.lastName)
+                if (user.lastName.isNotBlank()) lastName.postValue(user.lastName)
             }
         }
     }
@@ -145,6 +149,40 @@ class AddProductViewModel(private val repository: IRepository) : ViewModel() {
     override fun onCleared() {
         job.cancel()
         super.onCleared()
+    }
+
+    fun postAd() {
+        _isLoading.value = true
+        val list = _pictures.value!!
+        val pictureUrl = list.subList(1, list.lastIndex)
+        val storageRef = mutableListOf<String>()
+
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+
+                for(item in pictureUrl) {
+                    storageRef.add(repository.uploadPicture(item))
+                }
+
+                repository.insertProduct(
+                    Product(name = title.value!!,
+                        description = description.value!!,
+                        sellerId = user.id,
+                        type = category.value!!,
+                        qtyAvailable = quantityAvailable.value!!.toInt(),
+                        qtySold = 0,
+                        priceStr = "${currency.value!!.currencyCode}-${price.value!!}"
+                    )
+                )
+
+                finishLoading()
+            }
+
+        }
+    }
+
+    fun setCategory(string: String) {
+        _category.value = string
     }
 }
 

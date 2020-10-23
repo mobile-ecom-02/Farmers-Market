@@ -1,27 +1,26 @@
 package com.ilatyphi95.farmersmarket
 
 import `in`.galaxyofandroid.spinerdialog.SpinnerDialog
-import android.location.Address
-import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
 import com.ilatyphi95.farmersmarket.databinding.FragmentAddProductBinding
 import com.ilatyphi95.farmersmarket.utils.EventObserver
 import com.ilatyphi95.farmersmarket.utils.LocationProvider
 import com.ilatyphi95.farmersmarket.utils.SampleRepository
+import org.joda.money.CurrencyUnit
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
- * A simple [Fragment] subclass.
- * Use the [AddProductFragment.newInstance] factory method to
- * create an instance of this fragment.
+ *
  */
 class AddProductFragment : Fragment() {
     private lateinit var binding: FragmentAddProductBinding
@@ -49,10 +48,14 @@ class AddProductFragment : Fragment() {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = viewmodel
+            btSubmit.setOnClickListener {
+                verifyFields()
+            }
         }
 
-        LocationProvider(requireActivity()) { isSucessful, address ->
-            if (isSucessful) {
+
+        LocationProvider(requireActivity()) { isSuccessful, address ->
+            if (isSuccessful) {
                 viewmodel.updateAddress(address)
             }
             //handle failure case
@@ -74,15 +77,43 @@ class AddProductFragment : Fragment() {
                     { position -> viewmodel.selectCategory(position) }).showSpinerDialog()
                 }
             })
-
-
-            isLoading.observe(viewLifecycleOwner, {
-                it
-            })
-
-
         }
+
+        initializeFields()
         return binding.root
+    }
+
+    private fun initializeFields() {
+        viewmodel.setCategory(getString(R.string.select_category))
+        viewmodel.currency.value = CurrencyUnit.of(Locale.getDefault()).toCurrency()
+    }
+
+    private fun verifyFields() {
+        val title = binding.etName
+        val desc = binding.edDesc
+        val price = binding.edPrice
+        val availQty = binding.qtyAvail
+        val region = binding.spinnerRegion
+        val category = binding.spinnerCategory
+
+        if(title.text.isBlank()) title.error = getString(R.string.no_title)
+        if(desc.text.isBlank()) desc.error = getString(R.string.no_desc)
+        if(price.text.isBlank()) price.error = getString(R.string.no_price)
+        if(availQty.text.isBlank()) availQty.error = getString(R.string.no_avail_specify)
+
+        if(category.text == getString(R.string.select_category)) Snackbar
+            .make(requireView(), getString(R.string.select_category), Snackbar.LENGTH_LONG).show()
+
+        if(region.text.isNullOrEmpty()) Snackbar
+            .make(requireView(), getString(R.string.turn_on_location), Snackbar.LENGTH_LONG).show()
+
+        if(viewmodel.pictures.value?.size!! == 1) Snackbar
+            .make(requireView(), getString(R.string.upload_min_1_picture), Snackbar.LENGTH_LONG).show()
+
+        if(title.text.isNotBlank() && desc.text.isNotBlank() && price.text.isNotBlank()
+            && availQty.text.isNotBlank() && (category.text != getString(R.string.select_category))
+            && (region.text != getString(R.string.acquiring_location)) && viewmodel.pictures.value?.size!! > 1)
+            viewmodel.postAd()
     }
 
     private fun setupSpinnerDialog(

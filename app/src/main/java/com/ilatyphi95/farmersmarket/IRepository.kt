@@ -1,5 +1,6 @@
 package com.ilatyphi95.farmersmarket
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import com.ilatyphi95.farmersmarket.data.entities.CloseByProduct
 import com.ilatyphi95.farmersmarket.data.entities.Product
@@ -11,4 +12,7 @@ interface IRepository {
     suspend fun getRecentProducts(): List<Product>
     suspend fun getCloseByProduct(): List<CloseByProduct>
     suspend fun getCategory() : List<String>
+    suspend fun uploadPicture(file: Uri?): String
+    fun getCurrentUser(): User
+    fun insertProduct(product: Product)
 }
