@@ -18,8 +18,6 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
@@ -66,11 +64,6 @@ class LoginFragment : Fragment(){
         binding.forgotPasswordTextView.setOnClickListener{
             resetPassword()
         }
-
-        /**
-        view.findViewById<Button>(R.id.loginButton).setOnClickListener(this)
-        view.findViewById<TextView>(R.id.forgotPasswordTextView).setOnClickListener(this)
-        **/
     }
 
 
@@ -130,7 +123,6 @@ class LoginFragment : Fragment(){
             duration = 500
             start()
         }
-
     }
 
 
@@ -187,16 +179,4 @@ class LoginFragment : Fragment(){
                 Toast.makeText(context, "${it.message}", Toast.LENGTH_SHORT).show()
             }
     }
-
-    /**
-    override fun onClick(p0: View?) {
-        if (p0 != null) {
-            when(p0.id){
-                R.id.loginButton -> loginUser()
-                R.id.forgotPasswordTextView -> resetPassword()
-            }
-        }
-    }
-    */
-
 }

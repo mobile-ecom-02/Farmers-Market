@@ -1,5 +1,15 @@
 <resources>
     <string name="app_name">Farmer\'s Market</string>
+    <string name="image_count_sample">5/9</string>
+    <string name="product_image">Product Image</string>
+    <string name="sample_product_name">Basket of Fresh Mangos</string>
+    <string name="sample_price">NGN 350.00</string>
+    <string name="sample_available_text">12 items available</string>
+    <string name="availableText">%d items available</string>
+    <string name="chat">Chat</string>
+    <string name="call">Call</string>
+    <string name="description">About this item</string>
+    <string name="similar_items">Similar items</string>
     <string name="title_home">Home</string>
     <string name="title_message">Message</string>
     <string name="title_settings">Settings</string>
@@ -14,6 +24,12 @@
     <string name="fullname">Full Name</string>
     <string name="lastName">LastName</string>
     <string name="sign_up">Sign Up</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="type_a_message">Type a message</string>
+    <string name="product">Product</string>
+    <string name="recently_viewed">Your recently viewed products</string>
+    <string name="close_by">Nearby products</string>
+    <string name="sample_miles">30 miles</string>
+    <string name="distanceMiles">%d miles</string>
+    <string name="search">Search</string>
+    <string name="search_product">Search products</string>
 </resources>

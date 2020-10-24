@@ -61,8 +61,6 @@ class SignUpFragment : Fragment(){
         binding.signUpButton.setOnClickListener {
             signUpNewUser()
         }
-
-        //view.findViewById<Button>(R.id.signUpButton).setOnClickListener(this)
     }
 
     private fun spanText() {
@@ -144,7 +142,6 @@ class SignUpFragment : Fragment(){
         Log.d(TAG, "attempting to sign up new user with email $email")
 
         //Firebase authentication to create a user with email and password
-
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email!!, password)
             .addOnCompleteListener {
                 if(!it.isSuccessful) return@addOnCompleteListener
