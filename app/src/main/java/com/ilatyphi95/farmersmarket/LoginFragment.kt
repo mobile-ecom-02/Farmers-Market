@@ -9,30 +9,39 @@ import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
+import com.google.firebase.auth.FirebaseAuth
 import com.ilatyphi95.farmersmarket.databinding.FragmentLoginBinding
+import kotlinx.android.synthetic.main.fragment_login.*
 
 
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(){
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
+    companion object{
+        val TAG = "LOGIN"
+        val languageCode = "en"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.shared_transition)
-
     }
 
     override fun onCreateView(
@@ -45,6 +54,23 @@ class LoginFragment : Fragment() {
         spanText()
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.loginButton.setOnClickListener {
+            loginUser()
+        }
+
+        binding.forgotPasswordTextView.setOnClickListener{
+            resetPassword()
+        }
+
+        /**
+        view.findViewById<Button>(R.id.loginButton).setOnClickListener(this)
+        view.findViewById<TextView>(R.id.forgotPasswordTextView).setOnClickListener(this)
+        **/
     }
 
 
@@ -112,5 +138,65 @@ class LoginFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
+
+    //login user
+    private fun loginUser(){
+        val email = emailEditText.text.toString()
+        val password = passwordEditText.text.toString()
+
+        if(email.isEmpty() || password.isEmpty()){
+            Toast.makeText(context, "cannot have empty fields", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { 
+                if(!it.isSuccessful) return@addOnCompleteListener
+
+                Log.d(TAG, "logged in user ${it.result?.user?.uid}")
+            }
+            .addOnSuccessListener {
+                //code to go to home screen
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "${it.message}")
+                Toast.makeText(context, "${it.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    //reset password
+    private fun resetPassword(){
+        val email = emailEditText.text.toString()
+
+        if(email.isEmpty()){
+            Toast.makeText(context, "email field cannot be empty", Toast.LENGTH_SHORT).show()
+            return
+        }
+        FirebaseAuth.getInstance().setLanguageCode(languageCode)
+        FirebaseAuth.getInstance()
+            .sendPasswordResetEmail(email)
+            .addOnCompleteListener {
+                //receives response from firebase
+            }
+            .addOnSuccessListener {
+                Log.d(TAG, "email sent successfully to $email")
+                Toast.makeText(context, "password reset email sent", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "${it.message}")
+                Toast.makeText(context, "${it.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    /**
+    override fun onClick(p0: View?) {
+        if (p0 != null) {
+            when(p0.id){
+                R.id.loginButton -> loginUser()
+                R.id.forgotPasswordTextView -> resetPassword()
+            }
+        }
+    }
+    */
 
 }
