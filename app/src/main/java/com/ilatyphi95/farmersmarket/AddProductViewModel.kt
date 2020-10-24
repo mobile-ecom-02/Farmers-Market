@@ -12,7 +12,8 @@ import java.util.*
 enum class Loads {
     ADD_PICTURES,
     LOAD_CURRENCY,
-    LOAD_CATEGORY
+    LOAD_CATEGORY,
+    NAVIGATE_PRODUCT
 }
 
 class AddProductViewModel(private val repository: IRepository) : ViewModel() {
@@ -176,6 +177,8 @@ class AddProductViewModel(private val repository: IRepository) : ViewModel() {
                 )
 
                 finishLoading()
+                // notify of success or failure
+                _events.postValue(Event(Loads.NAVIGATE_PRODUCT))
             }
 
         }

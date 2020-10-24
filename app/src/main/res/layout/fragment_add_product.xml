@@ -20,18 +20,29 @@
         tools:context=".AddProductFragment">
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/light_green"
             android:visibility="@{viewModel.isLoading() ? View.INVISIBLE : View.VISIBLE}">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/normal_margin">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.5" />
 
                 <TextView
                     android:id="@+id/spinnerCategory"
                     style="@style/add_product_field_style"
                     android:onClick="@{() -> viewModel.onClickCategory()}"
+                    android:paddingStart="@dimen/small_normal_margin"
                     android:paddingTop="@dimen/small_margin"
                     android:paddingBottom="@dimen/normal_margin"
                     android:text="@{viewModel.category}"
@@ -39,7 +50,9 @@
                     app:drawableRightCompat="@drawable/ic_baseline_arrow_drop_down_24"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlSymmetry"
+                    tools:text="@string/select_category" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
@@ -55,134 +68,194 @@
                     tools:itemCount="10"
                     tools:listitem="@layout/product_picture_layout" />
 
-                <EditText
-                    android:id="@+id/etName"
-                    style="@style/add_product_field_style"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/title"
-                    android:inputType="textPersonName"
-                    android:text="@={viewModel.title}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+                    android:layout_marginTop="@dimen/small_margin"
+                    app:layout_constraintEnd_toEndOf="@+id/spinnerRegion"
+                    app:layout_constraintStart_toStartOf="@+id/spinnerRegion"
+                    app:layout_constraintTop_toBottomOf="@+id/recyclerView">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/title"
+                        android:inputType="textPersonName"
+                        android:text="@={viewModel.title}" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/spinnerRegion"
                     style="@style/add_product_field_style"
+                    android:paddingStart="@dimen/small_normal_margin"
                     android:paddingBottom="@dimen/normal_margin"
                     android:text="@{viewModel.address}"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/etName"
+                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+                    tools:ignore="RtlSymmetry"
                     tools:text="@string/sample_address" />
 
-                <EditText
-                    android:id="@+id/edDesc"
-                    style="@style/add_product_field_style"
-                    android:gravity="start|top"
-                    android:hint="@string/description"
-                    android:inputType="textMultiLine"
-                    android:text="@={viewModel.description}"
-                    app:layout_constraintEnd_toEndOf="@+id/spinnerRegion"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout4"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/small_margin"
+                    app:layout_constraintEnd_toEndOf="@+id/textInputLayout3"
                     app:layout_constraintStart_toStartOf="@+id/spinnerRegion"
-                    app:layout_constraintTop_toBottomOf="@+id/spinnerRegion" />
+                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout3">
 
-                <EditText
-                    android:id="@+id/edPrice"
-                    style="@style/add_product_field_style"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start|top"
+                        android:hint="@string/description"
+                        android:inputType="textMultiLine"
+                        android:text="@={viewModel.description}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout3"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:hint="@string/price"
-                    android:inputType="numberDecimal"
-                    android:minEms="5"
-                    android:text="@={viewModel.price}"
-                    android:textAlignment="viewEnd"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edDesc" />
+                    android:layout_marginTop="@dimen/small_margin"
+                    app:layout_constraintEnd_toEndOf="@+id/spinnerRegion"
+                    app:layout_constraintStart_toEndOf="@+id/tvCurrency"
+                    app:layout_constraintTop_toBottomOf="@+id/spinnerRegion">
 
-                <EditText
-                    android:id="@+id/qtyAvail"
-                    style="@style/add_product_field_style"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/available_qty"
-                    android:inputType="numberDecimal"
-                    android:minEms="5"
-                    android:text="@={viewModel.quantityAvailable}"
-                    android:textAlignment="viewEnd"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/edPrice" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:hint="@string/price"
+                        android:inputType="numberDecimal"
+                        android:minEms="5"
+                        android:text="@={viewModel.price}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
 
                 <TextView
                     android:id="@+id/tvCurrency"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/small_margin"
+                    android:gravity="center_vertical"
                     android:onClick="@{() -> viewModel.onClickCurrency()}"
                     android:padding="@dimen/small_margin"
                     android:text="@{viewModel.currency.symbol}"
                     android:textSize="18sp"
                     app:drawableLeftCompat="@drawable/ic_baseline_arrow_drop_down_24"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/edPrice"
-                    app:layout_constraintEnd_toStartOf="@+id/edPrice"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/textInputLayout3"
+                    app:layout_constraintStart_toStartOf="@+id/guideline4"
                     tools:text="@string/sample_currrency" />
 
-                <EditText
-                    android:id="@+id/edFirstName"
-                    style="@style/add_product_field_style"
-                    android:hint="@string/first_name"
-                    android:inputType="textPersonName"
-                    android:text="@={viewModel.firstName}"
-                    app:layout_constraintEnd_toEndOf="@+id/edPrice"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/qtyAvail" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout2"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/small_margin"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline4"
+                    app:layout_constraintStart_toStartOf="@+id/textInputLayout4"
+                    app:layout_constraintTop_toTopOf="@+id/textInputLayout3">
 
-                <EditText
-                    android:id="@+id/edLastName"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/qtyAvail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/available_qty"
+                        android:inputType="numberDecimal"
+                        android:minEms="2"
+                        android:text="@={viewModel.quantityAvailable}" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout5"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/small_margin"
-                    android:hint="@string/last_name"
-                    android:inputType="textPersonName"
-                    android:text="@={viewModel.lastName}"
-                    app:layout_constraintEnd_toEndOf="@+id/edPrice"
-                    app:layout_constraintStart_toStartOf="@+id/edFirstName"
-                    app:layout_constraintTop_toBottomOf="@+id/edFirstName" />
+                    app:layout_constraintEnd_toEndOf="@+id/textInputLayout4"
+                    app:layout_constraintStart_toStartOf="@+id/textInputLayout2"
+                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout4">
 
-                <EditText
-                    android:id="@+id/edPhone"
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edFirstName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/first_name"
+                        android:inputType="textPersonName"
+                        android:text="@={viewModel.firstName}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout7"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/small_margin"
-                    android:hint="@string/phone_number"
-                    android:inputType="phone"
-                    android:text="@={viewModel.phone}"
-                    app:layout_constraintEnd_toEndOf="@+id/edLastName"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="@+id/edLastName"
-                    app:layout_constraintTop_toBottomOf="@+id/edLastName" />
+                    app:layout_constraintEnd_toEndOf="@+id/textInputLayout5"
+                    app:layout_constraintStart_toStartOf="@+id/textInputLayout5"
+                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout5">
 
-                <Button
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edLastName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/small_margin"
+                        android:hint="@string/last_name"
+                        android:inputType="textPersonName"
+                        android:text="@={viewModel.lastName}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout6"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/small_margin"
+                    app:layout_constraintEnd_toEndOf="@+id/textInputLayout7"
+                    app:layout_constraintStart_toStartOf="@+id/textInputLayout7"
+                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout7">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/small_margin"
+                        android:hint="@string/phone_number"
+                        android:inputType="phone"
+                        android:text="@={viewModel.phone}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btSubmit"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
-                    android:layout_marginBottom="@dimen/normal_margin"
+                    android:layout_marginTop="@dimen/normal_margin"
                     android:text="@string/post_ad"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/edPhone"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/edPhone"
-                    app:layout_constraintTop_toBottomOf="@+id/edPhone" />
+                    app:layout_constraintEnd_toEndOf="@+id/textInputLayout5"
+                    app:layout_constraintStart_toStartOf="@+id/textInputLayout5"
+                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout6" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <include layout="@layout/progress_view"
-            android:layout_height="match_parent"
+        <include
+            layout="@layout/progress_view"
             android:layout_width="match_parent"
-            bind:isLoading="@{viewModel.isLoading()}"/>
+            android:layout_height="match_parent"
+            bind:isLoading="@{viewModel.isLoading()}" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

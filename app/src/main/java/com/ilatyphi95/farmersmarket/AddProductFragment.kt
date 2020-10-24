@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.ilatyphi95.farmersmarket.databinding.FragmentAddProductBinding
 import com.ilatyphi95.farmersmarket.utils.EventObserver
 import com.ilatyphi95.farmersmarket.utils.LocationProvider
+import com.ilatyphi95.farmersmarket.utils.NetworkAvailabilityUtils
 import com.ilatyphi95.farmersmarket.utils.SampleRepository
 import org.joda.money.CurrencyUnit
 import java.util.*
@@ -34,7 +35,6 @@ class AddProductFragment : Fragment() {
         viewmodel.addImages(imageList)
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -53,13 +53,17 @@ class AddProductFragment : Fragment() {
             }
         }
 
-
-        LocationProvider(requireActivity()) { isSuccessful, address ->
-            if (isSuccessful) {
-                viewmodel.updateAddress(address)
+        NetworkAvailabilityUtils.setNetworkAvailabilityListener(requireContext()) { isConnected ->
+            if (isConnected) {
+                LocationProvider(requireActivity()) { isSuccessful, address ->
+                    if (isSuccessful) {
+                        viewmodel.updateAddress(address)
+                    }
+                    //handle failure case
+                }
+            } else {
+                Snackbar.make(requireView(), getString(R.string.no_network_connection), Snackbar.LENGTH_LONG).show()
             }
-            //handle failure case
-
         }
 
         viewmodel.apply {
@@ -75,6 +79,9 @@ class AddProductFragment : Fragment() {
 
                     Loads.LOAD_CATEGORY -> (setupSpinnerDialog(R.string.search_currency)
                     { position -> viewmodel.selectCategory(position) }).showSpinerDialog()
+                    Loads.NAVIGATE_PRODUCT -> {
+                        // navigate to product page
+                    }
                 }
             })
         }
@@ -96,23 +103,25 @@ class AddProductFragment : Fragment() {
         val region = binding.spinnerRegion
         val category = binding.spinnerCategory
 
-        if(title.text.isBlank()) title.error = getString(R.string.no_title)
-        if(desc.text.isBlank()) desc.error = getString(R.string.no_desc)
-        if(price.text.isBlank()) price.error = getString(R.string.no_price)
-        if(availQty.text.isBlank()) availQty.error = getString(R.string.no_avail_specify)
+        if (title.text!!.isBlank()) title.error = getString(R.string.no_title)
+        if (desc.text!!.isBlank()) desc.error = getString(R.string.no_desc)
+        if (price.text!!.isBlank()) price.error = getString(R.string.no_price)
+        if (availQty.text!!.isBlank()) availQty.error = getString(R.string.no_avail_specify)
 
-        if(category.text == getString(R.string.select_category)) Snackbar
+        if (category.text == getString(R.string.select_category)) Snackbar
             .make(requireView(), getString(R.string.select_category), Snackbar.LENGTH_LONG).show()
 
-        if(region.text.isNullOrEmpty()) Snackbar
+        if (region.text.isNullOrEmpty()) Snackbar
             .make(requireView(), getString(R.string.turn_on_location), Snackbar.LENGTH_LONG).show()
 
-        if(viewmodel.pictures.value?.size!! == 1) Snackbar
-            .make(requireView(), getString(R.string.upload_min_1_picture), Snackbar.LENGTH_LONG).show()
+        if (viewmodel.pictures.value?.size!! == 1) Snackbar
+            .make(requireView(), getString(R.string.upload_min_1_picture), Snackbar.LENGTH_LONG)
+            .show()
 
-        if(title.text.isNotBlank() && desc.text.isNotBlank() && price.text.isNotBlank()
-            && availQty.text.isNotBlank() && (category.text != getString(R.string.select_category))
-            && (region.text != getString(R.string.acquiring_location)) && viewmodel.pictures.value?.size!! > 1)
+        if (title.text!!.isNotBlank() && desc.text!!.isNotBlank() && price.text!!.isNotBlank()
+            && availQty.text!!.isNotBlank() && (category.text != getString(R.string.select_category))
+            && (region.text != getString(R.string.acquiring_location)) && viewmodel.pictures.value?.size!! > 1
+        )
             viewmodel.postAd()
     }
 

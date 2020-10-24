@@ -14,9 +14,12 @@ import java.util.concurrent.TimeUnit
 
 // returns the address in format long|lat|city|LGA|state|country
 const val SEPARATOR = "|"
-class LocationProvider(val context: FragmentActivity, val operationResult: (Boolean, String) -> Unit) {
-    private var fusedLocationProviderClient: FusedLocationProviderClient
-            = LocationServices.getFusedLocationProviderClient(context)
+
+class LocationProvider(
+    val context: FragmentActivity, val operationResult: (Boolean, String) -> Unit
+) {
+    private var fusedLocationProviderClient: FusedLocationProviderClient =
+        LocationServices.getFusedLocationProviderClient(context)
 
     private var settingsClient: SettingsClient = LocationServices.getSettingsClient(context)
     private var locationRequest: LocationRequest
@@ -31,28 +34,26 @@ class LocationProvider(val context: FragmentActivity, val operationResult: (Bool
                     val geocoder = Geocoder(context, Locale.getDefault())
                     val lastLocation = locationResult.lastLocation
 
-                    // Check if online
-                    if (true) {
-                        try {
-                            val location = geocoder.getFromLocation(
+                    try {
+                        val location = geocoder.getFromLocation(
+                            lastLocation.latitude,
+                            lastLocation.longitude,
+                            1
+                        )
+                        if (location.size > 0) {
+                            val address = location[0]
+                            val fullAddress = listOf(
                                 lastLocation.latitude,
-                                lastLocation.longitude,
-                                1
-                            )
-                            if (location.size > 0) {
-                                val address = location[0]
-                                val fullAddress = listOf(lastLocation.latitude,
-                                    lastLocation.longitude, address.locality, address.subAdminArea,
-                                    address.adminArea, address.countryName).joinToString(SEPARATOR)
+                                lastLocation.longitude, address.locality, address.subAdminArea,
+                                address.adminArea, address.countryName
+                            ).joinToString(SEPARATOR)
 
-                                operationResult(true, fullAddress)
-                            }
-                        } catch (e: IOException) {
-                            operationResult(false, e.message ?: "Error Occurred")
+                            operationResult(true, fullAddress)
                         }
-                    } else {
-                        operationResult(false, "Not Connected")
+                    } catch (e: IOException) {
+                        operationResult(false, e.message ?: "Error Occurred")
                     }
+
                 }
             }
         }
@@ -98,7 +99,7 @@ class LocationProvider(val context: FragmentActivity, val operationResult: (Bool
                 }
             }
             .addOnFailureListener(context) {
-                operationResult(true, it.message?: "")
+                operationResult(true, it.message ?: "")
             }
     }
 }

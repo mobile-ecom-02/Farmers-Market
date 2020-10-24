@@ -59,4 +59,5 @@
     <string name="add_pictures">Add pictures</string>
     <string name="available_qty">Available quantity</string>
     <string name="no_avail_specify">No available quantity specified</string>
+    <string name="no_network_connection">No network connection</string>
 </resources>
