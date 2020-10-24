@@ -10,12 +10,12 @@ import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
@@ -24,12 +24,13 @@ import com.ilatyphi95.farmersmarket.databinding.FragmentLoginBinding
 import kotlinx.android.synthetic.main.fragment_login.*
 
 
-class LoginFragment : Fragment() {
+class LoginFragment : Fragment(){
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
     companion object{
         val TAG = "LOGIN"
+        val languageCode = "en"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,11 +38,6 @@ class LoginFragment : Fragment() {
 
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.shared_transition)
-
-        loginButton.setOnClickListener {
-            loginUser()
-        }
-
     }
 
     override fun onCreateView(
@@ -54,6 +50,18 @@ class LoginFragment : Fragment() {
         spanText()
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.loginButton.setOnClickListener {
+            loginUser()
+        }
+
+        binding.forgotPasswordTextView.setOnClickListener{
+            resetPassword()
+        }
     }
 
 
@@ -113,7 +121,6 @@ class LoginFragment : Fragment() {
             duration = 500
             start()
         }
-
     }
 
 
@@ -138,10 +145,37 @@ class LoginFragment : Fragment() {
 
                 Log.d(TAG, "logged in user ${it.result?.user?.uid}")
             }
+            .addOnSuccessListener {
+                findNavController().navigate(
+                    LoginFragmentDirections.actionLoginFragmentToHomeActivity())
+            }
             .addOnFailureListener {
                 Log.d(TAG, "${it.message}")
                 Toast.makeText(context, "${it.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
+    //reset password
+    private fun resetPassword(){
+        val email = emailEditText.text.toString()
+
+        if(email.isEmpty()){
+            Toast.makeText(context, "email field cannot be empty", Toast.LENGTH_SHORT).show()
+            return
+        }
+        FirebaseAuth.getInstance().setLanguageCode(languageCode)
+        FirebaseAuth.getInstance()
+            .sendPasswordResetEmail(email)
+            .addOnCompleteListener {
+                //receives response from firebase
+            }
+            .addOnSuccessListener {
+                Log.d(TAG, "email sent successfully to $email")
+                Toast.makeText(context, "password reset email sent", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Log.d(TAG, "${it.message}")
+                Toast.makeText(context, "${it.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
 }

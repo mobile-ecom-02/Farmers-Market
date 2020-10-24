@@ -13,19 +13,30 @@
         <action
             android:id="@+id/action_navigation_home_to_productFragment"
             app:destination="@id/productFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_message"
+            app:destination="@id/navigation_message" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_message"
         android:name="com.ilatyphi95.farmersmarket.ui.message.MessageFragment"
         android:label="@string/title_message"
-        tools:layout="@layout/fragment_message" />
+        tools:layout="@layout/fragment_message" >
+        <action
+            android:id="@+id/action_navigation_message_to_navigation_settings"
+            app:destination="@id/navigation_settings" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_settings"
         android:name="com.ilatyphi95.farmersmarket.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+<!--        <action-->
+<!--            android:id="@+id/action_navigation_settings_to_loginFragment2"-->
+<!--            app:destination="@id/loginFragment2" />-->
+    </fragment>
 
 <!--    for testing purpose don't forget to remove it-->
     <fragment
@@ -45,4 +56,10 @@
         android:id="@+id/addProductFragment"
         android:name="com.ilatyphi95.farmersmarket.AddProductFragment"
         android:label="AddProductFragment" />
+
+    <fragment
+        android:id="@+id/loginFragment2"
+        android:name="com.ilatyphi95.farmersmarket.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login"/>
 </navigation>

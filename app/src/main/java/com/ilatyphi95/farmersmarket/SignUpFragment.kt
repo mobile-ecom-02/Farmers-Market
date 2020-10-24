@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -26,7 +27,7 @@ import com.ilatyphi95.farmersmarket.databinding.FragmentSignUpBinding
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 
 
-class SignUpFragment : Fragment() {
+class SignUpFragment : Fragment(){
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
     private var email : String? = null
@@ -40,10 +41,6 @@ class SignUpFragment : Fragment() {
         super.onCreate(savedInstanceState)
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.shared_transition)
-
-        signUpButton.setOnClickListener {
-            SignUpNewUser()
-        }
     }
 
     override fun onCreateView(
@@ -56,6 +53,14 @@ class SignUpFragment : Fragment() {
         spanText()
         
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.signUpButton.setOnClickListener {
+            signUpNewUser()
+        }
     }
 
     private fun spanText() {
@@ -124,7 +129,7 @@ class SignUpFragment : Fragment() {
     }
 
     //sign up new user
-    private fun SignUpNewUser(){
+    private fun signUpNewUser(){
         username =  fullNameEditText.text.toString()
         email = emailEditText.text.toString()
         val password = passwordEditText.text.toString()
@@ -137,7 +142,6 @@ class SignUpFragment : Fragment() {
         Log.d(TAG, "attempting to sign up new user with email $email")
 
         //Firebase authentication to create a user with email and password
-
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email!!, password)
             .addOnCompleteListener {
                 if(!it.isSuccessful) return@addOnCompleteListener
@@ -158,14 +162,17 @@ class SignUpFragment : Fragment() {
         val ref = FirebaseDatabase.getInstance().getReference("/users/$id")
         val username = fullNameEditText.text.toString()
 
-        val user = User(id, "", "", email!!, "", "", "", "")
+        val user = User(id, "", "", email!!, "", "", username, "")
 
         ref.setValue(user)
             .addOnSuccessListener {
                 Log.d(TAG, "user saved to database")
+
+                //code to go to home fragment
             }
             .addOnFailureListener {
                 Log.d(TAG, "${it.message}")
             }
     }
+
 }
