@@ -58,8 +58,8 @@
         android:label="AddProductFragment" />
 
     <fragment
-        android:id="@+id/loginFragment2"
-        android:name="com.ilatyphi95.farmersmarket.LoginFragment"
-        android:label="LoginFragment"
-        tools:layout="@layout/fragment_login"/>
+        android:id="@+id/chatFragment"
+        android:name="com.ilatyphi95.farmersmarket.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
 </navigation>
