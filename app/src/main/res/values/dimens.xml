@@ -3,12 +3,4 @@
     <dimen name="normal_margin">16dp</dimen>
     <dimen name="small_margin">8dp</dimen>
     <dimen name="normal_card_radius">5dp</dimen>
-    <dimen name="picture_size">128dp</dimen>
-    <dimen name="picture_inset_size">48dp</dimen>
-    <dimen name="tiny_margin">4dp</dimen>
-    <dimen name="large_margin">32dp</dimen>
-    <dimen name="small_normal_margin">12dp</dimen>
-    <dimen name="chat_text_size">12sp</dimen>
-    <dimen name="chat_user_size">14sp</dimen>
-    <dimen name="icon_size">48dp</dimen>
 </resources>

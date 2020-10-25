@@ -24,6 +24,7 @@
     <string name="fullname">Full Name</string>
     <string name="lastName">LastName</string>
     <string name="sign_up">Sign Up</string>
+    <string name="type_a_message">Type a message</string>
     <string name="product">Product</string>
     <string name="recently_viewed">Your recently viewed products</string>
     <string name="close_by">Nearby products</string>
@@ -31,33 +32,4 @@
     <string name="distanceMiles">%d miles</string>
     <string name="search">Search</string>
     <string name="search_product">Search products</string>
-    <string name="type_a_message">Type a message</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="product_picture">Product picture</string>
-    <string name="delete_picture">delete picture</string>
-    <string name="post_ad">Post Ad</string>
-    <string name="title">Title</string>
-    <string name="price">Price</string>
-    <string name="first_name">First Name</string>
-    <string name="last_name">Last Name</string>
-    <string name="phone_number">Phone Number</string>
-    <string name="no_items">No items available</string>
-    <string name="search_currency">Search currency</string>
-    <string name="select_category">Select category</string>
-    <string name="sample_currrency">USD</string>
-    <string name="select_region">Select region</string>
-    <string name="update_location">Updating location…</string>
-    <string name="no_title">Title cannot be empty</string>
-    <string name="no_desc">Description of product cannot be empty</string>
-    <string name="no_price">Fill price for item</string>
-    <string name="turn_on_location">Turn on location</string>
-    <string name="acquiring_location">Acquiring location…</string>
-    <string name="upload_min_1_picture">Upload at least a picture</string>
-    <string name="default_currency">USD</string>
-    <string name="sample_address">Memphis, Atlanta</string>
-    <string name="add_pictures">Add pictures</string>
-    <string name="available_qty">Available quantity</string>
-    <string name="no_avail_specify">No available quantity specified</string>
-    <string name="no_network_connection">No network connection</string>
 </resources>
