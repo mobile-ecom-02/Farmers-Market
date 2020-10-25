@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
 import com.ilatyphi95.farmersmarket.databinding.FragmentSplashBinding
 import kotlinx.coroutines.*
 
@@ -34,22 +33,17 @@ class SplashFragment : Fragment() {
 
         CoroutineScope(Dispatchers.Main).launch {
             delay(1500)
-            if (FirebaseAuth.getInstance().currentUser == null) {
 
-                val extras = FragmentNavigatorExtras(
-                    binding.treeImage to "treeImage",
-                    binding.root to "headerContainer"
-                )
-                findNavController().navigate(
-                    R.id.action_splashFragment2_to_loginFragment,
-                    null,
-                    null,
-                    extras
-                )
-            } else {
-                findNavController().navigate(
-                    SplashFragmentDirections.actionSplashFragment2ToHomeActivity())
-            }
+            val extras = FragmentNavigatorExtras(
+                binding.treeImage to "treeImage",
+                binding.root to "headerContainer"
+            )
+            findNavController().navigate(
+                R.id.action_splashFragment2_to_loginFragment,
+                null,
+                null,
+                extras
+            )
         }
     }
 
