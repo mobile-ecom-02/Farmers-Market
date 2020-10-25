@@ -21,3 +21,10 @@ fun toDate(timeStamp: Long) : String {
         timeStampDate.format(DateTimeFormatter.ofPattern("EEE, d MMM yyyy, hh:mma"))
     }
 }
+
+fun toShortTime(timeStamp: Long) : String {
+    val timeStampDate = LocalDateTime
+        .ofInstant(Instant.ofEpochMilli(timeStamp), ZoneId.systemDefault())
+
+    return timeStampDate.format(DateTimeFormatter.ofPattern("hh:mma"))
+}
