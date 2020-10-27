@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/light_green"
+            android:paddingBottom="@dimen/normal_margin"
             android:visibility="@{viewModel.isLoading() ? View.INVISIBLE : View.VISIBLE}">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -73,7 +74,8 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/small_margin"
+                    android:layout_marginTop="@dimen/small_normal_margin"
+                    app:boxBackgroundColor="@android:color/white"
                     app:layout_constraintEnd_toEndOf="@+id/spinnerRegion"
                     app:layout_constraintStart_toStartOf="@+id/spinnerRegion"
                     app:layout_constraintTop_toBottomOf="@+id/recyclerView">
@@ -105,7 +107,8 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/small_margin"
+                    android:layout_marginTop="@dimen/small_normal_margin"
+                    app:boxBackgroundColor="@android:color/white"
                     app:layout_constraintEnd_toEndOf="@+id/textInputLayout3"
                     app:layout_constraintStart_toStartOf="@+id/spinnerRegion"
                     app:layout_constraintTop_toBottomOf="@+id/textInputLayout3">
@@ -125,7 +128,8 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/small_margin"
+                    android:layout_marginTop="@dimen/small_normal_margin"
+                    app:boxBackgroundColor="@android:color/white"
                     app:layout_constraintEnd_toEndOf="@+id/spinnerRegion"
                     app:layout_constraintStart_toEndOf="@+id/tvCurrency"
                     app:layout_constraintTop_toBottomOf="@+id/spinnerRegion">
@@ -165,6 +169,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/small_margin"
+                    app:boxBackgroundColor="@android:color/white"
                     app:layout_constraintEnd_toStartOf="@+id/guideline4"
                     app:layout_constraintStart_toStartOf="@+id/textInputLayout4"
                     app:layout_constraintTop_toTopOf="@+id/textInputLayout3">
@@ -185,7 +190,8 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/small_margin"
+                    android:layout_marginTop="@dimen/small_normal_margin"
+                    app:boxBackgroundColor="@android:color/white"
                     app:layout_constraintEnd_toEndOf="@+id/textInputLayout4"
                     app:layout_constraintStart_toStartOf="@+id/textInputLayout2"
                     app:layout_constraintTop_toBottomOf="@+id/textInputLayout4">
@@ -204,7 +210,8 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/small_margin"
+                    android:layout_marginTop="@dimen/small_normal_margin"
+                    app:boxBackgroundColor="@android:color/white"
                     app:layout_constraintEnd_toEndOf="@+id/textInputLayout5"
                     app:layout_constraintStart_toStartOf="@+id/textInputLayout5"
                     app:layout_constraintTop_toBottomOf="@+id/textInputLayout5">
@@ -224,7 +231,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/small_margin"
+                    android:layout_marginTop="@dimen/small_normal_margin"
                     app:layout_constraintEnd_toEndOf="@+id/textInputLayout7"
                     app:layout_constraintStart_toStartOf="@+id/textInputLayout7"
                     app:layout_constraintTop_toBottomOf="@+id/textInputLayout7">
@@ -241,10 +248,13 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btSubmit"
-                    android:layout_width="0dp"
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                    android:layout_width="@dimen/button_size"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/normal_margin"
+                    android:backgroundTint="@color/green_shade_1"
                     android:text="@string/post_ad"
+                    app:cornerRadius="@dimen/normal_card_radius"
                     app:layout_constraintEnd_toEndOf="@+id/textInputLayout5"
                     app:layout_constraintStart_toStartOf="@+id/textInputLayout5"
                     app:layout_constraintTop_toBottomOf="@+id/textInputLayout6" />

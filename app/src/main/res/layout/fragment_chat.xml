@@ -28,17 +28,17 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/imageView"
+                loadImage="@{viewModel.otherUser.profilePicUrl}"
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 android:layout_marginStart="@dimen/normal_margin"
                 android:layout_marginTop="@dimen/small_margin"
                 android:layout_marginBottom="@dimen/small_margin"
                 app:layout_constraintBottom_toBottomOf="parent"
-                loadImage="@{viewModel.otherUser.profilePicUrl}"
                 app:layout_constraintDimensionRatio="W,1:1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:shapeAppearanceOverlay="@style/roundImageView"
+                app:shapeAppearanceOverlay="@style/roundedImageView"
                 app:srcCompat="@drawable/ic_baseline_add_circle_24" />
 
             <TextView
@@ -54,25 +54,31 @@
                 tools:text="Selase Jude Kwashie" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/messageEditText"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout8"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="@dimen/small_margin"
+            android:layout_marginEnd="@dimen/small_margin"
             android:layout_marginBottom="@dimen/small_margin"
-            android:background="@drawable/custom_edit_text_background"
-            android:hint="@string/type_a_message"
-            android:text="@{viewModel.newMessage}"
-            android:inputType="textMultiLine"
-            android:lineSpacingMultiplier="1.2"
-            android:maxLines="4"
-            android:minLines="2"
-            android:paddingStart="16dp"
+            android:background="@android:color/white"
+            app:hintEnabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/floatingActionButton"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="RtlSymmetry" />
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/messageEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/type_a_message"
+                android:inputType="textMultiLine"
+                android:lineSpacingMultiplier="1.2"
+                android:maxLines="4"
+                android:minLines="1"
+                tools:ignore="RtlSymmetry" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"
@@ -80,13 +86,14 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:clickable="true"
+            android:enabled="@{viewModel.enableSend}"
             android:focusable="true"
             android:onClick="@{() -> viewModel.sendMessage()}"
-            android:enabled="@{viewModel.enableSend}"
             app:backgroundTint="@color/green_shade_2"
             app:fabCustomSize="@dimen/icon_size"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/messageEditText"
+            app:layout_constraintTop_toTopOf="@+id/textInputLayout8"
+            app:shapeAppearanceOverlay="@style/roundedImageView"
             app:srcCompat="@drawable/ic_send"
             app:tint="@color/green_shade_1" />
 
@@ -98,7 +105,7 @@
             android:paddingRight="@dimen/normal_margin"
             app:items="@{viewModel.chatRecycler}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@+id/messageEditText"
+            app:layout_constraintBottom_toTopOf="@+id/textInputLayout8"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout"

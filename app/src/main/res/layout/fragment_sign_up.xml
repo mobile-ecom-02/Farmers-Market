@@ -13,9 +13,10 @@
     <RelativeLayout
         android:id="@+id/headerContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="@drawable/custom_header_background"
         android:transitionName="headerContainer"
+        app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -50,130 +51,126 @@
         android:id="@+id/createAccountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="@dimen/normal_margin"
         android:fontFamily="@font/rufina"
         android:text="@string/create_new_account"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/green_shade_3"
-        android:textSize="24sp"
+        android:textSize="@dimen/large_text"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/fullNameTextLayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerContainer" />
+        app:layout_constraintTop_toBottomOf="@+id/headerContainer"
+        app:layout_constraintVertical_bias="0.4" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/fullNameTextLayout"
-        android:layout_width="match_parent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        app:boxBackgroundMode="none"
-        app:hintEnabled="false"
+        android:layout_marginStart="@dimen/normal_margin"
+        android:layout_marginEnd="@dimen/normal_margin"
+        android:layout_marginBottom="@dimen/small_normal_margin"
+        app:boxBackgroundColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/emailTextLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/createAccountTextView">
+        app:layout_constraintStart_toStartOf="parent">
 
-        <com.ilatyphi95.farmersmarket.CustomEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/fullNameEditText"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/custom_edit_text_background"
-            android:hint="@string/fullname"
-            android:padding="8dp"
-            android:textCursorDrawable="@color/green_shade_4" />
+            android:layout_height="wrap_content"
+            android:hint="@string/fullname" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailTextLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        app:boxBackgroundMode="none"
-        app:hintEnabled="false"
+        android:layout_marginBottom="@dimen/small_normal_margin"
+        app:boxBackgroundColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/passwordLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fullNameTextLayout"
-        app:passwordToggleTint="@color/green_shade_2">
+        app:layout_constraintStart_toStartOf="parent">
 
-        <com.ilatyphi95.farmersmarket.CustomEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/custom_edit_text_background"
-            android:hint="@string/email_hint"
-            android:padding="8dp"
-            android:textCursorDrawable="@color/green_shade_4" />
+            android:layout_height="wrap_content"
+            android:hint="@string/email_hint" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordLayout"
-        android:layout_width="match_parent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        app:boxBackgroundMode="none"
-        app:hintEnabled="false"
+        android:layout_marginStart="@dimen/normal_margin"
+        android:layout_marginEnd="@dimen/normal_margin"
+        app:boxBackgroundColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/guideline6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailTextLayout"
-        app:passwordToggleEnabled="true"
-        app:passwordToggleTint="@color/green_shade_2">
+        app:passwordToggleEnabled="true">
 
-        <com.ilatyphi95.farmersmarket.CustomEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordEditText"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/custom_edit_text_background"
+            android:layout_height="wrap_content"
             android:hint="@string/password_hint"
-            android:inputType="textPassword"
-            android:padding="8dp"
-            android:textCursorDrawable="@color/green_shade_4" />
+            android:inputType="textPassword" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/signUpButton"
         style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-        android:layout_width="130dp"
-        android:layout_height="54dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
+        android:layout_width="@dimen/button_size"
+        android:layout_height="wrap_content"
         android:backgroundTint="@color/green_shade_1"
         android:gravity="center"
         android:text="@string/sign_up"
         android:textColor="@android:color/white"
-        android:textSize="14sp"
-        app:cornerRadius="20dp"
-        app:layout_constraintBottom_toTopOf="@id/loginTextView"
+        android:textSize="@dimen/normal_text_size"
+        app:cornerRadius="@dimen/normal_card_radius"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/passwordLayout" />
-
+        app:layout_constraintTop_toBottomOf="@+id/passwordLayout"
+        app:layout_constraintVertical_bias="0.3" />
 
     <TextView
         android:id="@+id/loginTextView"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:gravity="center"
         android:text="@string/login_text"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUpButton" />
+        app:layout_constraintTop_toBottomOf="@+id/signUpButton"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.65" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
