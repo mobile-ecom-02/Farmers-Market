@@ -40,8 +40,8 @@
 
     <style name="HomeTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/green_shade_6</item>
-        <item name="colorPrimaryDark">@color/green_shade_6</item>
+        <item name="colorPrimary">@color/green_shade_1</item>
+        <item name="colorPrimaryDark">@color/green_shade_1</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
