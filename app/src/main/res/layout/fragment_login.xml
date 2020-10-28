@@ -131,7 +131,7 @@
         android:layout_width="130dp"
         android:layout_height="54dp"
         android:layout_marginTop="24dp"
-        android:backgroundTint="@color/green_shade_1"
+        app:backgroundTint="@color/green_shade_1"
         android:gravity="center"
         android:text="@string/login"
         android:textColor="@android:color/white"
