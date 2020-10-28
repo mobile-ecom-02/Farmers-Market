@@ -72,6 +72,9 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation 'com.google.android.material:material:1.2.0'
 
+    //viewpager2 dependency
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+
     //multidex support library
     implementation "androidx.multidex:multidex:$multidex_version"
 

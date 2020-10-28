@@ -33,9 +33,9 @@
         android:name="com.ilatyphi95.farmersmarket.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" >
-<!--        <action-->
-<!--            android:id="@+id/action_navigation_settings_to_loginFragment2"-->
-<!--            app:destination="@id/loginFragment2" />-->
+        <action
+            android:id="@+id/action_navigation_settings_to_pagerFragment"
+            app:destination="@id/navigation_pager" />
     </fragment>
 
 <!--    for testing purpose don't forget to remove it-->
@@ -52,6 +52,11 @@
             android:name="product"
             app:argType="com.ilatyphi95.farmersmarket.data.entities.Product" />
     </fragment>
+    <fragment
+        android:id="@+id/navigation_pager"
+        android:name="com.ilatyphi95.farmersmarket.PagerFragment"
+        android:label="fragment_pager"
+        tools:layout="@layout/fragment_pager" />
     <fragment
         android:id="@+id/addProductFragment"
         android:name="com.ilatyphi95.farmersmarket.AddProductFragment"

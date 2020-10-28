@@ -56,11 +56,12 @@ class LoginFragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
         binding.loginButton.setOnClickListener {
-            loginUser()
+//            loginUser()
+            findNavController().navigate(R.id.homeActivity)
         }
 
         binding.forgotPasswordTextView.setOnClickListener{
-            resetPassword()
+//            resetPassword()
         }
     }
 
