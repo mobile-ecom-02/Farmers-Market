@@ -55,7 +55,6 @@ class HomeFragment : Fragment() {
             })
 
             isLoading.observe(viewLifecycleOwner, {
-                Toast.makeText(context, "is Loading $it", Toast.LENGTH_SHORT).show()
             })
         }
 

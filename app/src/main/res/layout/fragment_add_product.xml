@@ -248,13 +248,8 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btSubmit"
-                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                    android:layout_width="@dimen/button_size"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/normal_margin"
-                    android:backgroundTint="@color/green_shade_1"
+                    style="@style/button_style"
                     android:text="@string/post_ad"
-                    app:cornerRadius="@dimen/normal_card_radius"
                     app:layout_constraintEnd_toEndOf="@+id/textInputLayout5"
                     app:layout_constraintStart_toStartOf="@+id/textInputLayout5"
                     app:layout_constraintTop_toBottomOf="@+id/textInputLayout6" />

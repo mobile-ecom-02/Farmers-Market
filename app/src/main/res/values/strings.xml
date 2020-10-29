@@ -69,4 +69,5 @@
     <string name="viewed_at">Viewed at %s</string>
     <string name="posted_at">Posted at %s</string>
     <string name="add_new_product_require_location">Add new product require location to be enabled</string>
+    <string name="ads">Ads</string>
 </resources>

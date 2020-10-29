@@ -113,15 +113,8 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/loginButton"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-        android:layout_width="@dimen/button_size"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/green_shade_1"
-        android:gravity="center"
+        style="@style/button_style"
         android:text="@string/login"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/normal_text_size"
-        app:cornerRadius="@dimen/normal_card_radius"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
