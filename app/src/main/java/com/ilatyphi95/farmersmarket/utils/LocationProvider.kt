@@ -1,8 +1,10 @@
 package com.ilatyphi95.farmersmarket.utils
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
+import android.location.LocationManager
 import android.os.Looper
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
@@ -102,4 +104,12 @@ class LocationProvider(
                 operationResult(true, it.message ?: "")
             }
     }
+
+    companion object {
+        fun isLocationEnabled(context: Context) : Boolean {
+            val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                    && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        }
+     }
 }

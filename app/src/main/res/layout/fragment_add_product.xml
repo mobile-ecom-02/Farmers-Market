@@ -161,7 +161,7 @@
                     app:drawableLeftCompat="@drawable/ic_baseline_arrow_drop_down_24"
                     app:layout_constraintBaseline_toBaselineOf="@+id/textInputLayout3"
                     app:layout_constraintStart_toStartOf="@+id/guideline4"
-                    tools:text="@string/sample_currrency" />
+                    tools:text="@string/sample_currency" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputLayout2"

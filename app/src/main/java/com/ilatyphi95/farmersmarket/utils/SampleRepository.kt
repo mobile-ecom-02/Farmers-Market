@@ -4,10 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.liveData
 import com.ilatyphi95.farmersmarket.IRepository
 import com.ilatyphi95.farmersmarket.ProductGenerator
-import com.ilatyphi95.farmersmarket.data.entities.ChatMessage
-import com.ilatyphi95.farmersmarket.data.entities.CloseByProduct
-import com.ilatyphi95.farmersmarket.data.entities.Product
-import com.ilatyphi95.farmersmarket.data.entities.User
+import com.ilatyphi95.farmersmarket.data.entities.*
 import com.thedeanda.lorem.LoremIpsum
 import kotlinx.coroutines.delay
 import kotlin.random.Random
@@ -74,6 +71,35 @@ class SampleRepository : IRepository {
 
     override fun sendMessage(chatMessage: ChatMessage) {
         chatList.add(chatMessage)
+    }
+
+    override suspend fun getPostedAds(): List<AddItem> {
+        return randomAddItem()
+    }
+
+    override suspend fun getInterestedAds(): List<AddItem> {
+        return randomAddItem()
+    }
+
+    override suspend fun getAd(itemId: String): Product {
+        return ProductGenerator.getList()[0]
+    }
+
+    private fun randomAddItem(): MutableList<AddItem> {
+        val list = mutableListOf<AddItem>()
+        val total = Random.nextInt(3, 35)
+
+        for (count in 1..total) {
+            list.add(
+                AddItem(
+                    name = lorem.name, quantity = Random.nextInt(10, 50),
+                    price = "NGN-${Random.nextInt(10, 500)}", itemId = lorem.firstNameFemale,
+                    date = System.currentTimeMillis() + Random.nextLong(-3000000000, 0),
+                    imageUrl = ProductGenerator.generateImage()
+                )
+            )
+        }
+        return list
     }
 
     private fun generateChat(messageId: String) : List<ChatMessage> {

@@ -73,3 +73,13 @@ fun ImageView.loadFirstImage(imageUrls: List<String>) {
     val firstValue = imageUrls.getOrElse(0){null}
     loadImage(firstValue)
 }
+
+@BindingAdapter("viewedAt")
+fun TextView.viewedOn(date: Long) {
+    text = context.getString(R.string.viewed_at, toDate(date))
+}
+
+@BindingAdapter("postedAt")
+fun TextView.postedOn(date: Long) {
+    text = context.getString(R.string.posted_at, toDate(date))
+}

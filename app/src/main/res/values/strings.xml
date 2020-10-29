@@ -47,7 +47,7 @@
     <string name="no_items">No items available</string>
     <string name="search_currency">Search currency</string>
     <string name="select_category">Select category</string>
-    <string name="sample_currrency">USD</string>
+    <string name="sample_currency">USD</string>
     <string name="select_region">Select region</string>
     <string name="update_location">Updating location…</string>
     <string name="no_title">Title cannot be empty</string>
@@ -62,4 +62,11 @@
     <string name="available_qty">Available quantity</string>
     <string name="no_avail_specify">No available quantity specified</string>
     <string name="no_network_connection">No network connection</string>
+    <string name="sample_item_bought">12 items purchased</string>
+    <string name="sample_purchase_on">purchased on 12–12–2020 23:59</string>
+    <string name="interested_ads">Interested Ads</string>
+    <string name="my_ads">My Ads</string>
+    <string name="viewed_at">Viewed at %s</string>
+    <string name="posted_at">Posted at %s</string>
+    <string name="add_new_product_require_location">Add new product require location to be enabled</string>
 </resources>
