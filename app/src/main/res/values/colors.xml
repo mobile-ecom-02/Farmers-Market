@@ -17,4 +17,5 @@
     <item name="green_shade_9" type="color">#F2F6F2</item>
     <item name="blue" type="color">#4293D5</item>
     <item name="gray" type="color">#8C8C8C</item>
+    <item name="green_shade_2_transparent" type="color">#B093B193</item>
 </resources>

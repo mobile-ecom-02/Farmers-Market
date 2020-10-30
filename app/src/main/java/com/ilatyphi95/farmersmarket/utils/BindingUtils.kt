@@ -1,5 +1,7 @@
 package com.ilatyphi95.farmersmarket.utils
 
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -50,9 +52,34 @@ fun ImageView.loadImage(imageUrl: String?) {
         }
     }
 }
+@BindingAdapter("loadImage")
+fun ImageView.loadImage(imageUri: Uri?) {
+
+    if (imageUri != null) {
+        this.context?.let {
+            Glide.with(it)
+                .load(BitmapFactory.decodeStream(context.contentResolver.openInputStream(imageUri)))
+                .apply(FarmersMarketApplication.requestOption)
+                .placeholder(R.drawable.loading_animation)
+                .error(R.drawable.ic_broken_image)
+                .into(this)
+        }
+    }
+}
+
 
 @BindingAdapter("loadFirst")
 fun ImageView.loadFirstImage(imageUrls: List<String>) {
     val firstValue = imageUrls.getOrElse(0){null}
     loadImage(firstValue)
+}
+
+@BindingAdapter("viewedAt")
+fun TextView.viewedOn(date: Long) {
+    text = context.getString(R.string.viewed_at, toDate(date))
+}
+
+@BindingAdapter("postedAt")
+fun TextView.postedOn(date: Long) {
+    text = context.getString(R.string.posted_at, toDate(date))
 }
