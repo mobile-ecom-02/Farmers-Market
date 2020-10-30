@@ -67,4 +67,9 @@
         <item name="android:textSize">@dimen/normal_text_size</item>
         <item name="cornerRadius">@dimen/normal_card_radius</item>
     </style>
+
+    <style name="edit_text_style" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="boxBackgroundColor">@android:color/white</item>
+    </style>
 </resources>
