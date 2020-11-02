@@ -60,31 +60,29 @@
                     app:layout_constraintTop_toBottomOf="@+id/rvImages"
                     bind:product="@{viewmodel.product}" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCall"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/small_margin"
                     android:layout_marginEnd="@dimen/normal_margin"
                     android:layout_marginRight="@dimen/normal_margin"
                     android:enabled="@{viewmodel.enablePhone}"
                     android:onClick="@{() -> viewmodel.callSeller()}"
                     android:text="@string/call"
+                    style="@style/button_style"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
                     app:layout_constraintTop_toTopOf="@+id/btnMessage"
                     android:layout_marginStart="@dimen/small_margin" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMessage"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/normal_margin"
                     android:layout_marginLeft="@dimen/normal_margin"
                     android:layout_marginTop="4dp"
                     android:layout_marginRight="@dimen/small_margin"
                     android:onClick="@{() -> viewmodel.chatSeller()}"
                     android:text="@string/chat"
+                    style="@style/button_style"
                     app:layout_constraintEnd_toStartOf="@+id/guideline"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/include"
@@ -95,7 +93,7 @@
                     style="@style/title_heading"
                     android:layout_marginTop="@dimen/normal_margin"
                     android:text="@string/description"
-                    app:layout_constraintStart_toStartOf="@+id/btnMessage"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/btnMessage" />
 
                 <TextView
@@ -103,10 +101,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/small_margin"
-                    android:layout_marginEnd="@dimen/small_margin"
-                    android:layout_marginRight="@dimen/small_margin"
+                    android:layout_marginEnd="@dimen/normal_margin"
                     android:text="@{viewmodel.product.description}"
-                    app:layout_constraintEnd_toEndOf="@+id/btnCall"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/textView6"
                     app:layout_constraintTop_toBottomOf="@+id/textView6"

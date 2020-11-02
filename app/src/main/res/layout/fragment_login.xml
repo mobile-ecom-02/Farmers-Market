@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_green"
+    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
 
     <RelativeLayout
         android:id="@+id/headerContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/custom_header_background"
         android:fitsSystemWindows="true"
         android:transitionName="headerContainer"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/custom_header_background"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/headerText"
@@ -30,21 +30,21 @@
             android:layout_marginTop="48dp"
             android:fontFamily="sans-serif-thin"
             android:text="@string/app_name"
-            android:transitionName="headerText"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@android:color/tertiary_text_light"
-            android:textSize="25sp" />
+            android:textSize="@dimen/large_text"
+            android:transitionName="headerText" />
 
         <ImageView
             android:id="@+id/treeImage"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_below="@id/headerText"
+            android:layout_centerInParent="true"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="48dp"
-            android:transitionName="treeImage"
             android:src="@drawable/splash"
-            android:layout_centerInParent="true"/>
+            android:transitionName="treeImage" />
 
     </RelativeLayout>
 
@@ -52,100 +52,80 @@
         android:id="@+id/welcomeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="@dimen/normal_margin"
         android:fontFamily="@font/rufina"
         android:text="@string/welcome"
-        android:transitionName="welcome"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/green_shade_3"
-        android:textSize="24sp"
+        android:textSize="@dimen/large_text"
         android:textStyle="bold"
+        android:transitionName="welcome"
+        app:layout_constraintBottom_toTopOf="@+id/emailTextLayout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerContainer" />
+        app:layout_constraintTop_toBottomOf="@+id/headerContainer"
+        app:layout_constraintVertical_bias="0.4" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailTextLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:hintEnabled="false"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        app:boxBackgroundMode="none"
+        android:layout_marginStart="@dimen/normal_margin"
+        android:layout_marginEnd="@dimen/normal_margin"
+        android:layout_marginBottom="@dimen/small_normal_margin"
+        app:boxBackgroundColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/passwordLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/welcomeTextView">
+        app:layout_constraintStart_toStartOf="parent">
 
-        <com.ilatyphi95.farmersmarket.CustomEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:inputType="textEmailAddress"
-            android:background="@drawable/custom_edit_text_background"
+            android:layout_height="wrap_content"
             android:hint="@string/email_hint"
-            android:textCursorDrawable="@color/green_shade_4"
-            android:padding="8dp" />
+            android:inputType="textEmailAddress" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
 
-
-
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        app:boxBackgroundMode="none"
+        android:layout_marginStart="@dimen/normal_margin"
+        android:layout_marginTop="@dimen/normal_margin"
+        android:layout_marginEnd="@dimen/normal_margin"
+        app:boxBackgroundColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emailTextLayout"
-        app:passwordToggleEnabled="true"
-        app:hintEnabled="false"
-        app:passwordToggleTint="@color/green_shade_2">
+        app:passwordToggleEnabled="true">
 
-        <com.ilatyphi95.farmersmarket.CustomEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/custom_edit_text_background"
             android:hint="@string/password_hint"
-            android:inputType="textPassword"
-            android:padding="8dp"
-            android:textCursorDrawable="@color/green_shade_4" />
+            android:inputType="textPassword" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/loginButton"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-        android:layout_width="130dp"
-        android:layout_height="54dp"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="@color/green_shade_1"
-        android:gravity="center"
+        style="@style/button_style"
         android:text="@string/login"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        app:cornerRadius="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/forgotPasswordTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordLayout"
+        app:layout_constraintVertical_bias="0.3" />
 
     <TextView
         android:id="@+id/forgotPasswordTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/small_margin"
         android:text="@string/forgot_password"
         android:textColor="@color/green_shade_1"
         android:textStyle="bold"
@@ -154,15 +134,28 @@
 
     <TextView
         android:id="@+id/signUpTextView"
-        android:layout_width="148dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:text="@string/sign_up_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginButton"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.65" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

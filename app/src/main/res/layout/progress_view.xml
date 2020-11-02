@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="isLoading"
+            type="java.lang.Boolean" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/green_shade_2_transparent"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="@{isLoading ? View.VISIBLE : View.GONE}"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:indeterminate="true"
+            app:layout_collapseMode="pin"
+            app:spb_color="@color/green_shade_1"
+            app:spb_sections_count="3" />
+    </FrameLayout>
+</layout>

@@ -28,7 +28,8 @@ data class Product @JvmOverloads constructor(
     val imgUrls: List<String> = emptyList(),
     var qtyAvailable: Int,
     var qtySold: Int,
-    val priceStr: String = "USD-0"
+    val priceStr: String = "USD-0",
+    val postedOn: Long = System.currentTimeMillis()
 ) : Parcelable {
     @IgnoredOnParcel
     val price = stringToMoney(priceStr)
