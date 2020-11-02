@@ -29,7 +29,11 @@
         android:id="@+id/navigation_settings"
         android:name="com.ilatyphi95.farmersmarket.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_navigation_settings_to_mainActivity"
+            app:destination="@id/mainActivity" />
+    </fragment>
 
 <!--    for testing purpose don't forget to remove it-->
     <fragment
@@ -78,4 +82,9 @@
             android:id="@+id/action_chatFragment_to_productFragment"
             app:destination="@id/productFragment" />
     </fragment>
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.ilatyphi95.farmersmarket.MainActivity"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
 </navigation>
