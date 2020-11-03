@@ -1,4 +1,4 @@
-package com.ilatyphi95.farmersmarket
+package com.ilatyphi95.farmersmarket.ui.chat
 
 import android.os.Bundle
 import android.text.Editable
@@ -9,8 +9,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.databinding.FragmentChatBinding
-import com.ilatyphi95.farmersmarket.utils.SampleRepository
+import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
 
 
 class ChatFragment : Fragment() {

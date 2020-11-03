@@ -1,4 +1,4 @@
-package com.ilatyphi95.farmersmarket
+package com.ilatyphi95.farmersmarket.ui.registration
 
 
 import android.os.Bundle
@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.databinding.FragmentSplashBinding
 import com.ilatyphi95.farmersmarket.utils.*
 import kotlinx.coroutines.*
@@ -23,7 +24,8 @@ class SplashFragment : Fragment() {
         when(userState) {
             is UserSignedIn -> {
                 findNavController().navigate(
-                    SplashFragmentDirections.actionSplashFragment2ToHomeActivity())
+                    SplashFragmentDirections.actionSplashFragment2ToHomeActivity()
+                )
             }
             UserSignedOut -> {
                 val extras = FragmentNavigatorExtras(

@@ -1,4 +1,4 @@
-package com.ilatyphi95.farmersmarket
+package com.ilatyphi95.farmersmarket.ui.addetails
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,10 +10,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.ilatyphi95.farmersmarket.data.universaladapter.OnSnapPositionChangeListener
-import com.ilatyphi95.farmersmarket.data.universaladapter.attachSnapHelperWithListener
 import com.ilatyphi95.farmersmarket.databinding.FragmentProductBinding
 import com.ilatyphi95.farmersmarket.utils.EventObserver
-import com.ilatyphi95.farmersmarket.utils.SampleRepository
+import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
+import com.ilatyphi95.farmersmarket.data.universaladapter.attachSnapHelperWithListener
 
 /**
  * ProductFragment to use to show product details

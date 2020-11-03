@@ -38,7 +38,7 @@
 <!--    for testing purpose don't forget to remove it-->
     <fragment
         android:id="@+id/productFragment"
-        android:name="com.ilatyphi95.farmersmarket.ProductFragment"
+        android:name="com.ilatyphi95.farmersmarket.ui.addetails.ProductFragment"
         android:label="ProductFragment" >
         <action
             android:id="@+id/action_productFragment_self"
@@ -54,7 +54,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_pager"
-        android:name="com.ilatyphi95.farmersmarket.PagerFragment"
+        android:name="com.ilatyphi95.farmersmarket.ui.ads.PagerFragment"
         android:label="fragment_pager"
         tools:layout="@layout/fragment_pager" >
         <action
@@ -66,7 +66,7 @@
     </fragment>
     <fragment
         android:id="@+id/addProductFragment"
-        android:name="com.ilatyphi95.farmersmarket.ModifyAdsFragment"
+        android:name="com.ilatyphi95.farmersmarket.ui.modifyad.ModifyAdsFragment"
         android:label="AddProductFragment" >
         <argument
             android:name="adsId"
@@ -75,7 +75,7 @@
 
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.ilatyphi95.farmersmarket.ChatFragment"
+        android:name="com.ilatyphi95.farmersmarket.ui.chat.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" >
         <action

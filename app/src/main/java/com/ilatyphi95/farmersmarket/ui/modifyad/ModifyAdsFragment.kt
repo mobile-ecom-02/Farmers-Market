@@ -1,4 +1,4 @@
-package com.ilatyphi95.farmersmarket
+package com.ilatyphi95.farmersmarket.ui.modifyad
 
 import `in`.galaxyofandroid.spinerdialog.SpinnerDialog
 import android.location.Geocoder
@@ -15,6 +15,8 @@ import androidx.fragment.app.viewModels
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.material.snackbar.Snackbar
+import com.ilatyphi95.farmersmarket.R
+import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
 import com.ilatyphi95.farmersmarket.databinding.FragmentModifyAdsBinding
 import com.ilatyphi95.farmersmarket.utils.*
 import org.joda.money.CurrencyUnit

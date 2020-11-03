@@ -1,7 +1,6 @@
-package com.ilatyphi95.farmersmarket
+package com.ilatyphi95.farmersmarket.data.repository
 
 import android.util.Log
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import java.lang.NullPointerException

@@ -7,14 +7,14 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.ilatyphi95.farmersmarket.ProductViewModel" />
+            type="com.ilatyphi95.farmersmarket.ui.addetails.ProductViewModel" />
 
     </data>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ProductFragment">
+        tools:context=".ui.addetails.ProductFragment">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"

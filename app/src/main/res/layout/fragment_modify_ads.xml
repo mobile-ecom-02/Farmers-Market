@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.ilatyphi95.farmersmarket.AddProductViewModel" />
+            type="com.ilatyphi95.farmersmarket.ui.modifyad.AddProductViewModel" />
 
         <import type="android.view.View" />
 
@@ -17,7 +17,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ModifyAdsFragment">
+        tools:context=".ui.modifyad.ModifyAdsFragment">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView2"

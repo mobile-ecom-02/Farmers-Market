@@ -1,8 +1,9 @@
-package com.ilatyphi95.farmersmarket
+package com.ilatyphi95.farmersmarket.ui.addetails
 
 import androidx.lifecycle.*
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.entities.User
+import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 import com.ilatyphi95.farmersmarket.utils.Event
 import com.ilatyphi95.farmersmarket.utils.ProductPicture

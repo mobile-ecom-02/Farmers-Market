@@ -1,9 +1,7 @@
-package com.ilatyphi95.farmersmarket.utils
+package com.ilatyphi95.farmersmarket.data.repository
 
 import android.net.Uri
 import androidx.lifecycle.liveData
-import com.ilatyphi95.farmersmarket.IRepository
-import com.ilatyphi95.farmersmarket.ProductGenerator
 import com.ilatyphi95.farmersmarket.data.entities.*
 import com.thedeanda.lorem.LoremIpsum
 import kotlinx.coroutines.delay

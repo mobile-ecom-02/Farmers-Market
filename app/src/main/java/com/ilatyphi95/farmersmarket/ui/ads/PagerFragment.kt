@@ -1,4 +1,4 @@
-package com.ilatyphi95.farmersmarket
+package com.ilatyphi95.farmersmarket.ui.ads
 
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -12,10 +12,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
+import com.ilatyphi95.farmersmarket.*
 import com.ilatyphi95.farmersmarket.databinding.FragmentPagerBinding
 import com.ilatyphi95.farmersmarket.utils.EventObserver
 import com.ilatyphi95.farmersmarket.utils.LocationUtils
-import com.ilatyphi95.farmersmarket.utils.SampleRepository
+import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
 
 
 class PagerFragment : Fragment() {
@@ -30,8 +31,7 @@ class PagerFragment : Fragment() {
     ) { isGranted ->
         if (isGranted) {
             findNavController().navigate(
-                PagerFragmentDirections
-                    .actionNavigationPagerToAddProductFragment(NEW_PRODUCT)
+                PagerFragmentDirections.actionNavigationPagerToAddProductFragment(NEW_PRODUCT)
             )
         } else {
             Snackbar.make(requireView(), getString(R.string.add_new_product_require_location),
@@ -60,7 +60,10 @@ class PagerFragment : Fragment() {
 
                         LocationUtils.checkLocationRequest(requireActivity()) {
                             findNavController().navigate(
-                                PagerFragmentDirections.actionNavigationPagerToAddProductFragment(adId))
+                                PagerFragmentDirections.actionNavigationPagerToAddProductFragment(
+                                    adId
+                                )
+                            )
                     }
                     }
 

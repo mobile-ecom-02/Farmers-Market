@@ -1,7 +1,7 @@
 package com.ilatyphi95.farmersmarket.ui.home
 
 import androidx.lifecycle.*
-import com.ilatyphi95.farmersmarket.IRepository
+import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 import com.ilatyphi95.farmersmarket.utils.*

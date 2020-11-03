@@ -1,4 +1,4 @@
-package com.ilatyphi95.farmersmarket
+package com.ilatyphi95.farmersmarket.data.repository
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
