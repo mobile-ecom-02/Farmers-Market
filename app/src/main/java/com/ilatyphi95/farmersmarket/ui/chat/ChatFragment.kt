@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.databinding.FragmentChatBinding
 import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
@@ -16,8 +17,11 @@ import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
 
 class ChatFragment : Fragment() {
     lateinit var binding: FragmentChatBinding
+
+    private val args by navArgs<ChatFragmentArgs>()
+
     val viewmodel by viewModels<ChatFragmentViewModel> {
-        ChatFragmentViewModelFactory("ade", SampleRepository())
+        ChatFragmentViewModelFactory(args.messageId, SampleRepository())
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

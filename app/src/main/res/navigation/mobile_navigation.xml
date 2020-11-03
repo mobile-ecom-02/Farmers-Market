@@ -81,6 +81,9 @@
         <action
             android:id="@+id/action_chatFragment_to_productFragment"
             app:destination="@id/productFragment" />
+        <argument
+            android:name="messageId"
+            app:argType="string" />
     </fragment>
     <activity
         android:id="@+id/mainActivity"

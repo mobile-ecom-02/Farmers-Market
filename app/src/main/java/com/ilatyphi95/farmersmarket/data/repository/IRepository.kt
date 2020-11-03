@@ -19,4 +19,5 @@ interface IRepository {
     suspend fun getPostedAds(): List<AddItem>
     suspend fun getInterestedAds(): List<AddItem>
     suspend fun getAd(itemId: String): Product
+    suspend fun getMessageList(): List<Message>?
 }

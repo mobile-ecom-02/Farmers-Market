@@ -4,28 +4,41 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.ilatyphi95.farmersmarket.R
+import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
+import com.ilatyphi95.farmersmarket.databinding.FragmentMessageBinding
+import com.ilatyphi95.farmersmarket.utils.EventObserver
 
 class MessageFragment : Fragment() {
 
-    private lateinit var messageViewModel: MessageViewModel
+    private val viewmodel by viewModels<MessageViewModel> {
+        MessageViewModelFactory(SampleRepository())
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        messageViewModel =
-                ViewModelProvider(this).get(MessageViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_message, container, false)
-        val textView: TextView = root.findViewById(R.id.text_dashboard)
-        messageViewModel.text.observe(viewLifecycleOwner, {
-            textView.text = it
-        })
 
-        return root
+        val binding = DataBindingUtil
+            .inflate<FragmentMessageBinding>(inflater, R.layout.fragment_message, container, false)
+
+        binding.apply {
+            viewModel = viewmodel
+            lifecycleOwner = viewLifecycleOwner
+        }
+
+        viewmodel.apply {
+            eventMessage.observe(viewLifecycleOwner, EventObserver{
+                findNavController()
+                    .navigate(MessageFragmentDirections.actionNavigationMessageToChatFragment(it))
+            })
+        }
+        return binding.root
     }
 }
