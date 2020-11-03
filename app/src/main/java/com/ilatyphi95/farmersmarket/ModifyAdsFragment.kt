@@ -1,7 +1,9 @@
 package com.ilatyphi95.farmersmarket
 
 import `in`.galaxyofandroid.spinerdialog.SpinnerDialog
+import android.location.Geocoder
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,21 +12,24 @@ import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.google.android.material.snackbar.Snackbar
-import com.ilatyphi95.farmersmarket.databinding.FragmentAddProductBinding
-import com.ilatyphi95.farmersmarket.utils.EventObserver
-import com.ilatyphi95.farmersmarket.utils.LocationProvider
-import com.ilatyphi95.farmersmarket.utils.NetworkAvailabilityUtils
-import com.ilatyphi95.farmersmarket.utils.SampleRepository
+import com.ilatyphi95.farmersmarket.databinding.FragmentModifyAdsBinding
+import com.ilatyphi95.farmersmarket.utils.*
 import org.joda.money.CurrencyUnit
+import java.io.IOException
 import java.util.*
 import kotlin.collections.ArrayList
 
 /**
  *
  */
-class AddProductFragment : Fragment() {
-    private lateinit var binding: FragmentAddProductBinding
+
+const val SEPARATOR = "|"
+class ModifyAdsFragment : Fragment() {
+    private val TAG: String? = this.tag
+    private lateinit var binding: FragmentModifyAdsBinding
     private val viewmodel by viewModels<AddProductViewModel> {
         AddProductViewModelFactory(SampleRepository())
     }
@@ -35,15 +40,45 @@ class AddProductFragment : Fragment() {
         viewmodel.addImages(imageList)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult?) {
+            super.onLocationResult(locationResult)
+            locationResult?.let {
+                val geocoder = Geocoder(context, Locale.getDefault())
+                val lastLocation = locationResult.lastLocation
+
+                try {
+                    val location = geocoder.getFromLocation(
+                        lastLocation.latitude,
+                        lastLocation.longitude,
+                        1
+                    )
+                    if (location.size > 0) {
+                        val address = location[0]
+                        val fullAddress = listOf(
+                            lastLocation.latitude,
+                            lastLocation.longitude, address.locality, address.subAdminArea,
+                            address.adminArea, address.countryName
+                        ).joinToString(SEPARATOR)
+
+                        viewmodel.updateAddress(address = fullAddress)
+                    } else {
+                        Log.e( TAG, "No valid address returned")
+                    }
+
+                } catch (e: IOException) {
+                    Log.e( TAG, e.message ?: "Error Occurred")
+                }
+
+            }
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_product, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_modify_ads, container, false)
 
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
@@ -53,14 +88,11 @@ class AddProductFragment : Fragment() {
             }
         }
 
+        lifecycle.addObserver( LocationUtils(requireActivity(), locationCallback))
+
         NetworkAvailabilityUtils.setNetworkAvailabilityListener(requireContext()) { isConnected ->
             if (isConnected) {
-                LocationProvider(requireActivity()) { isSuccessful, address ->
-                    if (isSuccessful) {
-                        viewmodel.updateAddress(address)
-                    }
-                    //handle failure case
-                }
+               // allow posting add
             } else {
                 Snackbar.make(requireView(), getString(R.string.no_network_connection), Snackbar.LENGTH_LONG).show()
             }

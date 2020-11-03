@@ -144,7 +144,12 @@ class AddProductViewModel(private val repository: IRepository) : ViewModel() {
     }
 
     fun updateAddress(address: String) {
-        _address.value = address.split(SEPARATOR)
+
+
+        val addressParts = address.split(SEPARATOR)
+        if(addressParts.size > 1) {
+            _address.value = addressParts
+        }
     }
 
     override fun onCleared() {

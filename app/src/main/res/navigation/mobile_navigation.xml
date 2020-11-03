@@ -66,7 +66,7 @@
     </fragment>
     <fragment
         android:id="@+id/addProductFragment"
-        android:name="com.ilatyphi95.farmersmarket.AddProductFragment"
+        android:name="com.ilatyphi95.farmersmarket.ModifyAdsFragment"
         android:label="AddProductFragment" >
         <argument
             android:name="adsId"
