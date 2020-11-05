@@ -6,7 +6,7 @@
     <data>
         <variable
             name="productViewModel"
-            type="com.ilatyphi95.farmersmarket.ProductViewModel" />
+            type="com.ilatyphi95.farmersmarket.ui.addetails.ProductViewModel" />
 
     </data>
 

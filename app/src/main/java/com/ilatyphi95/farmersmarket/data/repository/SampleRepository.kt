@@ -1,9 +1,7 @@
-package com.ilatyphi95.farmersmarket.utils
+package com.ilatyphi95.farmersmarket.data.repository
 
 import android.net.Uri
 import androidx.lifecycle.liveData
-import com.ilatyphi95.farmersmarket.IRepository
-import com.ilatyphi95.farmersmarket.ProductGenerator
 import com.ilatyphi95.farmersmarket.data.entities.*
 import com.thedeanda.lorem.LoremIpsum
 import kotlinx.coroutines.delay
@@ -14,7 +12,7 @@ class SampleRepository : IRepository {
     private val lorem = LoremIpsum.getInstance()
     private val chatList = mutableListOf<ChatMessage>()
 
-    override fun searchProducts(searchString: String)  = liveData {
+    override fun searchProducts(searchString: String) = liveData {
         delay(1000)
         ProductGenerator.resetList(10)
         emit(ProductGenerator.getList())
@@ -22,9 +20,16 @@ class SampleRepository : IRepository {
 
     override suspend fun getUser(sellerId: String): User {
         delay(3000)
-        return User(id = sellerId, email = "ilatyphi95@gmail.com", firstName = "AbdulLateef",
-        lastName = "Opebiyi", phone = "08038057735", location = "Nigeria", profileDisplayName = "ilatyphi95",
-        profilePicUrl = "https://www.eatforhealth.gov.au/sites/default/files/images/the_guidelines/fruit_selection_155265101_web.jpg")
+        return User(
+            id = sellerId,
+            email = "ilatyphi95@gmail.com",
+            firstName = "AbdulLateef",
+            lastName = "Opebiyi",
+            phone = "08038057735",
+            location = "Nigeria",
+            profileDisplayName = "ilatyphi95",
+            profilePicUrl = "https://www.eatforhealth.gov.au/sites/default/files/images/the_guidelines/fruit_selection_155265101_web.jpg"
+        )
     }
 
     override suspend fun getRecentProducts(): List<Product> {
@@ -50,8 +55,15 @@ class SampleRepository : IRepository {
     }
 
     override fun getCurrentUser(): User {
-        return User(id = "AbdulLateefOpebiyi", email = "ilatyphi95@gmail.com", firstName = "AbdulLateef",
-            lastName = "Opebiyi", phone = "08038057735", location = "Nigeria", profileDisplayName = "ilatyphi95")
+        return User(
+            id = "AbdulLateefOpebiyi",
+            email = "ilatyphi95@gmail.com",
+            firstName = "AbdulLateef",
+            lastName = "Opebiyi",
+            phone = "08038057735",
+            location = "Nigeria",
+            profileDisplayName = "ilatyphi95"
+        )
     }
 
     override fun insertProduct(product: Product) {
@@ -59,8 +71,8 @@ class SampleRepository : IRepository {
     }
 
     override fun getMessages(messageId: String) = liveData<List<ChatMessage>> {
-        for(i in 1..10) {
-            delay(Random.nextLong(1000,10000))
+        for (i in 1..10) {
+            delay(Random.nextLong(1000, 10000))
             emit(generateChat(messageId))
         }
     }
@@ -85,6 +97,30 @@ class SampleRepository : IRepository {
         return ProductGenerator.getList()[0]
     }
 
+    override suspend fun getMessageList(): List<Message>? {
+        return randomMessages()
+    }
+
+    private fun randomMessages(): List<Message>? {
+        val list = mutableListOf<Message>()
+        val total = Random.nextInt(10, 50)
+
+        for (count in 1..total) {
+            list.add(
+                Message(
+                    id = lorem.firstNameFemale + lorem.firstNameMale,
+                    message = lorem.getWords(3, 12),
+                    senderID = lorem.firstNameMale + lorem.firstNameFemale,
+                    imageUrl = ProductGenerator.generateImage(),
+                    senderName = lorem.firstName,
+                    timestamp = System.currentTimeMillis() + Random.nextLong(-3000000000, 0),
+                )
+            )
+        }
+
+        return list
+    }
+
     private fun randomAddItem(): MutableList<AddItem> {
         val list = mutableListOf<AddItem>()
         val total = Random.nextInt(3, 35)
@@ -102,14 +138,16 @@ class SampleRepository : IRepository {
         return list
     }
 
-    private fun generateChat(messageId: String) : List<ChatMessage> {
+    private fun generateChat(messageId: String): List<ChatMessage> {
 
-        chatList.add(ChatMessage(
-            chatId = messageId,
-            msg = lorem.getParagraphs(1,1),
-            senderId = "ade",
-            timeStamp = System.currentTimeMillis()
-        ))
+        chatList.add(
+            ChatMessage(
+                chatId = messageId,
+                msg = lorem.getParagraphs(1, 1),
+                senderId = "ade",
+                timeStamp = System.currentTimeMillis()
+            )
+        )
         return chatList
     }
 }

@@ -1,6 +1,7 @@
-package com.ilatyphi95.farmersmarket
+package com.ilatyphi95.farmersmarket.ui.ads
 
 import androidx.lifecycle.*
+import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.entities.AddItem
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem

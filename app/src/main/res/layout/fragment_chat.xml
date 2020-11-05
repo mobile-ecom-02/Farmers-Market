@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.ilatyphi95.farmersmarket.ChatFragmentViewModel" />
+            type="com.ilatyphi95.farmersmarket.ui.chat.ChatFragmentViewModel" />
 
     </data>
 
@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/light_green"
-        tools:context=".ChatFragment">
+        tools:context=".ui.chat.ChatFragment">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout

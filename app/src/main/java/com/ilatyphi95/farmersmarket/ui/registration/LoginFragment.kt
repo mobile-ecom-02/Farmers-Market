@@ -1,4 +1,4 @@
-package com.ilatyphi95.farmersmarket
+package com.ilatyphi95.farmersmarket.ui.registration
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -13,7 +13,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -21,24 +20,23 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
-import com.ilatyphi95.farmersmarket.data.entities.User
-import com.ilatyphi95.farmersmarket.databinding.FragmentSignUpBinding
-import kotlinx.android.synthetic.main.fragment_sign_up.*
+import com.ilatyphi95.farmersmarket.R
+import com.ilatyphi95.farmersmarket.databinding.FragmentLoginBinding
+import kotlinx.android.synthetic.main.fragment_login.*
 
 
-class SignUpFragment : Fragment(){
-    private var _binding: FragmentSignUpBinding? = null
+class LoginFragment : Fragment(){
+    private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    private var email : String? = null
-    private var username : String? = null
 
-    companion object {
-        val TAG = "RegisterUser"
+    companion object{
+        val TAG = "LOGIN"
+        val languageCode = "en"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         sharedElementEnterTransition =
             TransitionInflater.from(context).inflateTransition(R.transition.shared_transition)
     }
@@ -48,23 +46,29 @@ class SignUpFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentSignUpBinding.inflate(inflater, container, false)
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
         startFadeInAnimation()
         spanText()
-        
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.signUpButton.setOnClickListener {
-            signUpNewUser()
+        binding.loginButton.setOnClickListener {
+//            loginUser()
+            findNavController().navigate(R.id.homeActivity)
+        }
+
+        binding.forgotPasswordTextView.setOnClickListener{
+//            resetPassword()
         }
     }
 
+
     private fun spanText() {
-        val spannable = SpannableStringBuilder("Already a member? Login")
+        val spannable = SpannableStringBuilder("Not a member? Sign Up")
 
         val clickableSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
@@ -74,7 +78,7 @@ class SignUpFragment : Fragment(){
                     binding.treeImage to "treeImage"
                 )
                 findNavController().navigate(
-                    R.id.action_signUpFragment_to_loginFragment,
+                    R.id.action_loginFragment_to_signUpFragment2,
                     null,
                     null,
                     extras
@@ -93,12 +97,12 @@ class SignUpFragment : Fragment(){
 
         spannable.setSpan(
             clickableSpan,
-            18,
-            binding.loginTextView.text.length,
+            14,
+            21,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
-        binding.loginTextView.apply {
+        binding.signUpTextView.apply {
             text = spannable
             movementMethod = LinkMovementMethod.getInstance()
         }
@@ -107,72 +111,74 @@ class SignUpFragment : Fragment(){
     private fun startFadeInAnimation() {
         AnimatorSet().apply {
             playTogether(
-                ObjectAnimator.ofFloat(binding.createAccountTextView, "alpha", 0.0f, 1.0f),
+                ObjectAnimator.ofFloat(binding.welcomeTextView, "alpha", 0.0f, 1.0f),
                 ObjectAnimator.ofFloat(binding.emailTextLayout, "alpha", 0.0f, 1.0f),
                 ObjectAnimator.ofFloat(binding.emailTextLayout, "alpha", 0.0f, 1.0f),
                 ObjectAnimator.ofFloat(binding.passwordEditText, "alpha", 0.0f, 1.0f),
                 ObjectAnimator.ofFloat(binding.passwordLayout, "alpha", 0.0f, 1.0f),
-                ObjectAnimator.ofFloat(binding.fullNameEditText, "alpha", 0.0f, 1.0f),
-                ObjectAnimator.ofFloat(binding.fullNameTextLayout, "alpha", 0.0f, 1.0f),
-                ObjectAnimator.ofFloat(binding.signUpButton, "alpha", 0.0f, 1.0f),
-                ObjectAnimator.ofFloat(binding.loginTextView, "alpha", 0.0f, 1.0f)
+                ObjectAnimator.ofFloat(binding.loginButton, "alpha", 0.0f, 1.0f),
+                ObjectAnimator.ofFloat(binding.signUpTextView, "alpha", 0.0f, 1.0f),
+                ObjectAnimator.ofFloat(binding.forgotPasswordTextView, "alpha", 0.0f, 1.0f)
             )
             duration = 500
             start()
         }
-
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
 
-    //sign up new user
-    private fun signUpNewUser(){
-        username =  fullNameEditText.text.toString()
-        email = emailEditText.text.toString()
+    //login user
+    private fun loginUser(){
+        val email = emailEditText.text.toString()
         val password = passwordEditText.text.toString()
 
-        if(email!!.isEmpty() || password.isEmpty() || username!!.isEmpty()){
+        if(email.isEmpty() || password.isEmpty()){
             Toast.makeText(context, "cannot have empty fields", Toast.LENGTH_SHORT).show()
             return
         }
 
-        Log.d(TAG, "attempting to sign up new user with email $email")
-
-        //Firebase authentication to create a user with email and password
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email!!, password)
-            .addOnCompleteListener {
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { 
                 if(!it.isSuccessful) return@addOnCompleteListener
 
-                Log.d(TAG, "successfully created user with uid: ${it.result?.user?.uid}")
-
-                saveUserToDatabase()
+                Log.d(TAG, "logged in user ${it.result?.user?.uid}")
+            }
+            .addOnSuccessListener {
+                findNavController().navigate(
+                    LoginFragmentDirections.actionLoginFragmentToHomeActivity()
+                )
             }
             .addOnFailureListener {
-                Log.d(TAG, "failed to create user: ${it.message}")
+                Log.d(TAG, "${it.message}")
                 Toast.makeText(context, "${it.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
-    //save newly created user to database
-    private fun saveUserToDatabase(){
-        val id = FirebaseAuth.getInstance().uid ?: ""
-        val ref = FirebaseDatabase.getInstance().getReference("/users/$id")
-        val username = fullNameEditText.text.toString()
+    //reset password
+    private fun resetPassword(){
+        val email = emailEditText.text.toString()
 
-        val user = User(id, "", "", email!!, "", "", username, "")
-
-        ref.setValue(user)
+        if(email.isEmpty()){
+            Toast.makeText(context, "email field cannot be empty", Toast.LENGTH_SHORT).show()
+            return
+        }
+        FirebaseAuth.getInstance().setLanguageCode(languageCode)
+        FirebaseAuth.getInstance()
+            .sendPasswordResetEmail(email)
+            .addOnCompleteListener {
+                //receives response from firebase
+            }
             .addOnSuccessListener {
-                Log.d(TAG, "user saved to database")
-
-                //code to go to home fragment
+                Log.d(TAG, "email sent successfully to $email")
+                Toast.makeText(context, "password reset email sent", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {
                 Log.d(TAG, "${it.message}")
+                Toast.makeText(context, "${it.message}", Toast.LENGTH_SHORT).show()
             }
     }
-
 }

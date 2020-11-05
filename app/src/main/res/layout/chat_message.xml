@@ -52,7 +52,7 @@
             android:layout_marginEnd="@dimen/small_margin"
             android:layout_marginBottom="@dimen/tiny_margin"
             android:textSize="@dimen/chat_text_size"
-            android:text="@{viewmodel.shortTime}"
+            android:text="@{viewmodel.time}"
             app:layout_constraintBottom_toBottomOf="@+id/text_message_body"
             app:layout_constraintEnd_toEndOf="@+id/text_message_body"
             app:layout_constraintHorizontal_bias="1.0"

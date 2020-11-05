@@ -1,4 +1,4 @@
-package com.ilatyphi95.farmersmarket
+package com.ilatyphi95.farmersmarket.data.repository
 
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.thedeanda.lorem.LoremIpsum

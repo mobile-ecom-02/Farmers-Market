@@ -1,4 +1,4 @@
-package com.ilatyphi95.farmersmarket
+package com.ilatyphi95.farmersmarket.ui.registration
 
 
 import android.os.Bundle
@@ -6,10 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
+import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.databinding.FragmentSplashBinding
+import com.ilatyphi95.farmersmarket.utils.*
 import kotlinx.coroutines.*
 
 class SplashFragment : Fragment() {
@@ -17,25 +20,14 @@ class SplashFragment : Fragment() {
     private var _binding: FragmentSplashBinding? = null
     private val binding get() = _binding!!
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        _binding = FragmentSplashBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(1500)
-            if (FirebaseAuth.getInstance().currentUser == null) {
-
+    private val userStateObserver =  Observer<FirebaseAuthUserState> { userState ->
+        when(userState) {
+            is UserSignedIn -> {
+                findNavController().navigate(
+                    SplashFragmentDirections.actionSplashFragment2ToHomeActivity()
+                )
+            }
+            UserSignedOut -> {
                 val extras = FragmentNavigatorExtras(
                     binding.treeImage to "treeImage",
                     binding.root to "headerContainer"
@@ -46,10 +38,29 @@ class SplashFragment : Fragment() {
                     null,
                     extras
                 )
-            } else {
-                findNavController().navigate(
-                    SplashFragmentDirections.actionSplashFragment2ToHomeActivity())
             }
+            UserUnknown -> {
+                // remain on splash screen
+            }
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        _binding = FragmentSplashBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(1500)
+
+            FirebaseAuth.getInstance().newFirebaseAuthStateLiveData().observe(viewLifecycleOwner, userStateObserver)
         }
     }
 
@@ -57,6 +68,4 @@ class SplashFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
-
-
 }

@@ -1,4 +1,4 @@
-package com.ilatyphi95.farmersmarket
+package com.ilatyphi95.farmersmarket.data.repository
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
@@ -19,4 +19,5 @@ interface IRepository {
     suspend fun getPostedAds(): List<AddItem>
     suspend fun getInterestedAds(): List<AddItem>
     suspend fun getAd(itemId: String): Product
+    suspend fun getMessageList(): List<Message>?
 }

@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme">
 
         <service
-            android:name=".FirebaseMessagingService"
+            android:name=".data.repository.FirebaseMessagingService"
             android:stopWithTask="false"
             android:exported="false">
             <intent-filter>

@@ -29,12 +29,16 @@
         android:id="@+id/navigation_settings"
         android:name="com.ilatyphi95.farmersmarket.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_navigation_settings_to_mainActivity"
+            app:destination="@id/mainActivity" />
+    </fragment>
 
 <!--    for testing purpose don't forget to remove it-->
     <fragment
         android:id="@+id/productFragment"
-        android:name="com.ilatyphi95.farmersmarket.ProductFragment"
+        android:name="com.ilatyphi95.farmersmarket.ui.addetails.ProductFragment"
         android:label="ProductFragment" >
         <action
             android:id="@+id/action_productFragment_self"
@@ -50,7 +54,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_pager"
-        android:name="com.ilatyphi95.farmersmarket.PagerFragment"
+        android:name="com.ilatyphi95.farmersmarket.ui.ads.PagerFragment"
         android:label="fragment_pager"
         tools:layout="@layout/fragment_pager" >
         <action
@@ -62,7 +66,7 @@
     </fragment>
     <fragment
         android:id="@+id/addProductFragment"
-        android:name="com.ilatyphi95.farmersmarket.AddProductFragment"
+        android:name="com.ilatyphi95.farmersmarket.ui.modifyad.ModifyAdsFragment"
         android:label="AddProductFragment" >
         <argument
             android:name="adsId"
@@ -71,11 +75,19 @@
 
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.ilatyphi95.farmersmarket.ChatFragment"
+        android:name="com.ilatyphi95.farmersmarket.ui.chat.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" >
         <action
             android:id="@+id/action_chatFragment_to_productFragment"
             app:destination="@id/productFragment" />
+        <argument
+            android:name="messageId"
+            app:argType="string" />
     </fragment>
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.ilatyphi95.farmersmarket.MainActivity"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
 </navigation>

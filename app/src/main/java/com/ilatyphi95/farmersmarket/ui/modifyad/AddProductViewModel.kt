@@ -1,7 +1,8 @@
-package com.ilatyphi95.farmersmarket
+package com.ilatyphi95.farmersmarket.ui.modifyad
 
 import android.net.Uri
 import androidx.lifecycle.*
+import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.entities.User
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
@@ -144,7 +145,12 @@ class AddProductViewModel(private val repository: IRepository) : ViewModel() {
     }
 
     fun updateAddress(address: String) {
-        _address.value = address.split(SEPARATOR)
+
+
+        val addressParts = address.split(SEPARATOR)
+        if(addressParts.size > 1) {
+            _address.value = addressParts
+        }
     }
 
     override fun onCleared() {

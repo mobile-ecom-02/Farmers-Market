@@ -1,13 +1,51 @@
 package com.ilatyphi95.farmersmarket.ui.message
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.ilatyphi95.farmersmarket.data.entities.Message
+import com.ilatyphi95.farmersmarket.data.repository.IRepository
+import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
+import com.ilatyphi95.farmersmarket.utils.Event
+import com.ilatyphi95.farmersmarket.utils.MessageItemViewModel
+import com.ilatyphi95.farmersmarket.utils.toRecyclerItem
+import kotlinx.coroutines.*
 
-class MessageViewModel : ViewModel() {
+class MessageViewModel(val repository: IRepository) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is message Fragment"
+
+    private val job = Job()
+    private val uiScope = CoroutineScope(job + Dispatchers.Main)
+
+    private val _messages = MutableLiveData<List<Message>>()
+    val messages : LiveData<List<RecyclerItem>> = _messages.map { list ->
+        list.map {message ->
+            MessageItemViewModel(message).apply {
+                itemClickHandler = { messageClicked(message.id) }
+
+            }.toRecyclerItem()
+        }
     }
-    val text: LiveData<String> = _text
+
+    private val _eventMessage = MutableLiveData<Event<String>>()
+    val eventMessage : LiveData<Event<String>>
+        get() = _eventMessage
+
+
+    init {
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+                _messages.postValue(repository.getMessageList())
+            }
+        }
+    }
+
+    private fun messageClicked(messageId: String) {
+        _eventMessage.value = Event(messageId)
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
+class MessageViewModelFactory(val repository: IRepository) : ViewModelProvider.NewInstanceFactory(){
+
+    override fun <T : ViewModel?> create(modelClass: Class<T>) =
+        (MessageViewModel(repository) as T)
 }

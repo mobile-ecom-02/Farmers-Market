@@ -117,7 +117,7 @@ dependencies {
     //Firebase Authentication dependency
     implementation 'com.google.firebase:firebase-auth:19.4.0'
 
-    //Firebasee Messaging dependency
+    //Firebase Messaging dependency
     implementation 'com.google.firebase:firebase-messaging:20.3.0'
 
     //Firebase Storage dependency
@@ -131,5 +131,4 @@ dependencies {
 
     //Smooth progress bar dependency
     implementation "com.github.castorflex.smoothprogressbar:library:1.1.0"
-
 }

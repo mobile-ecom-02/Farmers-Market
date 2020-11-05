@@ -1,8 +1,9 @@
-package com.ilatyphi95.farmersmarket
+package com.ilatyphi95.farmersmarket.ui.chat
 
 import androidx.lifecycle.*
 import com.ilatyphi95.farmersmarket.data.entities.ChatMessage
 import com.ilatyphi95.farmersmarket.data.entities.User
+import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.utils.ReceiveRecyclerViewModel
 import com.ilatyphi95.farmersmarket.utils.SentRecyclerViewModel
 import com.ilatyphi95.farmersmarket.utils.toRecyclerItem
