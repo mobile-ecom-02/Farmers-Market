@@ -13,6 +13,8 @@ import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.data.entities.CloseByProduct
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 
+const val METERS_TO_MILES = 0.000621371
+
 @BindingAdapter("app:availableText")
 fun TextView.availableText(qty: Int) {
     text = this.context.getString(R.string.availableText, qty)
@@ -20,7 +22,8 @@ fun TextView.availableText(qty: Int) {
 
 @BindingAdapter("app:distanceMiles")
 fun TextView.distanceMiles(closeByProduct: CloseByProduct) {
-    text = this.context.getString(R.string.distanceMiles, closeByProduct.distance)
+    text = this.context.getString(R.string.distanceMiles,
+        (closeByProduct.distance * METERS_TO_MILES).toInt())
 }
 
 @BindingAdapter("items")

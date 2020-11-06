@@ -1,5 +1,6 @@
 package com.ilatyphi95.farmersmarket.data.repository
 
+import android.location.Location
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.thedeanda.lorem.LoremIpsum
 import kotlin.random.Random
@@ -38,7 +39,8 @@ object ProductGenerator{
                     imgUrls = generateList(),
                     qtyAvailable = Random.nextInt(30),
                     qtySold = Random.nextInt(10, 20),
-                    priceStr = "USD-${Random.nextInt(50, 250)}"
+                    priceStr = "USD-${Random.nextInt(50, 250)}",
+                    location = generateLocation()
                 )
             )
         }
@@ -67,5 +69,20 @@ object ProductGenerator{
 
         val until = imagesUrl.size - 1
         return  imagesUrl[Random.nextInt(0, until)]
+    }
+
+    fun createLocation(lat: Double, lng: Double, accuracy: Float = 3.0f) : Location {
+        val location = Location("test")
+        location.longitude = lat
+        location.longitude = lng
+        location.accuracy = accuracy
+        location.time = System.currentTimeMillis() + Random.nextLong(-3000000000, 0)
+
+        return location
+    }
+
+    fun generateLocation() : Location {
+        return createLocation(Random.nextDouble(-29.0460, 36.8592),
+            Random.nextDouble(-2.460415, 37.297204))
     }
 }

@@ -1,5 +1,6 @@
 package com.ilatyphi95.farmersmarket.data.entities
 
+import android.location.Location
 import android.os.Parcelable
 import com.ilatyphi95.farmersmarket.utils.stringToMoney
 import kotlinx.android.parcel.IgnoredOnParcel
@@ -29,7 +30,7 @@ data class Product @JvmOverloads constructor(
     var qtyAvailable: Int,
     var qtySold: Int,
     val priceStr: String = "USD-0",
-    val postedOn: Long = System.currentTimeMillis()
+    val location: Location
 ) : Parcelable {
     @IgnoredOnParcel
     val price = stringToMoney(priceStr)

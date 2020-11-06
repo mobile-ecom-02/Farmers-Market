@@ -3,6 +3,7 @@ package com.ilatyphi95.farmersmarket.data.repository
 import android.net.Uri
 import androidx.lifecycle.liveData
 import com.ilatyphi95.farmersmarket.data.entities.*
+import com.ilatyphi95.farmersmarket.data.repository.ProductGenerator.generateLocation
 import com.thedeanda.lorem.LoremIpsum
 import kotlinx.coroutines.delay
 import kotlin.random.Random
@@ -26,7 +27,6 @@ class SampleRepository : IRepository {
             firstName = "AbdulLateef",
             lastName = "Opebiyi",
             phone = "08038057735",
-            location = "Nigeria",
             profileDisplayName = "ilatyphi95",
             profilePicUrl = "https://www.eatforhealth.gov.au/sites/default/files/images/the_guidelines/fruit_selection_155265101_web.jpg"
         )
@@ -39,8 +39,9 @@ class SampleRepository : IRepository {
 
     override suspend fun getCloseByProduct(): List<CloseByProduct> {
         val list = mutableListOf<CloseByProduct>()
+        val thisLocation = generateLocation()
         ProductGenerator.resetList(40).forEach {
-            list.add(CloseByProduct(it, Random.nextInt(1, 40)))
+            list.add(CloseByProduct(it, thisLocation.distanceTo(it.location)))
         }
         return list.sortedBy { it.distance }
     }
@@ -61,7 +62,6 @@ class SampleRepository : IRepository {
             firstName = "AbdulLateef",
             lastName = "Opebiyi",
             phone = "08038057735",
-            location = "Nigeria",
             profileDisplayName = "ilatyphi95"
         )
     }

@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.entities.User
+import com.ilatyphi95.farmersmarket.data.repository.ProductGenerator.generateLocation
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 import com.ilatyphi95.farmersmarket.utils.*
 import kotlinx.coroutines.*
@@ -178,7 +179,8 @@ class AddProductViewModel(private val repository: IRepository) : ViewModel() {
                         type = category.value!!,
                         qtyAvailable = quantityAvailable.value!!.toInt(),
                         qtySold = 0,
-                        priceStr = "${currency.value!!.currencyCode}-${price.value!!}"
+                        priceStr = "${currency.value!!.currencyCode}-${price.value!!}",
+                        location = generateLocation()
                     )
                 )
 
