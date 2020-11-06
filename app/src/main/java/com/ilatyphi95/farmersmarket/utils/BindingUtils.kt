@@ -79,10 +79,15 @@ fun ImageView.loadFirstImage(imageUrls: List<String>) {
 
 @BindingAdapter("viewedAt")
 fun TextView.viewedOn(date: Long) {
-    text = context.getString(R.string.viewed_at, toDate(date))
+    text = context.getString(R.string.viewed_at, toDate(context, date))
 }
 
 @BindingAdapter("postedAt")
 fun TextView.postedOn(date: Long) {
-    text = context.getString(R.string.posted_at, toDate(date))
+    text = context.getString(R.string.posted_at, toDate(context, date))
+}
+
+@BindingAdapter("time")
+fun TextView.time(date: Long) {
+    text = toDate(context, date)
 }

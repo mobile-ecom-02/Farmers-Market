@@ -7,7 +7,6 @@
         <variable
             name="viewModel"
             type="com.ilatyphi95.farmersmarket.utils.MessageItemViewModel" />
-        <import type="com.ilatyphi95.farmersmarket.utils.FormatterUtilKt" />
 
     </data>
 
@@ -44,7 +43,7 @@
             android:layout_marginEnd="@dimen/normal_margin"
             android:textSize="12sp"
             android:typeface="normal"
-            android:text="@{FormatterUtilKt.toDate(viewModel.message.timestamp)}"
+            app:time="@{viewModel.message.timestamp}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/imageView2"
             app:layout_goneMarginEnd="@dimen/normal_margin"
