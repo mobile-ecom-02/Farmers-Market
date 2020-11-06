@@ -22,10 +22,4 @@ data class ChatMessage @JvmOverloads constructor(
     val msgType: String = "",
     val senderId: String,
     val timeStamp: Long
-) {
-    val time: String
-        get() = toDate(timeStamp)
-    val shortTime: String
-        get() = timeStamp.toString()
-//        get() = toShortTime(timeStamp)
-}
+)
