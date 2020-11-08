@@ -29,8 +29,6 @@ import kotlinx.android.synthetic.main.fragment_sign_up.*
 class SignUpFragment : Fragment(){
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
-    private var email : String? = null
-    private var username : String? = null
 
     companion object {
         val TAG = "RegisterUser"
@@ -129,12 +127,12 @@ class SignUpFragment : Fragment(){
 
     //sign up new user
     private fun signUpNewUser(){
-        email = emailEditText.text.toString()
+        val email = emailEditText.text.toString()
         val password = passwordEditText.text.toString()
         val confirmPassword = confirmPasswordEditText.text.toString()
 
 
-        if(email!!.isEmpty() || password.isEmpty() || username!!.isEmpty()){
+        if(email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()){
             Snackbar.make(requireView(),
                 getString(R.string.empty_email_password), Snackbar.LENGTH_SHORT).show()
             return
@@ -149,7 +147,7 @@ class SignUpFragment : Fragment(){
         Log.d(TAG, "attempting to sign up new user with email $email")
 
         //Firebase authentication to create a user with email and password
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email!!, password)
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if(!it.isSuccessful) return@addOnCompleteListener
 
@@ -166,25 +164,5 @@ class SignUpFragment : Fragment(){
                 Snackbar.make(requireView(), it.message.toString(), Snackbar.LENGTH_SHORT).show()
             }
     }
-
-    //save newly created user to database
-    //This will be handled by cloud function after verification
-//    private fun saveUserToDatabase(){
-//        val id = FirebaseAuth.getInstance().uid ?: ""
-//        val ref = FirebaseDatabase.getInstance().getReference("/users/$id")
-//        val username = fullNameEditText.text.toString()
-//
-//        val user = User(id, "", "", email!!, "", "", username)
-//
-//        ref.setValue(user)
-//            .addOnSuccessListener {
-//                Log.d(TAG, "user saved to database")
-//
-//                //code to go to home fragment
-//            }
-//            .addOnFailureListener {
-//                Log.d(TAG, "${it.message}")
-//            }
-//    }
 
 }
