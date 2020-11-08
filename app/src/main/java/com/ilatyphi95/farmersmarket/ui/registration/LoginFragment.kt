@@ -22,6 +22,7 @@ import androidx.transition.TransitionInflater
 import com.google.firebase.auth.FirebaseAuth
 import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.databinding.FragmentLoginBinding
+import com.ilatyphi95.farmersmarket.utils.sendVerificationEmail
 import kotlinx.android.synthetic.main.fragment_login.*
 
 
@@ -57,12 +58,11 @@ class LoginFragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
         binding.loginButton.setOnClickListener {
-//            loginUser()
-            findNavController().navigate(R.id.homeActivity)
+            loginUser()
         }
 
         binding.forgotPasswordTextView.setOnClickListener{
-//            resetPassword()
+            resetPassword()
         }
     }
 
@@ -148,9 +148,13 @@ class LoginFragment : Fragment(){
                 Log.d(TAG, "logged in user ${it.result?.user?.uid}")
             }
             .addOnSuccessListener {
-                findNavController().navigate(
-                    LoginFragmentDirections.actionLoginFragmentToHomeActivity()
-                )
+                if(FirebaseAuth.getInstance().currentUser?.isEmailVerified == true) {
+                    findNavController().navigate(
+                        LoginFragmentDirections.actionLoginFragmentToHomeActivity()
+                    )
+                } else {
+                    sendVerificationEmail(requireView())
+                }
             }
             .addOnFailureListener {
                 Log.d(TAG, "${it.message}")
@@ -180,5 +184,7 @@ class LoginFragment : Fragment(){
                 Log.d(TAG, "${it.message}")
                 Toast.makeText(context, "${it.message}", Toast.LENGTH_SHORT).show()
             }
+
+        FirebaseAuth.getInstance().signOut()
     }
 }

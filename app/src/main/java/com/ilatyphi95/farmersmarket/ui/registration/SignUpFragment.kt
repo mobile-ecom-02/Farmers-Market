@@ -19,11 +19,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.data.entities.User
 import com.ilatyphi95.farmersmarket.databinding.FragmentSignUpBinding
+import com.ilatyphi95.farmersmarket.utils.sendVerificationEmail
 import kotlinx.android.synthetic.main.fragment_sign_up.*
 
 
@@ -146,33 +148,38 @@ class SignUpFragment : Fragment(){
             .addOnCompleteListener {
                 if(!it.isSuccessful) return@addOnCompleteListener
 
+                Snackbar.make(requireView(),
+                    getString(R.string.account_creation_success), Snackbar.LENGTH_SHORT).show()
+
                 Log.d(TAG, "successfully created user with uid: ${it.result?.user?.uid}")
 
-                saveUserToDatabase()
+                sendVerificationEmail(requireView())
+
             }
             .addOnFailureListener {
                 Log.d(TAG, "failed to create user: ${it.message}")
-                Toast.makeText(context, "${it.message}", Toast.LENGTH_SHORT).show()
+                Snackbar.make(requireView(), it.message.toString(), Snackbar.LENGTH_SHORT).show()
             }
     }
 
     //save newly created user to database
-    private fun saveUserToDatabase(){
-        val id = FirebaseAuth.getInstance().uid ?: ""
-        val ref = FirebaseDatabase.getInstance().getReference("/users/$id")
-        val username = fullNameEditText.text.toString()
-
-        val user = User(id, "", "", email!!, "", "", username)
-
-        ref.setValue(user)
-            .addOnSuccessListener {
-                Log.d(TAG, "user saved to database")
-
-                //code to go to home fragment
-            }
-            .addOnFailureListener {
-                Log.d(TAG, "${it.message}")
-            }
-    }
+    //This will be handled by cloud function after verification
+//    private fun saveUserToDatabase(){
+//        val id = FirebaseAuth.getInstance().uid ?: ""
+//        val ref = FirebaseDatabase.getInstance().getReference("/users/$id")
+//        val username = fullNameEditText.text.toString()
+//
+//        val user = User(id, "", "", email!!, "", "", username)
+//
+//        ref.setValue(user)
+//            .addOnSuccessListener {
+//                Log.d(TAG, "user saved to database")
+//
+//                //code to go to home fragment
+//            }
+//            .addOnFailureListener {
+//                Log.d(TAG, "${it.message}")
+//            }
+//    }
 
 }

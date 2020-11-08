@@ -20,12 +20,17 @@ class SplashFragment : Fragment() {
     private var _binding: FragmentSplashBinding? = null
     private val binding get() = _binding!!
 
-    private val userStateObserver =  Observer<FirebaseAuthUserState> { userState ->
-        when(userState) {
+    private val userStateObserver = Observer<FirebaseAuthUserState> { userState ->
+        when (userState) {
             is UserSignedIn -> {
-                findNavController().navigate(
-                    SplashFragmentDirections.actionSplashFragment2ToHomeActivity()
-                )
+                if (FirebaseAuth.getInstance().currentUser?.isEmailVerified == true) {
+
+                    findNavController().navigate(
+                        SplashFragmentDirections.actionSplashFragment2ToHomeActivity())
+
+                } else {
+                    sendVerificationEmail(requireView())
+                }
             }
             UserSignedOut -> {
                 val extras = FragmentNavigatorExtras(
@@ -60,7 +65,8 @@ class SplashFragment : Fragment() {
         CoroutineScope(Dispatchers.Main).launch {
             delay(1500)
 
-            FirebaseAuth.getInstance().newFirebaseAuthStateLiveData().observe(viewLifecycleOwner, userStateObserver)
+            FirebaseAuth.getInstance().newFirebaseAuthStateLiveData()
+                .observe(viewLifecycleOwner, userStateObserver)
         }
     }
 
