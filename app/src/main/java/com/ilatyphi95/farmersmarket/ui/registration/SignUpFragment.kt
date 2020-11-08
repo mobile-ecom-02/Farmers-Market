@@ -13,7 +13,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.FragmentNavigatorExtras
@@ -21,9 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.ilatyphi95.farmersmarket.R
-import com.ilatyphi95.farmersmarket.data.entities.User
 import com.ilatyphi95.farmersmarket.databinding.FragmentSignUpBinding
 import com.ilatyphi95.farmersmarket.utils.sendVerificationEmail
 import kotlinx.android.synthetic.main.fragment_sign_up.*
@@ -114,8 +111,8 @@ class SignUpFragment : Fragment(){
                 ObjectAnimator.ofFloat(binding.emailTextLayout, "alpha", 0.0f, 1.0f),
                 ObjectAnimator.ofFloat(binding.passwordEditText, "alpha", 0.0f, 1.0f),
                 ObjectAnimator.ofFloat(binding.passwordLayout, "alpha", 0.0f, 1.0f),
-                ObjectAnimator.ofFloat(binding.fullNameEditText, "alpha", 0.0f, 1.0f),
-                ObjectAnimator.ofFloat(binding.fullNameTextLayout, "alpha", 0.0f, 1.0f),
+                ObjectAnimator.ofFloat(binding.confirmPasswordEditText, "alpha", 0.0f, 1.0f),
+                ObjectAnimator.ofFloat(binding.confirmPasswordLayout, "alpha", 0.0f, 1.0f),
                 ObjectAnimator.ofFloat(binding.signUpButton, "alpha", 0.0f, 1.0f),
                 ObjectAnimator.ofFloat(binding.loginTextView, "alpha", 0.0f, 1.0f)
             )
@@ -132,12 +129,20 @@ class SignUpFragment : Fragment(){
 
     //sign up new user
     private fun signUpNewUser(){
-        username =  fullNameEditText.text.toString()
         email = emailEditText.text.toString()
         val password = passwordEditText.text.toString()
+        val confirmPassword = confirmPasswordEditText.text.toString()
+
 
         if(email!!.isEmpty() || password.isEmpty() || username!!.isEmpty()){
-            Toast.makeText(context, "cannot have empty fields", Toast.LENGTH_SHORT).show()
+            Snackbar.make(requireView(),
+                getString(R.string.empty_email_password), Snackbar.LENGTH_SHORT).show()
+            return
+        }
+
+        if(password != confirmPassword) {
+            Snackbar.make(requireView(),
+                getString(R.string.not_matching_password), Snackbar.LENGTH_SHORT).show()
             return
         }
 

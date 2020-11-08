@@ -74,4 +74,7 @@
     <string name="check_email">Check email for verification mail</string>
     <string name="resend_verification_mail">Error: try resending verification mail</string>
     <string name="account_creation_success">Account creation successful</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="empty_email_password">cannot have empty fields</string>
+    <string name="not_matching_password">Password does not match</string>
 </resources>
