@@ -82,7 +82,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/tvName"
             app:layout_constraintTop_toBottomOf="@+id/tvQtyAvail"
-            app:viewedAt="@{viewModel.item.date}"
+            app:viewedAt="@{viewModel.item.timestamp}"
             tools:text="@string/sample_purchase_on" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

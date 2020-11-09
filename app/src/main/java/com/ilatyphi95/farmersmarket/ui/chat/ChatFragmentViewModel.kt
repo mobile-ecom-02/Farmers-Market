@@ -1,6 +1,7 @@
 package com.ilatyphi95.farmersmarket.ui.chat
 
 import androidx.lifecycle.*
+import com.google.firebase.Timestamp
 import com.ilatyphi95.farmersmarket.data.entities.ChatMessage
 import com.ilatyphi95.farmersmarket.data.entities.User
 import com.ilatyphi95.farmersmarket.data.repository.IRepository
@@ -58,7 +59,7 @@ class ChatFragmentViewModel(private val messageId: String, private val repositor
             chatId = messageId,
             msg = newMessage.value!!,
             senderId = thisUser.id,
-            timeStamp = System.currentTimeMillis()
+            timeStamp = Timestamp.now()
             ))
         newMessage.value = ""
     }

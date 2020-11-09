@@ -1,10 +1,11 @@
 package com.ilatyphi95.farmersmarket.utils
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneOffset
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneOffset
 
 class FormatterUtilKtTest {
 
@@ -12,12 +13,11 @@ class FormatterUtilKtTest {
     fun toTime_shouldReturnShortDateForToday() {
         //given
         val systemZone = ZoneOffset.systemDefault()
-        val now = LocalDate.now(systemZone)
+        val now: LocalDateTime = LocalDate.now(systemZone).atTime(23, 59)
         loadTimeZone()
 
         //when
-        val nowString = toDate(now.atTime(23,59)
-            .toInstant(systemZone.rules.getOffset(Instant.now())).toEpochMilli())
+        val nowString = toDate(now.toTimeStamp())
 
         //then
         assertEquals("11:59PM", nowString)
@@ -27,12 +27,12 @@ class FormatterUtilKtTest {
     fun toTime_shouldReturnLongDateForEarlierThanToday() {
         //given
         val systemZone = ZoneOffset.systemDefault()
-        val yesterday = LocalDate.now(systemZone).atTime(23,59).minusDays(1)
+        val yesterday: LocalDateTime = LocalDate.now(systemZone).atTime(23,59).minusDays(1)
         loadTimeZone()
 
         //when
         val yesterdayString =
-            toDate(yesterday.toInstant(systemZone.rules.getOffset(Instant.now())).toEpochMilli())
+            toDate(yesterday.toTimeStamp())
 
         //then
         assertTrue(yesterdayString.contains("11:59PM"))

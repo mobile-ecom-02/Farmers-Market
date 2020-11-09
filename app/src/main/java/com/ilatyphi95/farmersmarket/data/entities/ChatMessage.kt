@@ -1,5 +1,6 @@
 package com.ilatyphi95.farmersmarket.data.entities
 
+import com.google.firebase.Timestamp
 import com.ilatyphi95.farmersmarket.utils.toDate
 import com.ilatyphi95.farmersmarket.utils.toShortTime
 
@@ -21,5 +22,5 @@ data class ChatMessage @JvmOverloads constructor(
     val receiverId: String = "",
     val msgType: String = "",
     val senderId: String,
-    val timeStamp: Long
+    val timeStamp: Timestamp
 )

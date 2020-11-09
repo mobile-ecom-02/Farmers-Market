@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.Timestamp
 import com.ilatyphi95.farmersmarket.FarmersMarketApplication
 import com.ilatyphi95.farmersmarket.data.universaladapter.DataBindingRecyclerAdapter
 import com.ilatyphi95.farmersmarket.R
@@ -78,16 +79,16 @@ fun ImageView.loadFirstImage(imageUrls: List<String>) {
 }
 
 @BindingAdapter("viewedAt")
-fun TextView.viewedOn(date: Long) {
-    text = context.getString(R.string.viewed_at, toDate(context, date))
+fun TextView.viewedOn(timeStamp: Timestamp) {
+    text = context.getString(R.string.viewed_at, toDate(context, timeStamp))
 }
 
 @BindingAdapter("postedAt")
-fun TextView.postedOn(date: Long) {
-    text = context.getString(R.string.posted_at, toDate(context, date))
+fun TextView.postedOn(timeStamp: Timestamp) {
+    text = context.getString(R.string.posted_at, toDate(context, timeStamp))
 }
 
 @BindingAdapter("time")
-fun TextView.time(date: Long) {
-    text = toDate(context, date)
+fun TextView.time(timeStamp: Timestamp) {
+    text = toDate(context, timeStamp)
 }

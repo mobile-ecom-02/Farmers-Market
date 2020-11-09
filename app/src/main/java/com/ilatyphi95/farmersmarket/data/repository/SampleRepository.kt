@@ -2,8 +2,11 @@ package com.ilatyphi95.farmersmarket.data.repository
 
 import android.net.Uri
 import androidx.lifecycle.liveData
+import com.google.firebase.Timestamp
 import com.ilatyphi95.farmersmarket.data.entities.*
 import com.ilatyphi95.farmersmarket.data.repository.ProductGenerator.generateLocation
+import com.ilatyphi95.farmersmarket.utils.longToLocalDateTime
+import com.ilatyphi95.farmersmarket.utils.toTimeStamp
 import com.thedeanda.lorem.LoremIpsum
 import kotlinx.coroutines.delay
 import kotlin.random.Random
@@ -113,7 +116,8 @@ class SampleRepository : IRepository {
                     senderID = lorem.firstNameMale + lorem.firstNameFemale,
                     imageUrl = ProductGenerator.generateImage(),
                     senderName = lorem.firstName,
-                    timestamp = System.currentTimeMillis() + Random.nextLong(-3000000000, 0),
+                    timestamp = longToLocalDateTime(
+                        System.currentTimeMillis() + Random.nextLong(-3000000000, 0)).toTimeStamp()
                 )
             )
         }
@@ -130,7 +134,8 @@ class SampleRepository : IRepository {
                 AddItem(
                     name = lorem.name, quantity = Random.nextInt(10, 50),
                     price = "NGN-${Random.nextInt(10, 500)}", itemId = lorem.firstNameFemale,
-                    date = System.currentTimeMillis() + Random.nextLong(-3000000000, 0),
+                    timestamp = longToLocalDateTime(
+                        System.currentTimeMillis() + Random.nextLong(-3000000000, 0)).toTimeStamp(),
                     imageUrl = ProductGenerator.generateImage()
                 )
             )
@@ -145,7 +150,7 @@ class SampleRepository : IRepository {
                 chatId = messageId,
                 msg = lorem.getParagraphs(1, 1),
                 senderId = "ade",
-                timeStamp = System.currentTimeMillis()
+                timeStamp = Timestamp.now()
             )
         )
         return chatList
