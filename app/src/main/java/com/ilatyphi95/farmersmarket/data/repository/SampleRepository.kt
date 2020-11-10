@@ -6,6 +6,7 @@ import com.google.firebase.Timestamp
 import com.ilatyphi95.farmersmarket.data.entities.*
 import com.ilatyphi95.farmersmarket.data.repository.ProductGenerator.generateLocation
 import com.ilatyphi95.farmersmarket.utils.longToLocalDateTime
+import com.ilatyphi95.farmersmarket.utils.toLocation
 import com.ilatyphi95.farmersmarket.utils.toTimeStamp
 import com.thedeanda.lorem.LoremIpsum
 import kotlinx.coroutines.delay
@@ -42,9 +43,9 @@ class SampleRepository : IRepository {
 
     override suspend fun getCloseByProduct(): List<CloseByProduct> {
         val list = mutableListOf<CloseByProduct>()
-        val thisLocation = generateLocation()
+        val thisLocation = generateLocation().toLocation()
         ProductGenerator.resetList(40).forEach {
-            list.add(CloseByProduct(it, thisLocation.distanceTo(it.location)))
+            list.add(CloseByProduct(it, thisLocation.distanceTo(it.location?.toLocation())))
         }
         return list.sortedBy { it.distance }
     }
@@ -88,11 +89,11 @@ class SampleRepository : IRepository {
         chatList.add(chatMessage)
     }
 
-    override suspend fun getPostedAds(): List<AddItem> {
+    override suspend fun getPostedAds(): List<AdItem> {
         return randomAddItem()
     }
 
-    override suspend fun getInterestedAds(): List<AddItem> {
+    override suspend fun getInterestedAds(): List<AdItem> {
         return randomAddItem()
     }
 
@@ -125,13 +126,13 @@ class SampleRepository : IRepository {
         return list
     }
 
-    private fun randomAddItem(): MutableList<AddItem> {
-        val list = mutableListOf<AddItem>()
+    private fun randomAddItem(): MutableList<AdItem> {
+        val list = mutableListOf<AdItem>()
         val total = Random.nextInt(3, 35)
 
         for (count in 1..total) {
             list.add(
-                AddItem(
+                AdItem(
                     name = lorem.name, quantity = Random.nextInt(10, 50),
                     price = "NGN-${Random.nextInt(10, 500)}", itemId = lorem.firstNameFemale,
                     timestamp = longToLocalDateTime(

@@ -1,9 +1,7 @@
 package com.ilatyphi95.farmersmarket.data.entities
 
-import android.location.Location
 import android.os.Parcelable
-import com.ilatyphi95.farmersmarket.utils.stringToMoney
-import kotlinx.android.parcel.IgnoredOnParcel
+import com.google.firebase.firestore.DocumentId
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -21,17 +19,14 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Product @JvmOverloads constructor(
-    val id: String = "",
-    val name: String,
-    val description: String,
-    val sellerId: String,
-    val type: String,
+    @DocumentId val id: String = "",
+    val name: String = "",
+    val description: String = "",
+    val sellerId: String = "",
+    val type: String = "",
     val imgUrls: List<String> = emptyList(),
-    var qtyAvailable: Int,
-    var qtySold: Int,
+    var qtyAvailable: Int = 0,
+    var qtySold: Int = 0,
     val priceStr: String = "USD-0",
-    val location: Location
-) : Parcelable {
-    @IgnoredOnParcel
-    val price = stringToMoney(priceStr)
-}
+    val location: MyLocation? = null
+) : Parcelable

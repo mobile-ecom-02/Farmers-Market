@@ -3,6 +3,7 @@ package com.ilatyphi95.farmersmarket.utils
 import android.Manifest
 import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Looper
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
@@ -11,6 +12,7 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
+import com.ilatyphi95.farmersmarket.data.entities.MyLocation
 
 const val CHECK_LOCATION_SETTING = 10001
 
@@ -94,5 +96,15 @@ class LocationUtils(val context: FragmentActivity,
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     private fun stopLocationUpdates() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+}
+
+fun MyLocation.toLocation() : Location {
+    val myLocation = this
+    return Location("Farmer's Market").apply {
+        accuracy = myLocation.accuracy
+        latitude = myLocation.latitude
+        longitude = myLocation.longitude
+        time = myLocation.time
     }
 }

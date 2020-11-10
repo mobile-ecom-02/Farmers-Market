@@ -7,6 +7,7 @@
         <variable
             name="viewModel"
             type="com.ilatyphi95.farmersmarket.utils.SearchProductViewModel" />
+        <import type="com.ilatyphi95.farmersmarket.utils.MoneyUtilsKt" />
 
     </data>
 
@@ -50,7 +51,7 @@
             android:id="@+id/tvPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.product.price.toString()}"
+            moneyString ="@{MoneyUtilsKt.stringToMoney(viewModel.product.priceStr)}"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tvQtyAvail"

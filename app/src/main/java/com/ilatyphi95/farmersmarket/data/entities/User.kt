@@ -1,7 +1,5 @@
 package com.ilatyphi95.farmersmarket.data.entities
 
-import android.location.Location
-
 /**
  * @param id unigue to each user
  * @param firstName must be provided
@@ -20,5 +18,5 @@ data class User @JvmOverloads constructor(
     val phone: String = "",
     val profilePicUrl: String = "",
     val profileDisplayName: String = "",
-    val location: Location? = null
+    val location: MyLocation? = null
 )

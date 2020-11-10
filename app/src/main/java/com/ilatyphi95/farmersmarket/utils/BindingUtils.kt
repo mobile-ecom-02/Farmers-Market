@@ -13,6 +13,7 @@ import com.ilatyphi95.farmersmarket.data.universaladapter.DataBindingRecyclerAda
 import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.data.entities.CloseByProduct
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
+import org.joda.money.Money
 
 const val METERS_TO_MILES = 0.000621371
 
@@ -91,4 +92,9 @@ fun TextView.postedOn(timeStamp: Timestamp) {
 @BindingAdapter("time")
 fun TextView.time(timeStamp: Timestamp) {
     text = toDate(context, timeStamp)
+}
+
+@BindingAdapter("moneyString")
+fun TextView.moneyString(money: Money) {
+    text = money.toString()
 }

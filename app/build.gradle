@@ -126,11 +126,16 @@ dependencies {
     //Firebase Storage dependency
     implementation 'com.google.firebase:firebase-analytics'
 
+    implementation 'com.google.firebase:firebase-storage:19.2.0'
+
 
     // Declare the dependency for the Cloud Firestore library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-firestore:22.0.0'
+
+    //coroutines support for firebase operations
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
 
     // Google Play Services
     implementation "com.google.android.gms:play-services-location:17.1.0"

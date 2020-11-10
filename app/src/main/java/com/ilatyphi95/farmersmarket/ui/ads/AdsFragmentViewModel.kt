@@ -1,21 +1,25 @@
 package com.ilatyphi95.farmersmarket.ui.ads
 
 import androidx.lifecycle.*
-import com.ilatyphi95.farmersmarket.data.repository.IRepository
-import com.ilatyphi95.farmersmarket.data.entities.AddItem
+import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
+import com.ilatyphi95.farmersmarket.data.entities.AdItem
 import com.ilatyphi95.farmersmarket.data.entities.Product
+import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 import com.ilatyphi95.farmersmarket.utils.Event
 import com.ilatyphi95.farmersmarket.utils.InterestedAdsViewModel
 import com.ilatyphi95.farmersmarket.utils.PostedAdsViewModel
 import com.ilatyphi95.farmersmarket.utils.toRecyclerItem
 import kotlinx.coroutines.*
+import java.util.*
 
 const val NEW_PRODUCT = "New Product"
 class AdsFragmentViewModel(private val repository: IRepository) : ViewModel() {
 
     private val job = Job()
     private val uiScope = CoroutineScope(job + Dispatchers.Main)
+    private val thisUser = FirebaseAuth.getInstance().uid
 
     private val _eventAdsDetails = MutableLiveData<Event<Product>>()
     val eventAdsDetails : LiveData<Event<Product>>
@@ -25,16 +29,28 @@ class AdsFragmentViewModel(private val repository: IRepository) : ViewModel() {
     val eventEditAds : LiveData<Event<String>>
         get() = _eventEditAds
 
-    private val _postedAdsList = MutableLiveData<List<AddItem>>()
+    private val _postedAdsList = MutableLiveData<List<Product>>()
     val postedAdsList: LiveData<List<RecyclerItem>> = _postedAdsList.map { list ->
         list.map { item ->
-            PostedAdsViewModel(item).apply {
-                itemClickHandler = { postedItemClicked(itemId = this.item.itemId) }
-            }.toRecyclerItem()
+            val timestamp = if(item.location != null ){
+                Timestamp(Date(item.location.time))
+            } else Timestamp.now()
+
+                PostedAdsViewModel(
+                    AdItem(
+                    itemId = item.id,
+                        name = item.name,
+                        price = item.priceStr,
+                        quantity = item.qtyAvailable,
+                        imageUrl = item.imgUrls.getOrElse(0){""},
+                        timestamp = timestamp
+                )).apply {
+                    itemClickHandler = { postedItemClicked(itemId = this.item.itemId) }
+                }.toRecyclerItem()
         }
     }
 
-    private val _interestedAdsList = MutableLiveData<List<AddItem>>()
+    private val _interestedAdsList = MutableLiveData<List<AdItem>>()
     val interestedAdsList : LiveData<List<RecyclerItem>> = _interestedAdsList.map { list ->
         list.map { item ->
             InterestedAdsViewModel(item).apply {
@@ -46,7 +62,6 @@ class AdsFragmentViewModel(private val repository: IRepository) : ViewModel() {
     init {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                _postedAdsList.postValue(repository.getPostedAds())
                 _interestedAdsList.postValue(repository.getInterestedAds())
             }
         }
@@ -74,6 +89,10 @@ class AdsFragmentViewModel(private val repository: IRepository) : ViewModel() {
     override fun onCleared() {
         job.cancel()
         super.onCleared()
+    }
+
+    fun upDatePostedAds(products: List<Product>) {
+        _postedAdsList.postValue(products)
     }
 
 }

@@ -3,10 +3,10 @@ package com.ilatyphi95.farmersmarket.utils
 import androidx.annotation.LayoutRes
 import com.ilatyphi95.farmersmarket.BR
 import com.ilatyphi95.farmersmarket.R
-import com.ilatyphi95.farmersmarket.data.entities.AddItem
+import com.ilatyphi95.farmersmarket.data.entities.AdItem
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 
-sealed class AddItemViewModel(val item: AddItem, @LayoutRes val layoutId: Int) {
+sealed class AddItemViewModel(val item: AdItem, @LayoutRes val layoutId: Int) {
     lateinit var removeItemHandler: (itemId: String) -> Unit
     lateinit var itemClickHandler: (itemId: String) -> Unit
 
@@ -19,12 +19,12 @@ sealed class AddItemViewModel(val item: AddItem, @LayoutRes val layoutId: Int) {
     }
 }
 
-class PostedAdsViewModel(thisItem: AddItem) :
+class PostedAdsViewModel(thisItem: AdItem) :
     AddItemViewModel(thisItem, R.layout.ads_product_item) {
 
 }
 
-class InterestedAdsViewModel(thisItem: AddItem) :
+class InterestedAdsViewModel(thisItem: AdItem) :
     AddItemViewModel(thisItem, R.layout.interested_product_item) {
 }
 

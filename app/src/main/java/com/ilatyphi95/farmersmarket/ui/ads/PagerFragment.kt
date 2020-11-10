@@ -12,11 +12,15 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
-import com.ilatyphi95.farmersmarket.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObjects
+import com.ilatyphi95.farmersmarket.R
+import com.ilatyphi95.farmersmarket.data.entities.Product
+import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
 import com.ilatyphi95.farmersmarket.databinding.FragmentPagerBinding
 import com.ilatyphi95.farmersmarket.utils.EventObserver
 import com.ilatyphi95.farmersmarket.utils.LocationUtils
-import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
 
 
 class PagerFragment : Fragment() {
@@ -34,8 +38,10 @@ class PagerFragment : Fragment() {
                 PagerFragmentDirections.actionNavigationPagerToAddProductFragment(NEW_PRODUCT)
             )
         } else {
-            Snackbar.make(requireView(), getString(R.string.add_new_product_require_location),
-                Snackbar.LENGTH_LONG).show()
+            Snackbar.make(
+                requireView(), getString(R.string.add_new_product_require_location),
+                Snackbar.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -51,7 +57,7 @@ class PagerFragment : Fragment() {
                     .navigate(PagerFragmentDirections.actionNavigationPagerToProductFragment(it))
             })
 
-            eventEditAds.observe(viewLifecycleOwner, EventObserver {adId ->
+            eventEditAds.observe(viewLifecycleOwner, EventObserver { adId ->
                 when {
                     ContextCompat.checkSelfPermission(
                         requireContext(),
@@ -64,14 +70,17 @@ class PagerFragment : Fragment() {
                                     adId
                                 )
                             )
-                    }
+                        }
                     }
 
                     shouldShowRequestPermissionRationale(
-                        android.Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                        android.Manifest.permission.ACCESS_FINE_LOCATION
+                    ) -> {
 
-                        Snackbar.make(requireView(), getString(R.string.add_new_product_require_location),
-                            Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(
+                            requireView(), getString(R.string.add_new_product_require_location),
+                            Snackbar.LENGTH_LONG
+                        ).show()
                     }
                     else -> {
                         handleLocation.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -80,7 +89,24 @@ class PagerFragment : Fragment() {
             })
         }
 
+        setUpListeners()
+
         return binding.root
+    }
+
+    private fun setUpListeners() {
+        val thisUser = FirebaseAuth.getInstance().uid
+        val firestoreRef = FirebaseFirestore.getInstance()
+
+        firestoreRef.collection("ads").whereEqualTo("sellerId", thisUser)
+            .addSnapshotListener(requireActivity()) { value, error ->
+            if(error != null) {
+                return@addSnapshotListener
+            }
+
+            value?.toObjects<Product>()?.let { viewmodel.upDatePostedAds(it) }
+        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
