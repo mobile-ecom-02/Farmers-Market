@@ -1,4 +1,4 @@
-package com.ilatyphi95.farmersmarket.Firebase
+package com.ilatyphi95.farmersmarket.firebase
 
 import androidx.lifecycle.LiveData
 import com.google.firebase.auth.FirebaseAuth

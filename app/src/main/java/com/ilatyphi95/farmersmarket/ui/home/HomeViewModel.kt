@@ -1,9 +1,11 @@
 package com.ilatyphi95.farmersmarket.ui.home
 
 import androidx.lifecycle.*
+import com.ilatyphi95.farmersmarket.data.entities.AdItem
 import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
+import com.ilatyphi95.farmersmarket.firebase.addToRecent
 import com.ilatyphi95.farmersmarket.utils.*
 import kotlinx.coroutines.*
 
@@ -61,6 +63,7 @@ class HomeViewModel(private val repository: IRepository) : ViewModel() {
     }
 
     private fun productSelected(product: Product) {
+        addToRecent(product)
         _eventProductSelected.postValue(Event(product))
     }
 
@@ -90,6 +93,10 @@ class HomeViewModel(private val repository: IRepository) : ViewModel() {
         else {
             liveData {  emit(emptyList<RecyclerItem>()) }
         }
+    }
+
+    fun updateRecent(list: List<AdItem>) {
+
     }
 }
 
