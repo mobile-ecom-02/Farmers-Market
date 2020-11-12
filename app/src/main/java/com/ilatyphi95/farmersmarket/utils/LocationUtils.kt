@@ -47,7 +47,7 @@ class LocationUtils(val context: FragmentActivity,
             }
         }
 
-        fun getLastLocation(context: FragmentActivity) {
+        fun getLastLocation(context: FragmentActivity, useLocation: (Location) -> Unit)  {
             if (ActivityCompat.checkSelfPermission(
                     context,
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -61,7 +61,7 @@ class LocationUtils(val context: FragmentActivity,
 
             LocationServices.getFusedLocationProviderClient(context)
                 .lastLocation.addOnSuccessListener { location ->
-
+                    useLocation(location)
             }
         }
 

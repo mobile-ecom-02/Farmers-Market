@@ -11,7 +11,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
+import com.ilatyphi95.farmersmarket.data.entities.User
 import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
 import com.ilatyphi95.farmersmarket.databinding.FragmentHomeBinding
 import com.ilatyphi95.farmersmarket.firebase.addSnapshotListener
@@ -22,9 +24,7 @@ class HomeFragment : Fragment() {
     lateinit var binding : FragmentHomeBinding
     val TAG: String = this.javaClass.simpleName
 
-    private val userRef = FirebaseFirestore.getInstance()
-        .document("users/${FirebaseAuth.getInstance().currentUser?.uid}")
-        .collection("recent")
+    private val firestore = FirebaseFirestore.getInstance()
 
     private val homeViewModel by viewModels<HomeViewModel> {
         HomeViewModelFactory(SampleRepository())
@@ -67,16 +67,45 @@ class HomeFragment : Fragment() {
             })
         }
 
-        userRef.addSnapshotListener(viewLifecycleOwner) { query, exception ->
-            if (exception != null) {
-                Log.d(TAG, "setUpFirestoreListeners: ${exception.message}")
-            }
-
-            query?.let {
-                homeViewModel.updateRecent(it.toObjects())
-            }
-        }
+        setUpListeners()
 
         return binding.root
+    }
+
+    private fun setUpListeners() {
+        firestore.document("users/${FirebaseAuth.getInstance().currentUser?.uid}")
+            .collection("recent").addSnapshotListener(viewLifecycleOwner) { query, exception ->
+                if (exception != null) {
+                    Log.d(TAG, "setUpFirestoreListeners: ${exception.message}")
+                }
+
+                query?.let {
+                    homeViewModel.updateRecent(it.toObjects())
+                }
+            }
+
+        firestore.collection("users")
+            .document("${FirebaseAuth.getInstance().currentUser?.uid}").get()
+            .addOnSuccessListener {
+
+            val user = it.toObject<User>()
+                user?.location?.let {myLocation ->
+
+                    firestore.collection("ads")
+                        .whereNotEqualTo("sellerId", FirebaseAuth.getInstance().currentUser?.uid)
+                        .addSnapshotListener(viewLifecycleOwner) {query, exception ->
+
+                            if (exception != null) {
+                                Log.d(TAG, "setUpFirestoreListeners: ${exception.message}")
+                            }
+
+                            query?.let {snapshot ->
+                                homeViewModel.updateCloseBy(myLocation, snapshot.toObjects())
+                            }
+                        }
+                }
+        }
+
+
     }
 }

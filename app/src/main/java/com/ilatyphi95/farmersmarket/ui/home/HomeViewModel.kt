@@ -6,6 +6,8 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObjects
 import com.ilatyphi95.farmersmarket.data.entities.AdItem
+import com.ilatyphi95.farmersmarket.data.entities.CloseByProduct
+import com.ilatyphi95.farmersmarket.data.entities.MyLocation
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
@@ -28,10 +30,14 @@ class HomeViewModel(private val repository: IRepository) : ViewModel() {
         }.map { it.toRecyclerItem() }
     }
 
-
-    private val _closeBy = MutableLiveData<List<RecyclerItem>>()
-    val closeBy: LiveData<List<RecyclerItem>>
-        get() = _closeBy
+    private val _closeBy = MutableLiveData<List<CloseByProduct>>()
+    val closeBy: LiveData<List<RecyclerItem>> = _closeBy.map { list ->
+            list.map {
+                CloseProductViewModel(it).apply {
+                    itemClickHander = { it -> productSelected(it.product) }
+                }
+            }.map { it.toRecyclerItem() }
+    }
 
     private val searchString = MutableLiveData<String>()
     val showSearchRecycler = searchString.map { it != null && !it.isNullOrBlank() }
@@ -53,17 +59,6 @@ class HomeViewModel(private val repository: IRepository) : ViewModel() {
 
 
     init {
-        CoroutineScope(uiScope).launch {
-            withContext(Dispatchers.IO) {
-
-                _closeBy.postValue(repository.getCloseByProduct()
-                    .map {
-                        CloseProductViewModel(it).apply {
-                            itemClickHander = { it -> productSelected(it.product) }
-                        }
-                    }.map { it.toRecyclerItem() })
-            }
-        }
         clearSearch()
     }
 
@@ -123,6 +118,16 @@ class HomeViewModel(private val repository: IRepository) : ViewModel() {
 
     fun updateRecent(list: List<AdItem>) {
         _recentItems.postValue(list)
+    }
+
+    fun updateCloseBy(myLocation: MyLocation, list: List<Product>) {
+        CoroutineScope(uiScope).launch {
+            withContext(Dispatchers.Default) {
+                val closeByList = list.map { it -> CloseByProduct(it,
+                myLocation.toLocation().distanceTo(it.location?.toLocation())) }
+                _closeBy.postValue(closeByList.sortedBy { it.distance })
+            }
+        }
     }
 }
 

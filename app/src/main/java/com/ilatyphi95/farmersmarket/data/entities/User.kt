@@ -14,7 +14,7 @@ data class User @JvmOverloads constructor(
     var id: String = "",
     val firstName: String = "",
     val lastName: String = "",
-    val email: String,
+    val email: String = "",
     val phone: String = "",
     val profilePicUrl: String = "",
     val profileDisplayName: String = "",
