@@ -3,6 +3,8 @@ package com.ilatyphi95.farmersmarket.utils
 import android.content.Context
 import com.google.firebase.Timestamp
 import com.ilatyphi95.farmersmarket.R
+import com.ilatyphi95.farmersmarket.data.entities.AdItem
+import com.ilatyphi95.farmersmarket.data.entities.Product
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
@@ -64,3 +66,6 @@ fun toShortTime(timeStamp: Long) : String {
 
 fun longToLocalDateTime(long: Long) =
     LocalDateTime.ofInstant(Instant.ofEpochMilli(long), ZoneId.systemDefault())
+
+fun Product.toAdItem() = AdItem(itemId = this.id, name = this.name, price = this.priceStr,
+    quantity = this.qtyAvailable, imageUrl = this.imgUrls.getOrElse(0){""})

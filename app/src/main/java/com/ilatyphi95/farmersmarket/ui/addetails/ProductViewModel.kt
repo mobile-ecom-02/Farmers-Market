@@ -6,10 +6,7 @@ import com.ilatyphi95.farmersmarket.data.entities.User
 import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 import com.ilatyphi95.farmersmarket.firebase.addToRecent
-import com.ilatyphi95.farmersmarket.utils.Event
-import com.ilatyphi95.farmersmarket.utils.ProductPicture
-import com.ilatyphi95.farmersmarket.utils.ProductSmallBannerViewModel
-import com.ilatyphi95.farmersmarket.utils.toRecyclerItem
+import com.ilatyphi95.farmersmarket.utils.*
 import kotlinx.coroutines.*
 
 class ProductViewModel(val product: Product, repository: IRepository) : ViewModel() {
@@ -53,8 +50,8 @@ class ProductViewModel(val product: Product, repository: IRepository) : ViewMode
     }
 
     fun createProductSmallBannerViewModel(product: Product): ProductSmallBannerViewModel {
-        return ProductSmallBannerViewModel(product).apply {
-            itemClickHandler = { product -> productClicked(product) }
+        return ProductSmallBannerViewModel(product.toAdItem()).apply {
+            itemClickHandler = { productClicked(product) }
         }
     }
 
