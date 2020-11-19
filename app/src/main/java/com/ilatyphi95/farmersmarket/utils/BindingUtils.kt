@@ -98,3 +98,8 @@ fun TextView.time(timeStamp: Timestamp) {
 fun TextView.moneyString(money: Money) {
     text = money.toString()
 }
+
+@BindingAdapter("setInt")
+fun TextView.setInt(int: Int) {
+    text = int.toString()
+}

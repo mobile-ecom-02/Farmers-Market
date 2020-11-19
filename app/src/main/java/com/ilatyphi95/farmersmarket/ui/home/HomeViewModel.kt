@@ -103,6 +103,7 @@ class HomeViewModel(private val repository: IRepository) : ViewModel() {
         _eventIsLoading.value = true
 
         return if (searchStr != null) {
+
             repository.searchProducts(searchStr).map { list ->
                 list.map { product ->
                     SearchProductViewModel(product).apply {

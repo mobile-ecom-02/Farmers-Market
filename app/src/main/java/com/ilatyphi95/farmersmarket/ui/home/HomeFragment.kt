@@ -42,7 +42,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
@@ -88,24 +87,22 @@ class HomeFragment : Fragment() {
             .document("${FirebaseAuth.getInstance().currentUser?.uid}").get()
             .addOnSuccessListener {
 
-            val user = it.toObject<User>()
-                user?.location?.let {myLocation ->
+                val user = it.toObject<User>()
+                user?.location?.let { myLocation ->
 
                     firestore.collection("ads")
                         .whereNotEqualTo("sellerId", FirebaseAuth.getInstance().currentUser?.uid)
-                        .addSnapshotListener(viewLifecycleOwner) {query, exception ->
+                        .addSnapshotListener(viewLifecycleOwner) { query, exception ->
 
                             if (exception != null) {
                                 Log.d(TAG, "setUpFirestoreListeners: ${exception.message}")
                             }
 
-                            query?.let {snapshot ->
+                            query?.let { snapshot ->
                                 homeViewModel.updateCloseBy(myLocation, snapshot.toObjects())
                             }
                         }
                 }
-        }
-
-
+            }
     }
 }

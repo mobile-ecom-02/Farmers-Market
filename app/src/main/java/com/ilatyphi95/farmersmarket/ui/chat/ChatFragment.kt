@@ -1,8 +1,7 @@
 package com.ilatyphi95.farmersmarket.ui.chat
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,18 +9,27 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.ktx.toObjects
 import com.ilatyphi95.farmersmarket.R
-import com.ilatyphi95.farmersmarket.databinding.FragmentChatBinding
 import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
+import com.ilatyphi95.farmersmarket.databinding.FragmentChatBinding
+import com.ilatyphi95.farmersmarket.firebase.addSnapshotListener
 
 
 class ChatFragment : Fragment() {
+    private val TAG = this.javaClass.simpleName
     lateinit var binding: FragmentChatBinding
+
+    private val fireStore = FirebaseFirestore.getInstance()
+    private val user = FirebaseAuth.getInstance().currentUser
 
     private val args by navArgs<ChatFragmentArgs>()
 
     val viewmodel by viewModels<ChatFragmentViewModel> {
-        ChatFragmentViewModelFactory(args.messageId, SampleRepository())
+        ChatFragmentViewModelFactory(args.messageId)
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,19 +40,25 @@ class ChatFragment : Fragment() {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = viewmodel
-            messageEditText.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    viewmodel.newMessage.value = p0.toString()
-                }
-
-                override fun afterTextChanged(p0: Editable?) {
-                }
-
-            })
         }
+
+        fireStore.collection("messages/${args.messageId}/chatMessages")
+            .addSnapshotListener(viewLifecycleOwner) { query, exception ->
+                if(exception != null) {
+                    Log.d(TAG, "setUpFirestoreListeners: ${exception.message}")
+                }
+
+                query?.let {
+                    viewmodel.updateChat(it.toObjects())
+                }
+
+                // reset counter
+                val map = HashMap<String, Int>()
+                map["counter"] = 0
+
+                fireStore.document("users/${user?.uid}/chatList/${args.messageId}")
+                    .set(map, SetOptions.merge())
+            }
 
         viewmodel.chatRecycler.observe(viewLifecycleOwner) {
             binding.chatRecyclerView.smoothScrollToPosition(it.size)

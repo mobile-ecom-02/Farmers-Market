@@ -7,13 +7,8 @@ import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 import com.ilatyphi95.farmersmarket.utils.Event
 import com.ilatyphi95.farmersmarket.utils.MessageItemViewModel
 import com.ilatyphi95.farmersmarket.utils.toRecyclerItem
-import kotlinx.coroutines.*
 
 class MessageViewModel(val repository: IRepository) : ViewModel() {
-
-
-    private val job = Job()
-    private val uiScope = CoroutineScope(job + Dispatchers.Main)
 
     private val _messages = MutableLiveData<List<Message>>()
     val messages : LiveData<List<RecyclerItem>> = _messages.map { list ->
@@ -29,13 +24,8 @@ class MessageViewModel(val repository: IRepository) : ViewModel() {
     val eventMessage : LiveData<Event<String>>
         get() = _eventMessage
 
-
-    init {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                _messages.postValue(repository.getMessageList())
-            }
-        }
+    fun updateMessages(messageList: List<Message>) {
+        _messages.postValue(messageList)
     }
 
     private fun messageClicked(messageId: String) {

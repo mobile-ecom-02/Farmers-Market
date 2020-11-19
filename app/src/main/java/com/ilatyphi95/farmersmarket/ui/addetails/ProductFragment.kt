@@ -27,10 +27,6 @@ class ProductFragment : Fragment() {
 
     private lateinit var databinding: FragmentProductBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,6 +48,11 @@ class ProductFragment : Fragment() {
         viewModel.apply {
             eventProductSelected.observe(viewLifecycleOwner, EventObserver{
                 findNavController().navigate(ProductFragmentDirections.actionProductFragmentSelf(it))
+            })
+
+            eventMessage.observe(viewLifecycleOwner, EventObserver{
+                findNavController()
+                    .navigate(ProductFragmentDirections.actionProductFragmentToChatFragment(it))
             })
         }
 

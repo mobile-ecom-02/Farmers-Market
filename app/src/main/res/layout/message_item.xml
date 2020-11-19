@@ -7,6 +7,7 @@
         <variable
             name="viewModel"
             type="com.ilatyphi95.farmersmarket.utils.MessageItemViewModel" />
+        <import type="android.view.View" />
 
     </data>
 
@@ -55,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/normal_margin"
             android:layout_marginEnd="@dimen/normal_margin"
-            android:text="@{viewModel.message.senderName}"
+            android:text="@{viewModel.message.correspondentName}"
             android:maxLines="1"
             android:textColor="#000000"
             android:textStyle="bold"
@@ -76,5 +77,19 @@
             app:layout_constraintStart_toStartOf="@+id/textView10"
             app:layout_constraintTop_toBottomOf="@+id/textView10"
             tools:text="It's good to here the good news from you, hope you are keeping up" />
+
+        <TextView
+            android:id="@+id/counter"
+            android:layout_width="@dimen/normal_large_margin"
+            android:layout_height="@dimen/normal_large_margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:background="@drawable/circle"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:visibility="@{viewModel.message.counter == 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="@+id/textView8"
+            app:layout_constraintTop_toBottomOf="@+id/textView8"
+            app:setInt="@{viewModel.message.counter}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

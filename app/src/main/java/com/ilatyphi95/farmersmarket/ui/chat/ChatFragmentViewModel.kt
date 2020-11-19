@@ -1,36 +1,35 @@
 package com.ilatyphi95.farmersmarket.ui.chat
 
 import androidx.lifecycle.*
-import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import com.ilatyphi95.farmersmarket.data.entities.ChatMessage
+import com.ilatyphi95.farmersmarket.data.entities.MessageShell
 import com.ilatyphi95.farmersmarket.data.entities.User
-import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.utils.ReceiveRecyclerViewModel
 import com.ilatyphi95.farmersmarket.utils.SentRecyclerViewModel
 import com.ilatyphi95.farmersmarket.utils.toRecyclerItem
-import kotlinx.coroutines.*
 
-class ChatFragmentViewModel(private val messageId: String, private val repository: IRepository)
+class ChatFragmentViewModel(messageId: String)
     : ViewModel() {
 
-    private val job = Job()
-    private val uiScope = CoroutineScope(job + Dispatchers.Main)
+    private val firestoreRef = FirebaseFirestore.getInstance()
 
-    private val thisUser = repository.getCurrentUser()
+    private val documentRef = firestoreRef.document("messages/$messageId")
+
+    private val thisUser = FirebaseAuth.getInstance().currentUser
 
     private val _otherUser = MutableLiveData<User>()
     val otherUser : LiveData<User>
         get() = _otherUser
 
     val newMessage = MutableLiveData<String>()
-    val enableSend = newMessage.map {
-        !it.isNullOrBlank()
-    }
 
-    private val chatMessages = repository.getMessages(messageId)
+    private val chatMessages = MutableLiveData<List<ChatMessage>>()
     val chatRecycler = chatMessages.map { messageList ->
         messageList.map {
-            if(it.senderId == thisUser.id) {
+            if(it.senderId == thisUser!!.uid) {
                 SentRecyclerViewModel(it).toRecyclerItem()
             } else {
                 ReceiveRecyclerViewModel(it).toRecyclerItem()
@@ -40,40 +39,41 @@ class ChatFragmentViewModel(private val messageId: String, private val repositor
 
 
     init {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                val users = repository.getMessageRecipients(messageId)
-                val otherUserId = users.find { it != thisUser.id }
+        documentRef.get().addOnSuccessListener {document ->
 
-                otherUserId.isNullOrBlank()
-                otherUserId?.let {
-                    _otherUser.postValue(repository.getUser(it))
-                }
+            val messageShell = document.toObject<MessageShell>()
+            val otherUserId = messageShell!!.participants.find{it != thisUser!!.uid}!!
 
+            firestoreRef.document("users/$otherUserId").get().addOnSuccessListener {
+                _otherUser.postValue(it.toObject())
             }
+
         }
     }
 
     fun sendMessage() {
-        repository.sendMessage(ChatMessage(
-            chatId = messageId,
-            msg = newMessage.value!!,
-            senderId = thisUser.id,
-            timeStamp = Timestamp.now()
-            ))
-        newMessage.value = ""
+        val message = newMessage.value
+
+        if(message.isNullOrEmpty()) {
+            return
+        }
+
+        documentRef.collection("chatMessages").add(ChatMessage(
+            msg = message,
+            senderId = thisUser!!.uid
+        ))
+        newMessage.postValue("")
     }
 
-    override fun onCleared() {
-        job.cancel()
-        super.onCleared()
+    fun updateChat(chatList: List<ChatMessage>) {
+        chatMessages.postValue(chatList.sortedBy { it.timeStamp })
     }
 }
 
 @Suppress("UNCHECKED_CAST")
-class ChatFragmentViewModelFactory(private val messageId: String, private val repository: IRepository)
+class ChatFragmentViewModelFactory(private val messageId: String)
     : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        (ChatFragmentViewModel(messageId, repository) as T)
+        (ChatFragmentViewModel(messageId) as T)
 }
