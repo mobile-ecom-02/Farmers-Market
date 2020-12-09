@@ -77,4 +77,6 @@
     <string name="confirm_password">Confirm password</string>
     <string name="empty_email_password">cannot have empty fields</string>
     <string name="not_matching_password">Password does not match</string>
+    <string name="channel_name">message notifications</string>
+    <string name="channel_description">channel for handling message notifications</string>
 </resources>

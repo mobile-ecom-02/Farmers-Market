@@ -21,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import com.google.firebase.auth.FirebaseAuth
 import com.ilatyphi95.farmersmarket.R
+import com.ilatyphi95.farmersmarket.data.repository.FirebaseMessagingService
 import com.ilatyphi95.farmersmarket.databinding.FragmentLoginBinding
 import com.ilatyphi95.farmersmarket.utils.sendVerificationEmail
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -149,6 +150,12 @@ class LoginFragment : Fragment(){
             }
             .addOnSuccessListener {
                 if(FirebaseAuth.getInstance().currentUser?.isEmailVerified == true) {
+
+                    // register device for fcm messaging
+                    FirebaseMessagingService.useToken {
+                        FirebaseMessagingService.sendRegistrationToServer(it)
+                    }
+
                     findNavController().navigate(
                         LoginFragmentDirections.actionLoginFragmentToHomeActivity()
                     )

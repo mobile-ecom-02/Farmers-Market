@@ -17,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.data.entities.MyLocation
+import com.ilatyphi95.farmersmarket.data.repository.FirebaseMessagingService
 import com.ilatyphi95.farmersmarket.utils.LocationUtils
 import java.io.IOException
 import java.util.*
@@ -79,7 +80,14 @@ class SettingsFragment : Fragment() {
             }
         }
         root.findViewById<Button>(R.id.btnLogOut).setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
+
+            // remove device token from server
+            FirebaseMessagingService.useToken {
+                FirebaseMessagingService.removeRegistrationFromServer(it)
+                FirebaseAuth.getInstance().signOut()
+            }
+
+
             findNavController()
                 .navigate(SettingsFragmentDirections.actionNavigationSettingsToMainActivity())
         }
