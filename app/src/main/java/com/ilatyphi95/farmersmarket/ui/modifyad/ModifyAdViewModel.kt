@@ -13,10 +13,7 @@ import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.entities.User
 import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
-import com.ilatyphi95.farmersmarket.utils.AddIcon
-import com.ilatyphi95.farmersmarket.utils.AddedProductPicture
-import com.ilatyphi95.farmersmarket.utils.Event
-import com.ilatyphi95.farmersmarket.utils.toRecyclerItem
+import com.ilatyphi95.farmersmarket.utils.*
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.collections.HashMap
@@ -194,6 +191,8 @@ class ModifyAdViewModel(private val repository: IRepository) : ViewModel() {
         product["priceStr"] = "${currency.value!!.currencyCode}-${price.value!!}"
         product["location"] = _location.value!!
 
+        val keywords = getKeywords(title = title.value!!, description = description.value!!)
+
         val myProduct = Product(
             name = title.value!!,
             description = description.value!!,
@@ -203,7 +202,8 @@ class ModifyAdViewModel(private val repository: IRepository) : ViewModel() {
             qtyAvailable = quantityAvailable.value!!.toInt(),
             qtySold = 0,
             priceStr = "${currency.value!!.currencyCode}-${price.value!!}",
-            location = _location.value!!
+            location = _location.value!!,
+            keywords = keywords
         )
 
         val collection = FirebaseFirestore.getInstance().collection("ads")

@@ -28,5 +28,6 @@ data class Product @JvmOverloads constructor(
     var qtyAvailable: Int = 0,
     var qtySold: Int = 0,
     val priceStr: String = "USD-0",
-    val location: MyLocation? = null
+    val location: MyLocation? = null,
+    val keywords: List<String> = emptyList()
 ) : Parcelable
