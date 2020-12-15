@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -33,6 +34,7 @@ class HomeFragment : Fragment() {
     private val queryTextListener: OnQueryTextListener = object : OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
             homeViewModel.search(query)
+            homeViewModel.openSearchView()
             return true
         }
 
@@ -54,6 +56,13 @@ class HomeFragment : Fragment() {
             viewModel = homeViewModel
             lifecycleOwner = viewLifecycleOwner
             searchView.setOnQueryTextListener(queryTextListener)
+            searchView.setOnCloseListener {
+                SearchView.OnCloseListener {
+                    homeViewModel.closeSearchView()
+                    true
+                }
+                true
+            }
         }
 
         homeViewModel.apply {
@@ -70,6 +79,7 @@ class HomeFragment : Fragment() {
 
         return binding.root
     }
+
 
     private fun setUpListeners() {
         firestore.document("users/${FirebaseAuth.getInstance().currentUser?.uid}")

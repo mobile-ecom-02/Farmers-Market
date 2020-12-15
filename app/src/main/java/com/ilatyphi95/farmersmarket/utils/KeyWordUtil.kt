@@ -1,7 +1,9 @@
 package com.ilatyphi95.farmersmarket.utils
 
+import org.paukov.combinatorics3.Generator
 import java.util.*
 
+const val KEYWORD_LIMIT = 8
 
 //private val interjections = listOf("ah", "aha", "ahem", "alas",  "amen", "aw", "awesome", "aww",
 //    "bada-bing", "bada-boom", "Bah",  "baloney",  "bingo", "boo", "boo-hoo", "booyah", "boo-yah",
@@ -115,7 +117,7 @@ private val excludedWordList = listOf("aboard", "about", "above", "across", "aft
     "whosesoever", "whosever", "whoso", "whosoever", "why", "with", "within", "without",
     "woo-hoo", "wow", "yadda", "ye", "yet", "yippee", "yon", "yonder", "you", "your", "yours",
     "yourself", "yourselves", "yummy")
-fun getKeywords(title: String, description: String = "", limit: Int = 10) : List<String> {
+fun getKeywords(title: String, description: String = "", limit: Int = KEYWORD_LIMIT) : List<String> {
 
     val titleKeyWords = keyWords(title, limit)
     val descriptionKeyWords = keyWords(description, limit)
@@ -124,11 +126,13 @@ fun getKeywords(title: String, description: String = "", limit: Int = 10) : List
     keyWords.addAll(descriptionKeyWords)
     val keyWordList = keyWords.toList()
 
-    return if(keyWordList.size > limit) {
+    val keywords =  if(keyWordList.size > limit) {
         keyWordList.subList(0, limit)
     } else {
         keyWordList
     }
+
+    return keywordStrings(keywords.sorted())
 }
 
 private fun keyWords(text: String, limit: Int) : List<String> {
@@ -153,3 +157,22 @@ private fun keyWords(text: String, limit: Int) : List<String> {
         .take(limit)
         .map { it.first }
 }
+
+fun searchTerm(term: String) : String {
+    val keywords = keyWords(term, KEYWORD_LIMIT)
+    return keywords.sorted().joinToString("")
+}
+
+private fun keywordStrings(keywords: List<String>) : List<String> {
+    val size = keywords.size
+    val myList = mutableSetOf<String>()
+
+    for (counter in 1 .. size) {
+        myList.addAll(Generator.combination(keywords).simple(counter).map {
+            it.joinToString("")
+        })
+    }
+
+    return myList.toList()
+}
+
