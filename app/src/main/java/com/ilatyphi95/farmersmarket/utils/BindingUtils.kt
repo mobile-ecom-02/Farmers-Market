@@ -90,8 +90,10 @@ fun TextView.postedOn(timeStamp: Timestamp) {
 }
 
 @BindingAdapter("time")
-fun TextView.time(timeStamp: Timestamp) {
-    text = toDate(context, timeStamp)
+fun TextView.time(timeStamp: Timestamp?) {
+    timeStamp?.let {
+        text = toDate(context, it)
+    }
 }
 
 @BindingAdapter("moneyString")

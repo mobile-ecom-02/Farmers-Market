@@ -10,6 +10,6 @@ data class Message(
     val senderID: String = "",
     val imageUrl: String = "",
     val correspondentName: String = "",
-    val timestamp: Timestamp = Timestamp.now()
+    val timeStamp: Timestamp = Timestamp.now()
 ) {
 }

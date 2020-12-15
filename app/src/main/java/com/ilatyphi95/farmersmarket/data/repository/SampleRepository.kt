@@ -117,7 +117,7 @@ class SampleRepository : IRepository {
                     senderID = lorem.firstNameMale + lorem.firstNameFemale,
                     imageUrl = ProductGenerator.generateImage(),
                     correspondentName = lorem.firstName,
-                    timestamp = longToLocalDateTime(
+                    timeStamp = longToLocalDateTime(
                         System.currentTimeMillis() + Random.nextLong(-3000000000, 0)).toTimeStamp()
                 )
             )
