@@ -9,6 +9,7 @@ import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.entities.User
 import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
+import com.ilatyphi95.farmersmarket.firebase.addToInterested
 import com.ilatyphi95.farmersmarket.firebase.addToRecent
 import com.ilatyphi95.farmersmarket.utils.*
 import kotlinx.coroutines.*
@@ -51,6 +52,7 @@ class ProductViewModel(val product: Product, repository: IRepository) : ViewMode
         get() = _eventProductSelected
 
     fun callSeller() {
+        addToInterested(product)
 
     }
 
@@ -73,6 +75,7 @@ class ProductViewModel(val product: Product, repository: IRepository) : ViewMode
             .set(messageShell, SetOptions.merge()).addOnSuccessListener {
                 _eventMessage.postValue(Event(messageId))
             }
+        addToInterested(product)
     }
 
     fun createProductSmallBannerViewModel(product: Product): ProductSmallBannerViewModel {

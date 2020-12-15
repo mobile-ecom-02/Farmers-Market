@@ -3,6 +3,9 @@ package com.ilatyphi95.farmersmarket.ui.ads
 import androidx.lifecycle.*
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObjects
 import com.ilatyphi95.farmersmarket.data.entities.AdItem
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.repository.IRepository
@@ -59,18 +62,20 @@ class AdsFragmentViewModel(private val repository: IRepository) : ViewModel() {
         }
     }
 
-    init {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                _interestedAdsList.postValue(repository.getInterestedAds())
-            }
-        }
-    }
-
     private fun interestedAddClicked(itemId: String) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                _eventAdsDetails.postValue(Event(repository.getAd(itemId)))
+                FirebaseFirestore.getInstance().collection("ads")
+                    .whereEqualTo(FieldPath.documentId(), itemId).limit(1)
+                    .get()
+                    .continueWithTask { task ->
+                        if(task.isSuccessful) {
+                            task.result.toObjects<Product>().let {
+                                _eventAdsDetails.postValue(Event(it[0]))
+                            }
+                        }
+                        task
+                    }
             }
         }
 
@@ -93,6 +98,11 @@ class AdsFragmentViewModel(private val repository: IRepository) : ViewModel() {
 
     fun upDatePostedAds(products: List<Product>) {
         _postedAdsList.postValue(products)
+    }
+
+    fun upDateInterestedAds(items: List<AdItem>) {
+        _interestedAdsList.postValue(items)
+
     }
 
 }
