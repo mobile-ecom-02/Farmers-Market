@@ -1,5 +1,7 @@
 package com.ilatyphi95.farmersmarket.data.entities
 
+import com.google.firebase.firestore.DocumentId
+
 /**
  * @param id unigue to each user
  * @param firstName must be provided
@@ -11,7 +13,7 @@ package com.ilatyphi95.farmersmarket.data.entities
  * @param location must be provided
  */
 data class User @JvmOverloads constructor(
-    var id: String = "",
+    @DocumentId var id: String = "",
     val firstName: String = "",
     val lastName: String = "",
     val email: String = "",

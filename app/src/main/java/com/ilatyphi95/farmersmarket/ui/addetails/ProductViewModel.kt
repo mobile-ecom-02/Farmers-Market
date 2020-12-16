@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.ktx.toObject
 import com.ilatyphi95.farmersmarket.data.entities.MessageShell
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.entities.User
@@ -12,18 +13,23 @@ import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 import com.ilatyphi95.farmersmarket.firebase.addToInterested
 import com.ilatyphi95.farmersmarket.firebase.addToRecent
 import com.ilatyphi95.farmersmarket.utils.*
-import kotlinx.coroutines.*
 
 class ProductViewModel(val product: Product, repository: IRepository) : ViewModel() {
+
+    private val firestore = FirebaseFirestore.getInstance()
 
     private val _eventMessage = MutableLiveData<Event<String>>()
     val eventMessage : LiveData<Event<String>>
         get() = _eventMessage
 
+    private val _eventCall = MutableLiveData<Event<String>>()
+    val eventCall : LiveData<Event<String>>
+        get() = _eventCall
+
     init {
-        CoroutineScope(Job() + Dispatchers.Main).launch {
-            withContext(Dispatchers.IO){
-                _sellerDetails.postValue(repository.getUser(product.sellerId))
+        firestore.document("users/${product.sellerId}").get().continueWith {
+            if(it.isSuccessful) {
+                _sellerDetails.postValue(it.result.toObject<User>())
             }
         }
     }
@@ -52,8 +58,12 @@ class ProductViewModel(val product: Product, repository: IRepository) : ViewMode
         get() = _eventProductSelected
 
     fun callSeller() {
-        addToInterested(product)
-
+        _sellerDetails.value?.let {
+            if(it.phone.isNotEmpty()) {
+                _eventCall.postValue(Event(it.phone))
+                addToInterested(product)
+            }
+        }
     }
 
     fun chatSeller() {
@@ -71,7 +81,7 @@ class ProductViewModel(val product: Product, repository: IRepository) : ViewMode
             imgUrl = product.imgUrls.getOrElse(0){""},
             participants = listOf(sellerId, buyerId))
 
-        FirebaseFirestore.getInstance().document("messages/${messageId}")
+        firestore.document("messages/${messageId}")
             .set(messageShell, SetOptions.merge()).addOnSuccessListener {
                 _eventMessage.postValue(Event(messageId))
             }

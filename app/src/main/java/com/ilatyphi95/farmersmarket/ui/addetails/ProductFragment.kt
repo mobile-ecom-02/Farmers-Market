@@ -1,10 +1,15 @@
 package com.ilatyphi95.farmersmarket.ui.addetails
 
+import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -53,6 +58,21 @@ class ProductFragment : Fragment() {
             eventMessage.observe(viewLifecycleOwner, EventObserver{
                 findNavController()
                     .navigate(ProductFragmentDirections.actionProductFragmentToChatFragment(it))
+            })
+
+            eventCall.observe(viewLifecycleOwner, EventObserver{ number ->
+                if(number.isDigitsOnly()) {
+
+                    val intent = Intent(Intent.ACTION_DIAL).apply {
+                        data = Uri.parse("tel:$number")
+                    }
+
+                    try {
+                        startActivity(intent)
+                    } catch (e: ActivityNotFoundException) {
+
+                    }
+                }
             })
         }
 

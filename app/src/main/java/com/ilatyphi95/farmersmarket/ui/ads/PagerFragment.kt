@@ -111,7 +111,6 @@ class PagerFragment : Fragment() {
             value?.toObjects<Product>()?.let { viewmodel.upDatePostedAds(it) }
         }
 
-
         firestoreRef.document("users/${FirebaseAuth.getInstance().currentUser?.uid}")
             .collection("interestedItems").addSnapshotListener(viewLifecycleOwner) { query, exception ->
                 if (exception != null) {
