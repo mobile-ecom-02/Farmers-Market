@@ -45,7 +45,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/normal_margin"
                     android:layout_marginEnd="@dimen/normal_margin"
-                    android:layout_marginRight="@dimen/normal_margin"
                     android:text="@{viewmodel.pictureSelectedString}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -62,9 +61,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCall"
-                    android:layout_marginLeft="@dimen/small_margin"
                     android:layout_marginEnd="@dimen/normal_margin"
-                    android:layout_marginRight="@dimen/normal_margin"
                     android:enabled="@{viewmodel.enablePhone}"
                     android:onClick="@{() -> viewmodel.callSeller()}"
                     android:text="@string/call"
@@ -77,9 +74,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMessage"
                     android:layout_marginStart="@dimen/normal_margin"
-                    android:layout_marginLeft="@dimen/normal_margin"
                     android:layout_marginTop="4dp"
-                    android:layout_marginRight="@dimen/small_margin"
                     android:onClick="@{() -> viewmodel.chatSeller()}"
                     android:text="@string/chat"
                     style="@style/button_style"
@@ -115,6 +110,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/normal_margin"
                     app:layout_constraintTop_toBottomOf="@+id/tvDesc"
+                    app:showView ="@{viewmodel.isSimilarItemVisible}"
                     bind:productViewModel="@{viewmodel}" />
 
                 <androidx.constraintlayout.widget.Guideline

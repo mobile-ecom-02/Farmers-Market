@@ -2,6 +2,7 @@ package com.ilatyphi95.farmersmarket.utils
 
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -104,4 +105,13 @@ fun TextView.moneyString(money: Money) {
 @BindingAdapter("setInt")
 fun TextView.setInt(int: Int) {
     text = int.toString()
+}
+
+@BindingAdapter("showView")
+fun View.showView(isVisible: Boolean) {
+    if(isVisible) {
+        this.visibility = View.VISIBLE
+    } else {
+        this.visibility = View.GONE
+    }
 }

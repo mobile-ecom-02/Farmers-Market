@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.ktx.toObjects
 import com.ilatyphi95.farmersmarket.data.entities.MessageShell
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.entities.User
@@ -32,6 +33,16 @@ class ProductViewModel(val product: Product, repository: IRepository) : ViewMode
                 _sellerDetails.postValue(it.result.toObject<User>())
             }
         }
+
+        val searchTerm = searchTerm(product.name, product.description, limit = KEYWORD_LIMIT - 1)
+
+        firestore.collection("ads").whereArrayContains("keywords", searchTerm)
+            .limit(11).get().continueWith { task ->
+            if(task.isSuccessful) {
+                val products = task.result.toObjects<Product>().filter { it.id != product.id }
+                _similarItems.postValue(products)
+            }
+        }
     }
     private val _sellerDetails = MutableLiveData<User>()
 
@@ -39,11 +50,15 @@ class ProductViewModel(val product: Product, repository: IRepository) : ViewMode
         it != null && it.phone.isNotEmpty()
     }
 
+    private val _similarItems = MutableLiveData<List<Product>>()
     val similarItems: LiveData<List<RecyclerItem>> = Transformations
-        .map(repository.searchProducts(product.name)) { list ->
+        .map(_similarItems) { list ->
             list.map { createProductSmallBannerViewModel(it) }
                 .map { it.toRecyclerItem() }
         }
+
+    val isSimilarItemVisible: LiveData<Boolean> = Transformations.map(similarItems){ !it.isNullOrEmpty() }
+
 
     val imgUrls: List<RecyclerItem> =
         product.imgUrls.map { ProductPicture(it) }.map { it.toRecyclerItem() }
@@ -88,7 +103,7 @@ class ProductViewModel(val product: Product, repository: IRepository) : ViewMode
         addToInterested(product)
     }
 
-    fun createProductSmallBannerViewModel(product: Product): ProductSmallBannerViewModel {
+    private fun createProductSmallBannerViewModel(product: Product): ProductSmallBannerViewModel {
         return ProductSmallBannerViewModel(product.toAdItem()).apply {
             itemClickHandler = { productClicked(product) }
         }

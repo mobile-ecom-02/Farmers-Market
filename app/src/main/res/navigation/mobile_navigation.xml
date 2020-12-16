@@ -43,8 +43,8 @@
         <action
             android:id="@+id/action_productFragment_self"
             app:destination="@id/productFragment"
-            app:popUpTo="@id/navigation_message"
-            app:popUpToInclusive="false" />
+            app:popUpTo="@id/productFragment"
+            app:popUpToInclusive="true" />
         <argument
             android:name="product"
             app:argType="com.ilatyphi95.farmersmarket.data.entities.Product" />
