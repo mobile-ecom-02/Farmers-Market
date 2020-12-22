@@ -12,7 +12,7 @@ class MessageViewModel(val repository: IRepository) : ViewModel() {
 
     private val _messages = MutableLiveData<List<Message>>()
     val messages : LiveData<List<RecyclerItem>> = _messages.map { list ->
-        list.map {message ->
+        list.filter{ it.message.isNotEmpty() }.map {message ->
             MessageItemViewModel(message).apply {
                 itemClickHandler = { messageClicked(message.id) }
 

@@ -42,7 +42,7 @@ class ChatFragmentViewModel(messageId: String)
         documentRef.get().addOnSuccessListener {document ->
 
             val messageShell = document.toObject<MessageShell>()
-            val otherUserId = messageShell!!.participants.find{it != thisUser!!.uid}!!
+            val otherUserId = messageShell!!.participants.find{it != thisUser!!.uid}
 
             firestoreRef.document("users/$otherUserId").get().addOnSuccessListener {
                 _otherUser.postValue(it.toObject())
