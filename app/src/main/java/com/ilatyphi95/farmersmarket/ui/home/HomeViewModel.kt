@@ -71,10 +71,10 @@ class HomeViewModel(private val repository: IRepository) : ViewModel() {
     val isLoading: LiveData<Boolean>
         get() = _eventIsLoading
 
-
-    init {
-//        clearSearch()
-    }
+//
+//    init {
+////        clearSearch()
+//    }
 
     private fun productSelected(product: Product) {
         addToRecent(product)
@@ -136,35 +136,35 @@ class HomeViewModel(private val repository: IRepository) : ViewModel() {
 //        searchString.value = null
 //    }
 
-    private suspend fun searchTransform(searchStr: String?): LiveData<List<RecyclerItem>> {
-        _eventIsLoading.value = true
-
-        return if (searchStr != null) {
-            val  keywords = getKeywords(searchStr)
-
-            val query = FirebaseFirestore.getInstance().collection("ads")
-                .whereArrayContains("keywords", keywords).get().await()
-
-
-            liveData {
-                query.toObjects(Product::class.java).map {
-                    SearchProductViewModel(it).apply {
-                        itemClickHandler = { productSelected(product) }
-                    }.toRecyclerItem()
-                }
-            }
-//            repository.searchProducts(searchStr).map { list ->
-//                list.map { product ->
-//                    SearchProductViewModel(product).apply {
-//                        itemClickHandler = { productSelected(product) }
-//                    }
-//                }.map { it.toRecyclerItem() }
+//    private suspend fun searchTransform(searchStr: String?): LiveData<List<RecyclerItem>> {
+//        _eventIsLoading.value = true
 //
+//        return if (searchStr != null) {
+//            val  keywords = getKeywords(searchStr)
+//
+//            val query = FirebaseFirestore.getInstance().collection("ads")
+//                .whereArrayContains("keywords", keywords).get().await()
+//
+//
+//            liveData {
+//                query.toObjects(Product::class.java).map {
+//                    SearchProductViewModel(it).apply {
+//                        itemClickHandler = { productSelected(product) }
+//                    }.toRecyclerItem()
+//                }
 //            }
-        } else {
-            liveData { emit(emptyList<RecyclerItem>()) }
-        }
-    }
+////            repository.searchProducts(searchStr).map { list ->
+////                list.map { product ->
+////                    SearchProductViewModel(product).apply {
+////                        itemClickHandler = { productSelected(product) }
+////                    }
+////                }.map { it.toRecyclerItem() }
+////
+////            }
+//        } else {
+//            liveData { emit(emptyList<RecyclerItem>()) }
+//        }
+//    }
 
     fun updateRecent(list: List<AdItem>) {
         _recentItems.postValue(list)
@@ -173,8 +173,9 @@ class HomeViewModel(private val repository: IRepository) : ViewModel() {
     fun updateCloseBy(myLocation: MyLocation, list: List<Product>) {
         CoroutineScope(uiScope).launch {
             withContext(Dispatchers.Default) {
-                val closeByList = list.map { it -> CloseByProduct(it,
-                myLocation.toLocation().distanceTo(it.location?.toLocation())) }
+                val closeByList = list.filter { it.sellerId != user!!.uid }.map {
+                    CloseByProduct(it, myLocation.toLocation().distanceTo(it.location?.toLocation()))
+                }
                 _closeBy.postValue(closeByList.sortedBy { it.distance })
             }
         }

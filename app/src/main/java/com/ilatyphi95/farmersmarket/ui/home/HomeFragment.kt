@@ -14,16 +14,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
+import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.entities.User
 import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
 import com.ilatyphi95.farmersmarket.databinding.FragmentHomeBinding
 import com.ilatyphi95.farmersmarket.firebase.addSnapshotListener
 import com.ilatyphi95.farmersmarket.utils.EventObserver
+import com.koalap.geofirestore.GeoFire
+import com.koalap.geofirestore.GeoLocation
 
 class HomeFragment : Fragment() {
 
     lateinit var binding : FragmentHomeBinding
-    val TAG: String = this.javaClass.simpleName
 
     private val firestore = FirebaseFirestore.getInstance()
 
@@ -48,7 +50,7 @@ class HomeFragment : Fragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
 
@@ -80,12 +82,11 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-
     private fun setUpListeners() {
         firestore.document("users/${FirebaseAuth.getInstance().currentUser?.uid}")
             .collection("recent").addSnapshotListener(viewLifecycleOwner) { query, exception ->
                 if (exception != null) {
-                    Log.d(TAG, "setUpFirestoreListeners: ${exception.message}")
+                    Log.d(tag, "setUpFirestoreListeners: ${exception.message}")
                 }
 
                 query?.let {
@@ -99,18 +100,16 @@ class HomeFragment : Fragment() {
 
                 val user = it.toObject<User>()
                 user?.location?.let { myLocation ->
+                    val ref = firestore.collection("ads")
 
-                    firestore.collection("ads")
-                        .whereNotEqualTo("sellerId", FirebaseAuth.getInstance().currentUser?.uid)
-                        .addSnapshotListener(viewLifecycleOwner) { query, exception ->
-
-                            if (exception != null) {
-                                Log.d(TAG, "setUpFirestoreListeners: ${exception.message}")
+                    GeoFire(ref, ref.limit(30))
+                        .queryAtLocation(
+                            GeoLocation(user.location.latitude, user.location.longitude), 100.0)
+                        .addGeoQueryForSingleValueEvent { list ->
+                            val  productList = list.map { docChange ->
+                                docChange.document.toObject<Product>()
                             }
-
-                            query?.let { snapshot ->
-                                homeViewModel.updateCloseBy(myLocation, snapshot.toObjects())
-                            }
+                            homeViewModel.updateCloseBy(myLocation, productList)
                         }
                 }
             }

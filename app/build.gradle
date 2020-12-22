@@ -144,6 +144,9 @@ dependencies {
     // commons lib
     implementation "com.github.dpaukov:combinatoricslib3:3.3.0"
 
+    // Geohash library
+    implementation 'com.koalap:geofirestore-android:1.2.2'
+
 
     testImplementation 'junit:junit:4.12'
     testImplementation "androidx.arch.core:core-testing:2.1.0"
