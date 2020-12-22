@@ -71,7 +71,7 @@ object ProductGenerator {
         return imagesUrl[Random.nextInt(0, until)]
     }
 
-    fun createLocation(lat: Double, lng: Double, accuracy: Float = 3.0f): MyLocation {
+    private fun createLocation(lat: Double, lng: Double, accuracy: Float = 3.0f): MyLocation {
 
         return MyLocation(
             accuracy = accuracy,

@@ -2,7 +2,6 @@ package com.ilatyphi95.farmersmarket.ui.ads
 
 import androidx.lifecycle.*
 import com.google.firebase.Timestamp
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObjects
@@ -22,7 +21,6 @@ class AdsFragmentViewModel(private val repository: IRepository) : ViewModel() {
 
     private val job = Job()
     private val uiScope = CoroutineScope(job + Dispatchers.Main)
-    private val thisUser = FirebaseAuth.getInstance().uid
 
     private val _eventAdsDetails = MutableLiveData<Event<Product>>()
     val eventAdsDetails : LiveData<Event<Product>>

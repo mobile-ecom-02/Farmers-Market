@@ -31,7 +31,7 @@ class SignUpFragment : Fragment(){
     private val binding get() = _binding!!
 
     companion object {
-        val TAG = "RegisterUser"
+        const val TAG = "RegisterUser"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +43,7 @@ class SignUpFragment : Fragment(){
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentSignUpBinding.inflate(inflater, container, false)
         startFadeInAnimation()

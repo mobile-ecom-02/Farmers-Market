@@ -74,7 +74,7 @@ class SampleRepository : IRepository {
 
     }
 
-    override fun getMessages(messageId: String) = liveData<List<ChatMessage>> {
+    override fun getMessages(messageId: String) = liveData {
         for (i in 1..10) {
             delay(Random.nextLong(1000, 10000))
             emit(generateChat(messageId))
@@ -101,11 +101,11 @@ class SampleRepository : IRepository {
         return ProductGenerator.getList()[0]
     }
 
-    override suspend fun getMessageList(): List<Message>? {
+    override suspend fun getMessageList(): List<Message> {
         return randomMessages()
     }
 
-    private fun randomMessages(): List<Message>? {
+    private fun randomMessages(): List<Message> {
         val list = mutableListOf<Message>()
         val total = Random.nextInt(10, 50)
 

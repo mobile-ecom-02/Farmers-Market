@@ -47,9 +47,9 @@ class ModifyAdViewModel(private val repository: IRepository) : ViewModel() {
 
     private val imageUriList = mutableListOf<Uri>()
     private val firebaseStorageRef = FirebaseStorage.getInstance().reference.child("images")
-    lateinit var documentAddress: DocumentReference
-    var pictureCount : Int = 0
-    var currentPictureUpload: Int = 0
+    private lateinit var documentAddress: DocumentReference
+    private var pictureCount : Int = 0
+    private var currentPictureUpload: Int = 0
 
     private val _location = MutableLiveData<MyLocation>()
     val address: LiveData<String> = _location.map {
@@ -196,7 +196,7 @@ class ModifyAdViewModel(private val repository: IRepository) : ViewModel() {
         val myProduct = Product(
             name = title.value!!,
             description = description.value!!,
-            sellerId = user!!.uid,
+            sellerId = user.uid,
             type = category.value!!,
             imgUrls = emptyList(),
             qtyAvailable = quantityAvailable.value!!.toInt(),
@@ -207,7 +207,6 @@ class ModifyAdViewModel(private val repository: IRepository) : ViewModel() {
         )
 
         val collection = FirebaseFirestore.getInstance().collection("ads")
-//        collection.add(product)
         collection.add(myProduct)
             .addOnCompleteListener {
                 finishLoading()

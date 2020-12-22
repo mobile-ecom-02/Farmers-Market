@@ -25,8 +25,6 @@ import kotlin.collections.HashMap
 
 class SettingsFragment : Fragment() {
 
-    private val TAG: String? = this.tag
-
     private lateinit var settingsViewModel: SettingsViewModel
 
     override fun onCreateView(
@@ -71,11 +69,11 @@ class SettingsFragment : Fragment() {
                             .set(map, SetOptions.merge())
 
                     } else {
-                        Log.e( TAG, "No valid address returned")
+                        Log.e( tag, "No valid address returned")
                     }
 
                 } catch (e: IOException) {
-                    Log.e( TAG, e.message ?: "Error Occurred")
+                    Log.e( tag, e.message ?: "Error Occurred")
                 }
             }
         }

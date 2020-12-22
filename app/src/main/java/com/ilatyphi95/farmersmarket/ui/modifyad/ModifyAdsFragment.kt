@@ -31,7 +31,6 @@ import kotlin.collections.ArrayList
  */
 
 class ModifyAdsFragment : Fragment() {
-    private val TAG: String? = this.tag
     private lateinit var binding: FragmentModifyAdsBinding
     private val viewmodel by viewModels<ModifyAdViewModel> {
         AddProductViewModelFactory(SampleRepository())
@@ -68,11 +67,11 @@ class ModifyAdsFragment : Fragment() {
                                 address.adminArea,
                                 address.countryName))
                     } else {
-                        Log.e( TAG, "No valid address returned")
+                        Log.e( tag, "No valid address returned")
                     }
 
                 } catch (e: IOException) {
-                    Log.e( TAG, e.message ?: "Error Occurred")
+                    Log.e( tag, e.message ?: "Error Occurred")
                 }
             }
         }
@@ -81,7 +80,7 @@ class ModifyAdsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_modify_ads, container, false)
 
         binding.apply {

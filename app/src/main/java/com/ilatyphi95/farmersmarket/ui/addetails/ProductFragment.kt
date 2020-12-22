@@ -1,24 +1,23 @@
 package com.ilatyphi95.farmersmarket.ui.addetails
 
-import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.text.isDigitsOnly
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.PagerSnapHelper
+import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
 import com.ilatyphi95.farmersmarket.data.universaladapter.OnSnapPositionChangeListener
+import com.ilatyphi95.farmersmarket.data.universaladapter.attachSnapHelperWithListener
 import com.ilatyphi95.farmersmarket.databinding.FragmentProductBinding
 import com.ilatyphi95.farmersmarket.utils.EventObserver
-import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
-import com.ilatyphi95.farmersmarket.data.universaladapter.attachSnapHelperWithListener
 
 /**
  * ProductFragment to use to show product details
@@ -35,7 +34,7 @@ class ProductFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         databinding = FragmentProductBinding.inflate(inflater, container, false)
         databinding.apply {

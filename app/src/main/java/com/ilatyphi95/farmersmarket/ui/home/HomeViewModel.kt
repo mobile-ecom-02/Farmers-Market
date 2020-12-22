@@ -44,24 +44,13 @@ class HomeViewModel(private val repository: IRepository) : ViewModel() {
                 }
             }.map { it.toRecyclerItem() }
     }
-//
-//    private val searchString = MutableLiveData<String>()
+
     val showSearchRecycler = _showSearchResult.map { it }
     val showRecentScreen = showSearchRecycler.map { it.not() }
 
     private val _searchProduct = MutableLiveData<List<RecyclerItem>>()
     val searchProduct : LiveData<List<RecyclerItem>>
         get() = _searchProduct
-
-//    val searchProduct = searchString.switchMap { srcStr ->
-//        var mySearch : LiveData<List<RecyclerItem>> = liveData { emptyList<RecyclerItem>() }
-//        viewModelScope.launch {
-//            mySearch = searchTransform(srcStr)
-//
-//        }
-//        _eventIsLoading.value = false
-//        mySearch
-//    }
 
     private val _eventProductSelected = MutableLiveData<Event<Product>>()
     val eventProductSelected: LiveData<Event<Product>>
@@ -70,11 +59,6 @@ class HomeViewModel(private val repository: IRepository) : ViewModel() {
     private val _eventIsLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
         get() = _eventIsLoading
-
-//
-//    init {
-////        clearSearch()
-//    }
 
     private fun productSelected(product: Product) {
         addToRecent(product)
@@ -107,7 +91,6 @@ class HomeViewModel(private val repository: IRepository) : ViewModel() {
 
     fun search(query: String?) {
         query?.let {
-//            searchString.value = it
             loadSearch(query)
         }
     }
@@ -131,40 +114,6 @@ class HomeViewModel(private val repository: IRepository) : ViewModel() {
         }
 
     }
-//
-//    private fun clearSearch() {
-//        searchString.value = null
-//    }
-
-//    private suspend fun searchTransform(searchStr: String?): LiveData<List<RecyclerItem>> {
-//        _eventIsLoading.value = true
-//
-//        return if (searchStr != null) {
-//            val  keywords = getKeywords(searchStr)
-//
-//            val query = FirebaseFirestore.getInstance().collection("ads")
-//                .whereArrayContains("keywords", keywords).get().await()
-//
-//
-//            liveData {
-//                query.toObjects(Product::class.java).map {
-//                    SearchProductViewModel(it).apply {
-//                        itemClickHandler = { productSelected(product) }
-//                    }.toRecyclerItem()
-//                }
-//            }
-////            repository.searchProducts(searchStr).map { list ->
-////                list.map { product ->
-////                    SearchProductViewModel(product).apply {
-////                        itemClickHandler = { productSelected(product) }
-////                    }
-////                }.map { it.toRecyclerItem() }
-////
-////            }
-//        } else {
-//            liveData { emit(emptyList<RecyclerItem>()) }
-//        }
-//    }
 
     fun updateRecent(list: List<AdItem>) {
         _recentItems.postValue(list)

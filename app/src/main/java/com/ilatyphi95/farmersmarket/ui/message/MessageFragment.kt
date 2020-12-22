@@ -20,7 +20,6 @@ import com.ilatyphi95.farmersmarket.utils.EventObserver
 
 class MessageFragment : Fragment() {
 
-    private val TAG = this.javaClass.simpleName
     private val firestore = FirebaseFirestore.getInstance()
 
     private val viewmodel by viewModels<MessageViewModel> {
@@ -31,7 +30,7 @@ class MessageFragment : Fragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         val binding = DataBindingUtil
             .inflate<FragmentMessageBinding>(inflater, R.layout.fragment_message, container, false)
@@ -53,7 +52,7 @@ class MessageFragment : Fragment() {
         firestore.collection("users/${user?.uid}/chatList")
             .addSnapshotListener(viewLifecycleOwner) {query, exception ->
                 if(exception != null){
-                    Log.d(TAG, "GetChatMessage: ${exception.message}")
+                    Log.d(tag, "GetChatMessage: ${exception.message}")
                 }
 
                 query?.let {

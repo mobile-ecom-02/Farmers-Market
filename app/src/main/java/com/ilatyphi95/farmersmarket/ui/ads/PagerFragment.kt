@@ -27,7 +27,6 @@ import com.ilatyphi95.farmersmarket.utils.LocationUtils
 
 
 class PagerFragment : Fragment() {
-    private val TAG = this.tag
     private lateinit var binding: FragmentPagerBinding
 
     private val viewmodel by viewModels<AdsFragmentViewModel> {
@@ -114,7 +113,7 @@ class PagerFragment : Fragment() {
         firestoreRef.document("users/${FirebaseAuth.getInstance().currentUser?.uid}")
             .collection("interestedItems").addSnapshotListener(viewLifecycleOwner) { query, exception ->
                 if (exception != null) {
-                    Log.d(TAG, "setUpFirestoreListeners: ${exception.message}")
+                    Log.d(tag, "setUpFirestoreListeners: ${exception.message}")
                     return@addSnapshotListener
                 }
 

@@ -64,7 +64,7 @@ fun toShortTime(timeStamp: Long) : String {
     return timeStampDate.format(DateTimeFormatter.ofPattern("hh:mma"))
 }
 
-fun longToLocalDateTime(long: Long) =
+fun longToLocalDateTime(long: Long): LocalDateTime =
     LocalDateTime.ofInstant(Instant.ofEpochMilli(long), ZoneId.systemDefault())
 
 fun Product.toAdItem() = AdItem(itemId = this.id, name = this.name, price = this.priceStr,

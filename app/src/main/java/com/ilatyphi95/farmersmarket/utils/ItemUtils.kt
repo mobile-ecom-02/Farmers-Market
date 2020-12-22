@@ -20,13 +20,10 @@ sealed class AddItemViewModel(val item: AdItem, @LayoutRes val layoutId: Int) {
 }
 
 class PostedAdsViewModel(thisItem: AdItem) :
-    AddItemViewModel(thisItem, R.layout.ads_product_item) {
-
-}
+    AddItemViewModel(thisItem, R.layout.ads_product_item)
 
 class InterestedAdsViewModel(thisItem: AdItem) :
-    AddItemViewModel(thisItem, R.layout.interested_product_item) {
-}
+    AddItemViewModel(thisItem, R.layout.interested_product_item)
 
 fun AddItemViewModel.toRecyclerItem() = RecyclerItem(
     data = this,

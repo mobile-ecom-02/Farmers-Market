@@ -32,8 +32,8 @@ class LoginFragment : Fragment(){
     private val binding get() = _binding!!
 
     companion object{
-        val TAG = "LOGIN"
-        val languageCode = "en"
+        const val TAG = "LOGIN"
+        const val languageCode = "en"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +46,7 @@ class LoginFragment : Fragment(){
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         startFadeInAnimation()

@@ -14,13 +14,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.toObjects
 import com.ilatyphi95.farmersmarket.R
-import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
 import com.ilatyphi95.farmersmarket.databinding.FragmentChatBinding
 import com.ilatyphi95.farmersmarket.firebase.addSnapshotListener
 
 
 class ChatFragment : Fragment() {
-    private val TAG = this.javaClass.simpleName
     lateinit var binding: FragmentChatBinding
 
     private val fireStore = FirebaseFirestore.getInstance()
@@ -34,7 +32,7 @@ class ChatFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_chat, container, false)
 
         binding.apply {
@@ -45,7 +43,7 @@ class ChatFragment : Fragment() {
         fireStore.collection("messages/${args.messageId}/chatMessages")
             .addSnapshotListener(viewLifecycleOwner) { query, exception ->
                 if(exception != null) {
-                    Log.d(TAG, "setUpFirestoreListeners: ${exception.message}")
+                    Log.d(tag, "setUpFirestoreListeners: ${exception.message}")
                 }
 
                 query?.let {

@@ -19,14 +19,10 @@ class InterestedAdsFragment : Fragment() {
         requireParentFragment()
     })
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         val binding = DataBindingUtil.inflate<FragmentInterestedAdsBinding>(
             inflater, R.layout.fragment_interested_ads, container, false)
