@@ -1,10 +1,9 @@
 package com.ilatyphi95.farmersmarket.utils
 
 import android.net.Uri
-import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.BR
+import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.data.entities.AdItem
-import com.ilatyphi95.farmersmarket.data.entities.CloseByProduct
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 
@@ -50,11 +49,11 @@ fun ProductPicture.toRecyclerItem() = RecyclerItem(
     variableId = BR.viewModel
 )
 
-class CloseProductViewModel(val closeByProduct: CloseByProduct) {
-    lateinit var itemClickHander: (closeByProduct: CloseByProduct) -> Unit
+class CloseProductViewModel(val product: Product) {
+    lateinit var itemClickHandler: (product: Product) -> Unit
 
     fun onItemClick() {
-        itemClickHander(closeByProduct)
+        itemClickHandler(product)
     }
 }
 

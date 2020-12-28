@@ -28,7 +28,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:loadFirst="@{viewModel.closeByProduct.product.imgUrls}"
+            app:loadFirst="@{viewModel.product.imgUrls}"
             app:shapeAppearanceOverlay="@style/roundedImageView"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:lines="2"
             android:paddingTop="@dimen/small_margin"
-            android:text="@{viewModel.closeByProduct.product.name}"
+            android:text="@{viewModel.product.name}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView"
@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_margin"
-            android:text="@{MoneyUtilsKt.stringToMoney(viewModel.closeByProduct.product.priceStr).toString()}"
+            android:text="@{MoneyUtilsKt.stringToMoney(viewModel.product.priceStr).toString()}"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/tvName"
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_margin"
             android:textStyle="italic"
-            app:distanceMiles="@{viewModel.closeByProduct}"
+            android:text="@{viewModel.product.location.city}"
             app:layout_constraintStart_toStartOf="@+id/tvPrice"
             app:layout_constraintTop_toBottomOf="@+id/tvPrice" />
 

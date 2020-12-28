@@ -67,7 +67,7 @@ class ModifyAdsFragment : Fragment() {
                                 lastLocation.latitude,
                                 lastLocation.longitude,
                                 lastLocation.time,
-                                address.subAdminArea,
+                                address.locality ?: address.subAdminArea,
                                 address.adminArea,
                                 address.countryName))
                     } else {
