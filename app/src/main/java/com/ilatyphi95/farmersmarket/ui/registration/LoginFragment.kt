@@ -21,7 +21,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import com.google.firebase.auth.FirebaseAuth
 import com.ilatyphi95.farmersmarket.R
+import com.ilatyphi95.farmersmarket.data.repository.FirebaseMessagingService
 import com.ilatyphi95.farmersmarket.databinding.FragmentLoginBinding
+import com.ilatyphi95.farmersmarket.utils.sendVerificationEmail
 import kotlinx.android.synthetic.main.fragment_login.*
 
 
@@ -30,8 +32,8 @@ class LoginFragment : Fragment(){
     private val binding get() = _binding!!
 
     companion object{
-        val TAG = "LOGIN"
-        val languageCode = "en"
+        const val TAG = "LOGIN"
+        const val languageCode = "en"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,7 +46,7 @@ class LoginFragment : Fragment(){
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         startFadeInAnimation()
@@ -57,12 +59,11 @@ class LoginFragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
 
         binding.loginButton.setOnClickListener {
-//            loginUser()
-            findNavController().navigate(R.id.homeActivity)
+            loginUser()
         }
 
         binding.forgotPasswordTextView.setOnClickListener{
-//            resetPassword()
+            resetPassword()
         }
     }
 
@@ -141,6 +142,8 @@ class LoginFragment : Fragment(){
             return
         }
 
+
+
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { 
                 if(!it.isSuccessful) return@addOnCompleteListener
@@ -148,9 +151,19 @@ class LoginFragment : Fragment(){
                 Log.d(TAG, "logged in user ${it.result?.user?.uid}")
             }
             .addOnSuccessListener {
-                findNavController().navigate(
-                    LoginFragmentDirections.actionLoginFragmentToHomeActivity()
-                )
+                if(FirebaseAuth.getInstance().currentUser?.isEmailVerified == true) {
+
+                    // register device for fcm messaging
+                    FirebaseMessagingService.useToken {
+                        FirebaseMessagingService.sendRegistrationToServer(it)
+                    }
+
+                    findNavController().navigate(
+                        LoginFragmentDirections.actionLoginFragmentToHomeActivity()
+                    )
+                } else {
+                    sendVerificationEmail(requireView())
+                }
             }
             .addOnFailureListener {
                 Log.d(TAG, "${it.message}")
@@ -180,5 +193,7 @@ class LoginFragment : Fragment(){
                 Log.d(TAG, "${it.message}")
                 Toast.makeText(context, "${it.message}", Toast.LENGTH_SHORT).show()
             }
+
+        FirebaseAuth.getInstance().signOut()
     }
 }

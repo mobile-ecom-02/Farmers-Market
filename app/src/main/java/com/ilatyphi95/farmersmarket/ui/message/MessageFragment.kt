@@ -9,21 +9,23 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.ilatyphi95.farmersmarket.R
-import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
 import com.ilatyphi95.farmersmarket.databinding.FragmentMessageBinding
+import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
 import com.ilatyphi95.farmersmarket.utils.EventObserver
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 class MessageFragment : Fragment() {
 
     private val viewmodel by viewModels<MessageViewModel> {
-        MessageViewModelFactory(SampleRepository())
+        MessageViewModelFactory(ProductServices)
     }
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         val binding = DataBindingUtil
             .inflate<FragmentMessageBinding>(inflater, R.layout.fragment_message, container, false)
@@ -39,6 +41,7 @@ class MessageFragment : Fragment() {
                     .navigate(MessageFragmentDirections.actionNavigationMessageToChatFragment(it))
             })
         }
+
         return binding.root
     }
 }

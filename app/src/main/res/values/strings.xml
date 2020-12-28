@@ -66,8 +66,17 @@
     <string name="sample_purchase_on">purchased on 12–12–2020 23:59</string>
     <string name="interested_ads">Interested Ads</string>
     <string name="my_ads">My Ads</string>
-    <string name="viewed_at">Viewed at %s</string>
-    <string name="posted_at">Posted at %s</string>
+    <string name="viewed_at">Viewed: %s</string>
+    <string name="posted_at">Posted: %s</string>
     <string name="add_new_product_require_location">Add new product require location to be enabled</string>
     <string name="ads">Ads</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="check_email">Check email for verification mail</string>
+    <string name="resend_verification_mail">Error: try resending verification mail</string>
+    <string name="account_creation_success">Account creation successful</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="empty_email_password">cannot have empty fields</string>
+    <string name="not_matching_password">Password does not match</string>
+    <string name="channel_name">message notifications</string>
+    <string name="channel_description">channel for handling message notifications</string>
 </resources>

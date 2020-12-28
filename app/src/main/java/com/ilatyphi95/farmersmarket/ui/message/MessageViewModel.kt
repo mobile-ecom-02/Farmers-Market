@@ -1,23 +1,19 @@
 package com.ilatyphi95.farmersmarket.ui.message
 
 import androidx.lifecycle.*
-import com.ilatyphi95.farmersmarket.data.entities.Message
-import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
+import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
 import com.ilatyphi95.farmersmarket.utils.Event
 import com.ilatyphi95.farmersmarket.utils.MessageItemViewModel
 import com.ilatyphi95.farmersmarket.utils.toRecyclerItem
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-class MessageViewModel(val repository: IRepository) : ViewModel() {
+@ExperimentalCoroutinesApi
+class MessageViewModel(service: ProductServices) : ViewModel() {
 
-
-    private val job = Job()
-    private val uiScope = CoroutineScope(job + Dispatchers.Main)
-
-    private val _messages = MutableLiveData<List<Message>>()
+    private val _messages = service.getMessageList().asLiveData()
     val messages : LiveData<List<RecyclerItem>> = _messages.map { list ->
-        list.map {message ->
+        list.filter{ it.message.isNotEmpty() }.map {message ->
             MessageItemViewModel(message).apply {
                 itemClickHandler = { messageClicked(message.id) }
 
@@ -29,23 +25,15 @@ class MessageViewModel(val repository: IRepository) : ViewModel() {
     val eventMessage : LiveData<Event<String>>
         get() = _eventMessage
 
-
-    init {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                _messages.postValue(repository.getMessageList())
-            }
-        }
-    }
-
     private fun messageClicked(messageId: String) {
         _eventMessage.value = Event(messageId)
     }
 }
 
+@ExperimentalCoroutinesApi
 @Suppress("UNCHECKED_CAST")
-class MessageViewModelFactory(val repository: IRepository) : ViewModelProvider.NewInstanceFactory(){
+class MessageViewModelFactory(private val service: ProductServices) : ViewModelProvider.NewInstanceFactory(){
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        (MessageViewModel(repository) as T)
+        (MessageViewModel(service) as T)
 }

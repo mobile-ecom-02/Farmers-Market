@@ -3,33 +3,36 @@ package com.ilatyphi95.farmersmarket.ui.addetails
 import androidx.lifecycle.*
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.entities.User
-import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
-import com.ilatyphi95.farmersmarket.utils.Event
-import com.ilatyphi95.farmersmarket.utils.ProductPicture
-import com.ilatyphi95.farmersmarket.utils.ProductSmallBannerViewModel
-import com.ilatyphi95.farmersmarket.utils.toRecyclerItem
-import kotlinx.coroutines.*
+import com.ilatyphi95.farmersmarket.firebase.addToInterested
+import com.ilatyphi95.farmersmarket.firebase.addToRecent
+import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
+import com.ilatyphi95.farmersmarket.utils.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
-class ProductViewModel(val product: Product, repository: IRepository) : ViewModel() {
-    init {
-        CoroutineScope(Job() + Dispatchers.Main).launch {
-            withContext(Dispatchers.IO){
-                _sellerDetails.postValue(repository.getUser(product.sellerId))
-            }
-        }
-    }
+@ExperimentalCoroutinesApi
+class ProductViewModel(val product: Product, private val services: ProductServices) : ViewModel() {
+
+    private val _eventMessage = MutableLiveData<Event<String>>()
+    val eventMessage : LiveData<Event<String>>
+        get() = _eventMessage
+
+    private val _eventCall = MutableLiveData<Event<String>>()
+    val eventCall : LiveData<Event<String>>
+        get() = _eventCall
+
     private val _sellerDetails = MutableLiveData<User>()
 
-    val enablePhone = Transformations.map(_sellerDetails) {
-        it != null && it.phone.isNotEmpty()
-    }
+    val enablePhone = _sellerDetails.map { it != null && it.phone.isNotEmpty() }
 
-    val similarItems: LiveData<List<RecyclerItem>> = Transformations
-        .map(repository.searchProducts(product.name)) { list ->
+    private val _similarItems = MutableLiveData<List<Product>>()
+    val similarItems: LiveData<List<RecyclerItem>> = _similarItems.map {  list ->
             list.map { createProductSmallBannerViewModel(it) }
                 .map { it.toRecyclerItem() }
         }
+
+    val isSimilarItemVisible: LiveData<Boolean> = similarItems.map { !it.isNullOrEmpty() }
 
     val imgUrls: List<RecyclerItem> =
         product.imgUrls.map { ProductPicture(it) }.map { it.toRecyclerItem() }
@@ -43,21 +46,41 @@ class ProductViewModel(val product: Product, repository: IRepository) : ViewMode
     val eventProductSelected : LiveData<Event<Product>>
         get() = _eventProductSelected
 
-    fun callSeller() {
+    init {
+        val searchTerm = searchTerm(product.name, product.description, limit = KEYWORD_LIMIT - 1)
 
+        viewModelScope.launch {
+            _similarItems.postValue(services.searchProduct(searchTerm).filter { it != product })
+            _sellerDetails.postValue(services.getUser(product.sellerId))
+        }
+    }
+
+    fun callSeller() {
+        _sellerDetails.value?.let {
+            if(it.phone.isNotEmpty()) {
+                _eventCall.postValue(Event(it.phone))
+                addToInterested(product)
+            }
+        }
     }
 
     fun chatSeller() {
-
+        viewModelScope.launch {
+            services.createMessage(product)?.let {
+                _eventMessage.postValue(Event(it))
+                addToInterested(product)
+            }
+        }
     }
 
-    fun createProductSmallBannerViewModel(product: Product): ProductSmallBannerViewModel {
-        return ProductSmallBannerViewModel(product).apply {
-            itemClickHandler = { product -> productClicked(product) }
+    private fun createProductSmallBannerViewModel(product: Product): ProductSmallBannerViewModel {
+        return ProductSmallBannerViewModel(product.toAdItem()).apply {
+            itemClickHandler = { productClicked(product) }
         }
     }
 
     private fun productClicked(product: Product) {
+        addToRecent(product)
         _eventProductSelected.value = Event(product)
     }
 
@@ -66,9 +89,10 @@ class ProductViewModel(val product: Product, repository: IRepository) : ViewMode
     }
 }
 
+@ExperimentalCoroutinesApi
 @Suppress("UNCHECKED_CAST")
-class ProductViewModelFactory(private val product: Product, private val repository: IRepository) : ViewModelProvider.NewInstanceFactory() {
+class ProductViewModelFactory(private val product: Product, private val services: ProductServices) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        (ProductViewModel(product, repository) as T)
+        (ProductViewModel(product, services) as T)
 }

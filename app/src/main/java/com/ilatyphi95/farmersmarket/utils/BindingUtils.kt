@@ -2,16 +2,21 @@ package com.ilatyphi95.farmersmarket.utils
 
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.Timestamp
 import com.ilatyphi95.farmersmarket.FarmersMarketApplication
 import com.ilatyphi95.farmersmarket.data.universaladapter.DataBindingRecyclerAdapter
 import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.data.entities.CloseByProduct
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
+import org.joda.money.Money
+
+const val METERS_TO_MILES = 0.000621371
 
 @BindingAdapter("app:availableText")
 fun TextView.availableText(qty: Int) {
@@ -20,7 +25,8 @@ fun TextView.availableText(qty: Int) {
 
 @BindingAdapter("app:distanceMiles")
 fun TextView.distanceMiles(closeByProduct: CloseByProduct) {
-    text = this.context.getString(R.string.distanceMiles, closeByProduct.distance)
+    text = this.context.getString(R.string.distanceMiles,
+        (closeByProduct.distance * METERS_TO_MILES).toInt())
 }
 
 @BindingAdapter("items")
@@ -75,11 +81,37 @@ fun ImageView.loadFirstImage(imageUrls: List<String>) {
 }
 
 @BindingAdapter("viewedAt")
-fun TextView.viewedOn(date: Long) {
-    text = context.getString(R.string.viewed_at, toDate(date))
+fun TextView.viewedOn(timeStamp: Timestamp) {
+    text = context.getString(R.string.viewed_at, toDate(context, timeStamp))
 }
 
 @BindingAdapter("postedAt")
-fun TextView.postedOn(date: Long) {
-    text = context.getString(R.string.posted_at, toDate(date))
+fun TextView.postedOn(timeStamp: Timestamp) {
+    text = context.getString(R.string.posted_at, toDate(context, timeStamp))
+}
+
+@BindingAdapter("time")
+fun TextView.time(timeStamp: Timestamp?) {
+    timeStamp?.let {
+        text = toDate(context, it)
+    }
+}
+
+@BindingAdapter("moneyString")
+fun TextView.moneyString(money: Money) {
+    text = money.toString()
+}
+
+@BindingAdapter("setInt")
+fun TextView.setInt(int: Int) {
+    text = int.toString()
+}
+
+@BindingAdapter("showView")
+fun View.showView(isVisible: Boolean) {
+    if(isVisible) {
+        this.visibility = View.VISIBLE
+    } else {
+        this.visibility = View.GONE
+    }
 }

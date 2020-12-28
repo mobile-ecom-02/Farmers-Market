@@ -16,8 +16,8 @@ interface IRepository {
     fun getMessages(messageId: String): LiveData<List<ChatMessage>>
     suspend fun getMessageRecipients(messageId: String): List<String>
     fun sendMessage(chatMessage: ChatMessage)
-    suspend fun getPostedAds(): List<AddItem>
-    suspend fun getInterestedAds(): List<AddItem>
+    suspend fun getPostedAds(): List<AdItem>
+    suspend fun getInterestedAds(): List<AdItem>
     suspend fun getAd(itemId: String): Product
     suspend fun getMessageList(): List<Message>?
 }

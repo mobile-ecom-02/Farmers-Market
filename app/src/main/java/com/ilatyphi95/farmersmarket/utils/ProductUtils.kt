@@ -3,15 +3,16 @@ package com.ilatyphi95.farmersmarket.utils
 import android.net.Uri
 import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.BR
+import com.ilatyphi95.farmersmarket.data.entities.AdItem
 import com.ilatyphi95.farmersmarket.data.entities.CloseByProduct
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 
-class ProductSmallBannerViewModel(val product: Product) {
-    lateinit var itemClickHandler: (product: Product) -> Unit
+class ProductSmallBannerViewModel(val adItem: AdItem) {
+    lateinit var itemClickHandler: (adItem: AdItem) -> Unit
 
     fun onItemClick() {
-        itemClickHandler(product)
+        itemClickHandler(adItem)
     }
 }
 

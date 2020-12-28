@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.ilatyphi95.farmersmarket.ui.modifyad.AddProductViewModel" />
+            type="com.ilatyphi95.farmersmarket.ui.modifyad.ModifyAdViewModel" />
 
         <import type="android.view.View" />
 
