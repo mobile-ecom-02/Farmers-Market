@@ -142,6 +142,8 @@ class LoginFragment : Fragment(){
             return
         }
 
+
+
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { 
                 if(!it.isSuccessful) return@addOnCompleteListener

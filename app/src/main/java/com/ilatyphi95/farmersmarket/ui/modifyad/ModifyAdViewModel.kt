@@ -2,21 +2,16 @@ package com.ilatyphi95.farmersmarket.ui.modifyad
 
 import android.net.Uri
 import androidx.lifecycle.*
-import com.google.common.io.Files.getFileExtension
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import com.ilatyphi95.farmersmarket.data.entities.MyLocation
 import com.ilatyphi95.farmersmarket.data.entities.Product
-import com.ilatyphi95.farmersmarket.data.entities.User
-import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
+import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
 import com.ilatyphi95.farmersmarket.utils.*
 import kotlinx.coroutines.*
 import java.util.*
-import kotlin.collections.HashMap
 
 
 enum class Loads {
@@ -26,12 +21,10 @@ enum class Loads {
     NAVIGATE_PRODUCT
 }
 
+@ExperimentalCoroutinesApi
 @Suppress("UnstableApiUsage")
-class ModifyAdViewModel(private val repository: IRepository) : ViewModel() {
-    private val job = Job()
-    private val uiScope = CoroutineScope(job + Dispatchers.Main)
+class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
 
-    var user: User = repository.getCurrentUser()
     private val _category = MutableLiveData<String>()
     val category: LiveData<String>
         get() = _category
@@ -46,7 +39,6 @@ class ModifyAdViewModel(private val repository: IRepository) : ViewModel() {
     val description = MutableLiveData<String>()
 
     private val imageUriList = mutableListOf<Uri>()
-    private val firebaseStorageRef = FirebaseStorage.getInstance().reference.child("images")
     private lateinit var documentAddress: DocumentReference
     private var pictureCount : Int = 0
     private var currentPictureUpload: Int = 0
@@ -56,7 +48,7 @@ class ModifyAdViewModel(private val repository: IRepository) : ViewModel() {
         "${it.city}, ${it.state}"
     }
 
-    var loadedList: List<String>? = emptyList()
+    var loadedList: List<String> = emptyList()
     private lateinit var currencies: List<Currency>
 
     private val _isLoading = MutableLiveData<Boolean>()
@@ -92,13 +84,15 @@ class ModifyAdViewModel(private val repository: IRepository) : ViewModel() {
     }
 
     init {
-        uiScope.launch {
+        viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                //TODO: Add the id of the current user
-                val user = repository.getUser("")
+                val user = service.getUser(service.getThisUserUid()!!)
 
-                if (user.firstName.isNotBlank()) firstName.postValue(user.firstName)
-                if (user.lastName.isNotBlank()) lastName.postValue(user.lastName)
+                user?.let {thisUser ->
+                    if (thisUser.firstName.isNotBlank()) firstName.postValue(thisUser.firstName)
+                    if (thisUser.lastName.isNotBlank()) lastName.postValue(thisUser.lastName)
+
+                }
             }
         }
     }
@@ -112,17 +106,15 @@ class ModifyAdViewModel(private val repository: IRepository) : ViewModel() {
 
     fun onClickCategory() {
         _isLoading.value = true
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                loadedList = repository.getCategory()
-                _events.postValue(Event(Loads.LOAD_CATEGORY))
-            }
+        viewModelScope.launch {
+            loadedList = service.getCategories().map { it.type }
+            _events.postValue(Event(Loads.LOAD_CATEGORY))
         }
     }
 
     fun onClickCurrency() {
         _isLoading.value = true
-        uiScope.launch {
+        viewModelScope.launch {
             withContext(Dispatchers.Default) {
 
                 // remove old currencies
@@ -155,18 +147,11 @@ class ModifyAdViewModel(private val repository: IRepository) : ViewModel() {
     }
 
     fun selectCategory(position: Int) {
-        loadedList?.let {
-            _category.value = it[position]
-        }
+            _category.value = loadedList[position]
     }
 
     fun finishLoading() {
         _isLoading.postValue(false)
-    }
-
-    override fun onCleared() {
-        job.cancel()
-        super.onCleared()
     }
 
     fun postAd() {
@@ -178,25 +163,13 @@ class ModifyAdViewModel(private val repository: IRepository) : ViewModel() {
 
         imageUriList.addAll(list.subList(1, list.size).filterNotNull())
         pictureCount = imageUriList.size
-        val user = FirebaseAuth.getInstance().currentUser
-
-        val product = HashMap<String, Any>()
-        product["name"] = title.value!!
-        product["description"] = description.value!!
-        product["sellerId"] = user!!.uid
-        product["type"] = category.value!!
-        product["imgUrls"] = emptyList<String>()
-        product["qtyAvailable"] = quantityAvailable.value!!.toInt()
-        product["qtySold"] = 0
-        product["priceStr"] = "${currency.value!!.currencyCode}-${price.value!!}"
-        product["location"] = _location.value!!
 
         val keywords = getKeywords(title = title.value!!, description = description.value!!)
 
         val myProduct = Product(
             name = title.value!!,
             description = description.value!!,
-            sellerId = user.uid,
+            sellerId = service.getThisUserUid()!!,
             type = category.value!!,
             imgUrls = emptyList(),
             qtyAvailable = quantityAvailable.value!!.toInt(),
@@ -206,25 +179,20 @@ class ModifyAdViewModel(private val repository: IRepository) : ViewModel() {
             keywords = keywords
         )
 
-        val collection = FirebaseFirestore.getInstance().collection("ads")
-        collection.add(myProduct)
-            .addOnCompleteListener {
-                finishLoading()
-                if (it.isSuccessful) {
-                    // notify of success or failure
-                    postNotification("Ad posted!")
-                    _events.postValue(Event(Loads.NAVIGATE_PRODUCT))
+        viewModelScope.launch {
+            val uploadId = service.uploadAd(myProduct)
+            finishLoading()
 
-                } else {
-                    // notify of error
-                }
-            }.addOnSuccessListener {
-                documentAddress = collection.document(it.id)
-                uiScope.launch {
-
-                    withContext(Dispatchers.IO) { uploadImageToFirebaseStorage() }
-                }
+            if(uploadId == null) {
+                // notify error
+                return@launch
             }
+
+            postNotification("Ad posted!")
+            _events.postValue(Event(Loads.NAVIGATE_PRODUCT))
+           documentAddress = FirebaseFirestore.getInstance().collection("ads").document(uploadId)
+            uploadImageToFirebaseStorage()
+        }
     }
 
     private fun postNotification(message: String) {
@@ -234,27 +202,12 @@ class ModifyAdViewModel(private val repository: IRepository) : ViewModel() {
     private fun uploadImageToFirebaseStorage() {
         if (imageUriList.size > 0) {
             val imageUri = imageUriList[0]
-            val storageRef = firebaseStorageRef
-                .child("${UUID.randomUUID()}.${getFileExtension(imageUri.toString())}")
 
             imageUriList.removeAt(0)
             currentPictureUpload += 1
-
-            val uploadTask = storageRef.putFile(imageUri)
-            postNotification("Uploading image $currentPictureUpload/$pictureCount")
-            uploadTask.continueWithTask { task ->
-
-                if (!task.isSuccessful) {
-                    postNotification("Image $currentPictureUpload/$pictureCount upload failed!")
-                    throw task.exception!!
-                }
-
-                storageRef.downloadUrl
-
-            }.addOnCompleteListener { task ->
-
-                if (task.isSuccessful) {
-                    documentAddress.update("imgUrls", FieldValue.arrayUnion(task.result.toString()))
+            viewModelScope.launch {
+                service.uploadImage(imageUri)?.let {
+                    documentAddress.update("imgUrls", FieldValue.arrayUnion(it))
                     postNotification("Image $currentPictureUpload/$pictureCount upload Successful!")
 
                     // recursive call
@@ -273,10 +226,11 @@ class ModifyAdViewModel(private val repository: IRepository) : ViewModel() {
     }
 }
 
+@ExperimentalCoroutinesApi
 @Suppress("UNCHECKED_CAST")
-class AddProductViewModelFactory(private val repository: IRepository) :
+class AddProductViewModelFactory(private val service: ProductServices) :
     ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        (ModifyAdViewModel(repository) as T)
+        (ModifyAdViewModel(service) as T)
 }

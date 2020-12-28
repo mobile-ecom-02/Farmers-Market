@@ -2,7 +2,6 @@ package com.ilatyphi95.farmersmarket.ui.ads
 
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,24 +12,20 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObjects
 import com.ilatyphi95.farmersmarket.R
-import com.ilatyphi95.farmersmarket.data.entities.AdItem
-import com.ilatyphi95.farmersmarket.data.entities.Product
-import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
 import com.ilatyphi95.farmersmarket.databinding.FragmentPagerBinding
-import com.ilatyphi95.farmersmarket.firebase.addSnapshotListener
+import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
 import com.ilatyphi95.farmersmarket.utils.EventObserver
 import com.ilatyphi95.farmersmarket.utils.LocationUtils
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
+@ExperimentalCoroutinesApi
 class PagerFragment : Fragment() {
     private lateinit var binding: FragmentPagerBinding
 
     private val viewmodel by viewModels<AdsFragmentViewModel> {
-        AdsFragmentViewModelFactory(SampleRepository())
+        AdsFragmentViewModelFactory(ProductServices)
     }
 
     private val handleLocation = registerForActivityResult(
@@ -92,34 +87,7 @@ class PagerFragment : Fragment() {
             })
         }
 
-        setUpListeners()
-
         return binding.root
-    }
-
-    private fun setUpListeners() {
-        val thisUser = FirebaseAuth.getInstance().uid
-        val firestoreRef = FirebaseFirestore.getInstance()
-
-        firestoreRef.collection("ads").whereEqualTo("sellerId", thisUser)
-            .addSnapshotListener(requireActivity()) { value, error ->
-            if(error != null) {
-                return@addSnapshotListener
-            }
-
-            value?.toObjects<Product>()?.let { viewmodel.upDatePostedAds(it) }
-        }
-
-        firestoreRef.document("users/${FirebaseAuth.getInstance().currentUser?.uid}")
-            .collection("interestedItems").addSnapshotListener(viewLifecycleOwner) { query, exception ->
-                if (exception != null) {
-                    Log.d(tag, "setUpFirestoreListeners: ${exception.message}")
-                    return@addSnapshotListener
-                }
-
-                query?.toObjects<AdItem>()?.let { viewmodel.upDateInterestedAds(it) }
-            }
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

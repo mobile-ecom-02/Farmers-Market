@@ -1,24 +1,19 @@
 package com.ilatyphi95.farmersmarket.ui.chat
 
 import androidx.lifecycle.*
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObject
-import com.ilatyphi95.farmersmarket.data.entities.ChatMessage
-import com.ilatyphi95.farmersmarket.data.entities.MessageShell
 import com.ilatyphi95.farmersmarket.data.entities.User
+import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
 import com.ilatyphi95.farmersmarket.utils.ReceiveRecyclerViewModel
 import com.ilatyphi95.farmersmarket.utils.SentRecyclerViewModel
 import com.ilatyphi95.farmersmarket.utils.toRecyclerItem
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
-class ChatFragmentViewModel(messageId: String)
+@ExperimentalCoroutinesApi
+class ChatFragmentViewModel(val messageId: String, private val service: ProductServices)
     : ViewModel() {
 
-    private val firestoreRef = FirebaseFirestore.getInstance()
-
-    private val documentRef = firestoreRef.document("messages/$messageId")
-
-    private val thisUser = FirebaseAuth.getInstance().currentUser
+    private val thisUserUid = service.getThisUserUid()
 
     private val _otherUser = MutableLiveData<User>()
     val otherUser : LiveData<User>
@@ -26,10 +21,10 @@ class ChatFragmentViewModel(messageId: String)
 
     val newMessage = MutableLiveData<String>()
 
-    private val chatMessages = MutableLiveData<List<ChatMessage>>()
+    private val chatMessages = service.readChats(messageId).asLiveData()
     val chatRecycler = chatMessages.map { messageList ->
         messageList.map {
-            if(it.senderId == thisUser!!.uid) {
+            if(it.senderId == thisUserUid) {
                 SentRecyclerViewModel(it).toRecyclerItem()
             } else {
                 ReceiveRecyclerViewModel(it).toRecyclerItem()
@@ -39,15 +34,8 @@ class ChatFragmentViewModel(messageId: String)
 
 
     init {
-        documentRef.get().addOnSuccessListener {document ->
-
-            val messageShell = document.toObject<MessageShell>()
-            val otherUserId = messageShell!!.participants.find{it != thisUser!!.uid}
-
-            firestoreRef.document("users/$otherUserId").get().addOnSuccessListener {
-                _otherUser.postValue(it.toObject())
-            }
-
+        viewModelScope.launch {
+            _otherUser.postValue(service.getOtherUser(messageId))
         }
     }
 
@@ -58,22 +46,17 @@ class ChatFragmentViewModel(messageId: String)
             return
         }
 
-        documentRef.collection("chatMessages").add(ChatMessage(
-            msg = message,
-            senderId = thisUser!!.uid
-        ))
-        newMessage.postValue("")
-    }
+        service.addChat(messageId, message)
 
-    fun updateChat(chatList: List<ChatMessage>) {
-        chatMessages.postValue(chatList.sortedBy { it.timeStamp })
+        newMessage.postValue("")
     }
 }
 
+@ExperimentalCoroutinesApi
 @Suppress("UNCHECKED_CAST")
-class ChatFragmentViewModelFactory(private val messageId: String)
+class ChatFragmentViewModelFactory(private val messageId: String, private val service: ProductServices)
     : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        (ChatFragmentViewModel(messageId) as T)
+        (ChatFragmentViewModel(messageId, service) as T)
 }

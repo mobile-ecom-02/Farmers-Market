@@ -5,6 +5,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'de.mannodermaus.android-junit5'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 30
@@ -128,6 +129,8 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-firestore:22.0.0'
+
+    implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
 
     //coroutines support for firebase operations
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'

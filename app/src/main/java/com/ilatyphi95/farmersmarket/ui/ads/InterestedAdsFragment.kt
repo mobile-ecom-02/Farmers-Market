@@ -9,10 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.databinding.FragmentInterestedAdsBinding
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
 /**
  */
+@ExperimentalCoroutinesApi
 class InterestedAdsFragment : Fragment() {
 
     private val viewmodel by viewModels<AdsFragmentViewModel> (ownerProducer = {

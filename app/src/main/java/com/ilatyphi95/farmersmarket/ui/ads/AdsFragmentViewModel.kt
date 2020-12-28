@@ -2,57 +2,53 @@ package com.ilatyphi95.farmersmarket.ui.ads
 
 import androidx.lifecycle.*
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FieldPath
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObjects
 import com.ilatyphi95.farmersmarket.data.entities.AdItem
 import com.ilatyphi95.farmersmarket.data.entities.Product
-import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
+import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
 import com.ilatyphi95.farmersmarket.utils.Event
 import com.ilatyphi95.farmersmarket.utils.InterestedAdsViewModel
 import com.ilatyphi95.farmersmarket.utils.PostedAdsViewModel
 import com.ilatyphi95.farmersmarket.utils.toRecyclerItem
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import java.util.*
 
 const val NEW_PRODUCT = "New Product"
-class AdsFragmentViewModel(private val repository: IRepository) : ViewModel() {
 
-    private val job = Job()
-    private val uiScope = CoroutineScope(job + Dispatchers.Main)
+@ExperimentalCoroutinesApi
+class AdsFragmentViewModel(private val service: ProductServices) : ViewModel() {
 
     private val _eventAdsDetails = MutableLiveData<Event<Product>>()
-    val eventAdsDetails : LiveData<Event<Product>>
+    val eventAdsDetails: LiveData<Event<Product>>
         get() = _eventAdsDetails
 
     private val _eventEditAds = MutableLiveData<Event<String>>()
-    val eventEditAds : LiveData<Event<String>>
+    val eventEditAds: LiveData<Event<String>>
         get() = _eventEditAds
 
-    private val _postedAdsList = MutableLiveData<List<Product>>()
-    val postedAdsList: LiveData<List<RecyclerItem>> = _postedAdsList.map { list ->
+    val postedAdsList: LiveData<List<RecyclerItem>> = service.myItems().asLiveData().map { list ->
         list.map { item ->
-            val timestamp = if(item.location != null ){
+            val timestamp = if (item.location != null) {
                 Timestamp(Date(item.location.time))
             } else Timestamp.now()
 
-                PostedAdsViewModel(
-                    AdItem(
+            PostedAdsViewModel(
+                AdItem(
                     itemId = item.id,
-                        name = item.name,
-                        price = item.priceStr,
-                        quantity = item.qtyAvailable,
-                        imageUrl = item.imgUrls.getOrElse(0){""},
-                        timestamp = timestamp
-                )).apply {
-                    itemClickHandler = { postedItemClicked(itemId = this.item.itemId) }
-                }.toRecyclerItem()
+                    name = item.name,
+                    price = item.priceStr,
+                    quantity = item.qtyAvailable,
+                    imageUrl = item.imgUrls.getOrElse(0) { "" },
+                    timestamp = timestamp
+                )
+            ).apply {
+                itemClickHandler = { postedItemClicked(itemId = this.item.itemId) }
+            }.toRecyclerItem()
         }
     }
 
-    private val _interestedAdsList = MutableLiveData<List<AdItem>>()
-    val interestedAdsList : LiveData<List<RecyclerItem>> = _interestedAdsList.map { list ->
+    val interestedAdsList: LiveData<List<RecyclerItem>> = service.interestedItems().asLiveData().map { list ->
         list.map { item ->
             InterestedAdsViewModel(item).apply {
                 itemClickHandler = { interestedAddClicked(itemId = this.item.itemId) }
@@ -61,53 +57,25 @@ class AdsFragmentViewModel(private val repository: IRepository) : ViewModel() {
     }
 
     private fun interestedAddClicked(itemId: String) {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                FirebaseFirestore.getInstance().collection("ads")
-                    .whereEqualTo(FieldPath.documentId(), itemId).limit(1)
-                    .get()
-                    .continueWithTask { task ->
-                        if(task.isSuccessful) {
-                            task.result.toObjects<Product>().let {
-                                _eventAdsDetails.postValue(Event(it[0]))
-                            }
-                        }
-                        task
-                    }
-            }
+        viewModelScope.launch {
+            service.getProduct(itemId)?.let { _eventAdsDetails.postValue(Event(it)) }
         }
-
     }
 
     private fun postedItemClicked(itemId: String) {
         _eventEditAds.value = Event(itemId)
-
     }
 
     fun postNewAd() {
         _eventEditAds.value = Event(NEW_PRODUCT)
-
     }
-
-    override fun onCleared() {
-        job.cancel()
-        super.onCleared()
-    }
-
-    fun upDatePostedAds(products: List<Product>) {
-        _postedAdsList.postValue(products)
-    }
-
-    fun upDateInterestedAds(items: List<AdItem>) {
-        _interestedAdsList.postValue(items)
-
-    }
-
 }
 
 @Suppress("UNCHECKED_CAST")
-class AdsFragmentViewModelFactory(private val repository: IRepository) : ViewModelProvider.NewInstanceFactory() {
+@ExperimentalCoroutinesApi
+class AdsFragmentViewModelFactory(private val services: ProductServices) :
+    ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        (AdsFragmentViewModel(repository) as T)
+        (AdsFragmentViewModel(services) as T)
 }

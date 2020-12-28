@@ -1,23 +1,18 @@
 package com.ilatyphi95.farmersmarket.ui.addetails
 
 import androidx.lifecycle.*
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.firestore.ktx.toObjects
-import com.ilatyphi95.farmersmarket.data.entities.MessageShell
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.entities.User
-import com.ilatyphi95.farmersmarket.data.repository.IRepository
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 import com.ilatyphi95.farmersmarket.firebase.addToInterested
 import com.ilatyphi95.farmersmarket.firebase.addToRecent
+import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
 import com.ilatyphi95.farmersmarket.utils.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 
-class ProductViewModel(val product: Product, repository: IRepository) : ViewModel() {
-
-    private val firestore = FirebaseFirestore.getInstance()
+@ExperimentalCoroutinesApi
+class ProductViewModel(val product: Product, private val services: ProductServices) : ViewModel() {
 
     private val _eventMessage = MutableLiveData<Event<String>>()
     val eventMessage : LiveData<Event<String>>
@@ -27,38 +22,17 @@ class ProductViewModel(val product: Product, repository: IRepository) : ViewMode
     val eventCall : LiveData<Event<String>>
         get() = _eventCall
 
-    init {
-        firestore.document("users/${product.sellerId}").get().continueWith {
-            if(it.isSuccessful) {
-                _sellerDetails.postValue(it.result.toObject<User>())
-            }
-        }
-
-        val searchTerm = searchTerm(product.name, product.description, limit = KEYWORD_LIMIT - 1)
-
-        firestore.collection("ads").whereArrayContains("keywords", searchTerm)
-            .limit(11).get().continueWith { task ->
-            if(task.isSuccessful) {
-                val products = task.result.toObjects<Product>().filter { it.id != product.id }
-                _similarItems.postValue(products)
-            }
-        }
-    }
     private val _sellerDetails = MutableLiveData<User>()
 
-    val enablePhone = Transformations.map(_sellerDetails) {
-        it != null && it.phone.isNotEmpty()
-    }
+    val enablePhone = _sellerDetails.map { it != null && it.phone.isNotEmpty() }
 
     private val _similarItems = MutableLiveData<List<Product>>()
-    val similarItems: LiveData<List<RecyclerItem>> = Transformations
-        .map(_similarItems) { list ->
+    val similarItems: LiveData<List<RecyclerItem>> = _similarItems.map {  list ->
             list.map { createProductSmallBannerViewModel(it) }
                 .map { it.toRecyclerItem() }
         }
 
-    val isSimilarItemVisible: LiveData<Boolean> = Transformations.map(similarItems){ !it.isNullOrEmpty() }
-
+    val isSimilarItemVisible: LiveData<Boolean> = similarItems.map { !it.isNullOrEmpty() }
 
     val imgUrls: List<RecyclerItem> =
         product.imgUrls.map { ProductPicture(it) }.map { it.toRecyclerItem() }
@@ -72,6 +46,15 @@ class ProductViewModel(val product: Product, repository: IRepository) : ViewMode
     val eventProductSelected : LiveData<Event<Product>>
         get() = _eventProductSelected
 
+    init {
+        val searchTerm = searchTerm(product.name, product.description, limit = KEYWORD_LIMIT - 1)
+
+        viewModelScope.launch {
+            _similarItems.postValue(services.searchProduct(searchTerm).filter { it != product })
+            _sellerDetails.postValue(services.getUser(product.sellerId))
+        }
+    }
+
     fun callSeller() {
         _sellerDetails.value?.let {
             if(it.phone.isNotEmpty()) {
@@ -82,25 +65,12 @@ class ProductViewModel(val product: Product, repository: IRepository) : ViewMode
     }
 
     fun chatSeller() {
-        val sellerId = _sellerDetails.value?.id
-        val buyerId = FirebaseAuth.getInstance().currentUser?.uid
-
-        if(sellerId.isNullOrEmpty() || buyerId.isNullOrEmpty()) {
-            // provide notification
-            return
-        }
-        val messageId = product.id.substring(0,10) + sellerId.substring(0, 10) + buyerId.substring(0, 10)
-
-        val messageShell = MessageShell(
-            productId = product.id,
-            imgUrl = product.imgUrls.getOrElse(0){""},
-            participants = listOf(sellerId, buyerId))
-
-        firestore.document("messages/${messageId}")
-            .set(messageShell, SetOptions.merge()).addOnSuccessListener {
-                _eventMessage.postValue(Event(messageId))
+        viewModelScope.launch {
+            services.createMessage(product)?.let {
+                _eventMessage.postValue(Event(it))
+                addToInterested(product)
             }
-        addToInterested(product)
+        }
     }
 
     private fun createProductSmallBannerViewModel(product: Product): ProductSmallBannerViewModel {
@@ -119,9 +89,10 @@ class ProductViewModel(val product: Product, repository: IRepository) : ViewMode
     }
 }
 
+@ExperimentalCoroutinesApi
 @Suppress("UNCHECKED_CAST")
-class ProductViewModelFactory(private val product: Product, private val repository: IRepository) : ViewModelProvider.NewInstanceFactory() {
+class ProductViewModelFactory(private val product: Product, private val services: ProductServices) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        (ProductViewModel(product, repository) as T)
+        (ProductViewModel(product, services) as T)
 }
