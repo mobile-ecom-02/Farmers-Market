@@ -40,7 +40,7 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
 
     private val imageUriList = mutableListOf<Uri>()
     private lateinit var documentAddress: DocumentReference
-    private var pictureCount : Int = 0
+    private var pictureCount: Int = 0
     private var currentPictureUpload: Int = 0
 
     private val _location = MutableLiveData<MyLocation>()
@@ -86,12 +86,9 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val user = service.getUser(service.getThisUserUid()!!)
-
-                user?.let {thisUser ->
+                service.getUser(service.getThisUserUid()!!)?.let { thisUser ->
                     if (thisUser.firstName.isNotBlank()) firstName.postValue(thisUser.firstName)
                     if (thisUser.lastName.isNotBlank()) lastName.postValue(thisUser.lastName)
-
                 }
             }
         }
@@ -147,7 +144,7 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
     }
 
     fun selectCategory(position: Int) {
-            _category.value = loadedList[position]
+        _category.value = loadedList[position]
     }
 
     fun finishLoading() {
@@ -183,14 +180,14 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
             val uploadId = service.uploadAd(myProduct)
             finishLoading()
 
-            if(uploadId == null) {
+            if (uploadId == null) {
                 // notify error
                 return@launch
             }
 
             postNotification("Ad posted!")
             _events.postValue(Event(Loads.NAVIGATE_PRODUCT))
-           documentAddress = FirebaseFirestore.getInstance().collection("ads").document(uploadId)
+            documentAddress = FirebaseFirestore.getInstance().collection("ads").document(uploadId)
             uploadImageToFirebaseStorage()
         }
     }

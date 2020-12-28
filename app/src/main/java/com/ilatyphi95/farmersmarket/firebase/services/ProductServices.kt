@@ -223,10 +223,9 @@ object ProductServices {
                         GeoLocation(location.latitude, location.longitude), 100.0
                     )
                     .addGeoQueryForSingleValueEvent { list ->
+
                         continuation.resume(
-                            list.map { docChange ->
-                                docChange.document.toObject()
-                            }
+                            list.map { docChange -> docChange.document.toObject() }
                         )
                     }
             }
