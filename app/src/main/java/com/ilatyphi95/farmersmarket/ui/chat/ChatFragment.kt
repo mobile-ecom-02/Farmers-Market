@@ -1,8 +1,6 @@
 package com.ilatyphi95.farmersmarket.ui.chat
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,38 +10,28 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.databinding.FragmentChatBinding
-import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
+import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
+@ExperimentalCoroutinesApi
 class ChatFragment : Fragment() {
     lateinit var binding: FragmentChatBinding
 
     private val args by navArgs<ChatFragmentArgs>()
 
     val viewmodel by viewModels<ChatFragmentViewModel> {
-        ChatFragmentViewModelFactory(args.messageId, SampleRepository())
+        ChatFragmentViewModelFactory(args.messageId, ProductServices)
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_chat, container, false)
 
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = viewmodel
-            messageEditText.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    viewmodel.newMessage.value = p0.toString()
-                }
-
-                override fun afterTextChanged(p0: Editable?) {
-                }
-
-            })
         }
 
         viewmodel.chatRecycler.observe(viewLifecycleOwner) {

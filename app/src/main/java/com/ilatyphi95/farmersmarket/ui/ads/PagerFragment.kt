@@ -12,18 +12,20 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
-import com.ilatyphi95.farmersmarket.*
+import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.databinding.FragmentPagerBinding
+import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
 import com.ilatyphi95.farmersmarket.utils.EventObserver
 import com.ilatyphi95.farmersmarket.utils.LocationUtils
-import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 
+@ExperimentalCoroutinesApi
 class PagerFragment : Fragment() {
     private lateinit var binding: FragmentPagerBinding
 
     private val viewmodel by viewModels<AdsFragmentViewModel> {
-        AdsFragmentViewModelFactory(SampleRepository())
+        AdsFragmentViewModelFactory(ProductServices)
     }
 
     private val handleLocation = registerForActivityResult(
@@ -34,15 +36,17 @@ class PagerFragment : Fragment() {
                 PagerFragmentDirections.actionNavigationPagerToAddProductFragment(NEW_PRODUCT)
             )
         } else {
-            Snackbar.make(requireView(), getString(R.string.add_new_product_require_location),
-                Snackbar.LENGTH_LONG).show()
+            Snackbar.make(
+                requireView(), getString(R.string.add_new_product_require_location),
+                Snackbar.LENGTH_LONG
+            ).show()
         }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentPagerBinding.inflate(inflater, container, false)
         viewmodel.apply {
@@ -51,7 +55,7 @@ class PagerFragment : Fragment() {
                     .navigate(PagerFragmentDirections.actionNavigationPagerToProductFragment(it))
             })
 
-            eventEditAds.observe(viewLifecycleOwner, EventObserver {adId ->
+            eventEditAds.observe(viewLifecycleOwner, EventObserver { adId ->
                 when {
                     ContextCompat.checkSelfPermission(
                         requireContext(),
@@ -64,14 +68,17 @@ class PagerFragment : Fragment() {
                                     adId
                                 )
                             )
-                    }
+                        }
                     }
 
                     shouldShowRequestPermissionRationale(
-                        android.Manifest.permission.ACCESS_FINE_LOCATION) -> {
+                        android.Manifest.permission.ACCESS_FINE_LOCATION
+                    ) -> {
 
-                        Snackbar.make(requireView(), getString(R.string.add_new_product_require_location),
-                            Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(
+                            requireView(), getString(R.string.add_new_product_require_location),
+                            Snackbar.LENGTH_LONG
+                        ).show()
                     }
                     else -> {
                         handleLocation.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)

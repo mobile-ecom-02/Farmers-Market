@@ -12,13 +12,18 @@ import androidx.annotation.StringRes
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.material.snackbar.Snackbar
 import com.ilatyphi95.farmersmarket.R
-import com.ilatyphi95.farmersmarket.data.repository.SampleRepository
+import com.ilatyphi95.farmersmarket.data.entities.MyLocation
 import com.ilatyphi95.farmersmarket.databinding.FragmentModifyAdsBinding
-import com.ilatyphi95.farmersmarket.utils.*
+import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
+import com.ilatyphi95.farmersmarket.utils.EventObserver
+import com.ilatyphi95.farmersmarket.utils.LocationUtils
+import com.ilatyphi95.farmersmarket.utils.NetworkAvailabilityUtils
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.joda.money.CurrencyUnit
 import java.io.IOException
 import java.util.*
@@ -28,12 +33,11 @@ import kotlin.collections.ArrayList
  *
  */
 
-const val SEPARATOR = "|"
+@ExperimentalCoroutinesApi
 class ModifyAdsFragment : Fragment() {
-    private val TAG: String? = this.tag
     private lateinit var binding: FragmentModifyAdsBinding
-    private val viewmodel by viewModels<AddProductViewModel> {
-        AddProductViewModelFactory(SampleRepository())
+    private val viewmodel by viewModels<ModifyAdViewModel> {
+        AddProductViewModelFactory(ProductServices)
     }
 
     private val handlePictures = registerForActivityResult(
@@ -57,21 +61,22 @@ class ModifyAdsFragment : Fragment() {
                     )
                     if (location.size > 0) {
                         val address = location[0]
-                        val fullAddress = listOf(
-                            lastLocation.latitude,
-                            lastLocation.longitude, address.locality, address.subAdminArea,
-                            address.adminArea, address.countryName
-                        ).joinToString(SEPARATOR)
-
-                        viewmodel.updateAddress(address = fullAddress)
+                        viewmodel.updateLocation(
+                            MyLocation(
+                                lastLocation.accuracy,
+                                lastLocation.latitude,
+                                lastLocation.longitude,
+                                lastLocation.time,
+                                address.subAdminArea,
+                                address.adminArea,
+                                address.countryName))
                     } else {
-                        Log.e( TAG, "No valid address returned")
+                        Log.e( tag, "No valid address returned")
                     }
 
                 } catch (e: IOException) {
-                    Log.e( TAG, e.message ?: "Error Occurred")
+                    Log.e( tag, e.message ?: "Error Occurred")
                 }
-
             }
         }
     }
@@ -79,7 +84,7 @@ class ModifyAdsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_modify_ads, container, false)
 
         binding.apply {
@@ -115,8 +120,15 @@ class ModifyAdsFragment : Fragment() {
                     { position -> viewmodel.selectCategory(position) }).showSpinerDialog()
                     Loads.NAVIGATE_PRODUCT -> {
                         // navigate to product page
+                        findNavController().navigate(
+                            ModifyAdsFragmentDirections.actionAddProductFragmentToNavigationPager()
+                        )
                     }
                 }
+            })
+
+            eventNotification.observe(viewLifecycleOwner, EventObserver{
+                Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
             })
         }
 
@@ -163,7 +175,7 @@ class ModifyAdsFragment : Fragment() {
         @StringRes searchName: Int, @StringRes noList: Int = R.string.no_items,
         usePosition: (Int) -> Unit
     ): SpinnerDialog {
-        val myList = viewmodel.loadedList ?: listOf(getString(noList))
+        val myList = viewmodel.loadedList
         val spinnerDialog = SpinnerDialog(activity, ArrayList(myList), getString(searchName))
         spinnerDialog.setCancellable(true)
         spinnerDialog.setShowKeyboard(false)

@@ -27,7 +27,12 @@
 
         <activity android:name=".HomeActivity"
             android:theme="@style/HomeTheme"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            android:windowSoftInputMode="stateHidden|adjustPan">
+            <intent-filter>
+                <action android:name="ChatFragment" />
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".MainActivity"
