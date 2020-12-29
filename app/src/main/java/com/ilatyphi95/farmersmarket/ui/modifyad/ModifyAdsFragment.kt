@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.material.snackbar.Snackbar
 import com.ilatyphi95.farmersmarket.R
+import com.ilatyphi95.farmersmarket.data.entities.Category
 import com.ilatyphi95.farmersmarket.data.entities.MyLocation
 import com.ilatyphi95.farmersmarket.databinding.FragmentModifyAdsBinding
 import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
@@ -137,7 +138,7 @@ class ModifyAdsFragment : Fragment() {
     }
 
     private fun initializeFields() {
-        viewmodel.setCategory(getString(R.string.select_category))
+        viewmodel.setCategory(Category(type = getString(R.string.select_category)))
         viewmodel.currency.value = CurrencyUnit.of(Locale.getDefault()).toCurrency()
     }
 

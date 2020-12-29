@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.ilatyphi95.farmersmarket.data.entities.Category
 import com.ilatyphi95.farmersmarket.data.entities.MyLocation
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
@@ -25,8 +26,8 @@ enum class Loads {
 @Suppress("UnstableApiUsage")
 class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
 
-    private val _category = MutableLiveData<String>()
-    val category: LiveData<String>
+    private val _category = MutableLiveData<Category>()
+    val category: LiveData<Category>
         get() = _category
 
     val title = MutableLiveData<String>()
@@ -50,6 +51,7 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
 
     var loadedList: List<String> = emptyList()
     private lateinit var currencies: List<Currency>
+    private lateinit var categories: List<Category>
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
@@ -104,7 +106,8 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
     fun onClickCategory() {
         _isLoading.value = true
         viewModelScope.launch {
-            loadedList = service.getCategories().map { it.type }
+            categories = service.getCategories().sortedBy { it.type }
+            loadedList = categories.map { it.type }
             _events.postValue(Event(Loads.LOAD_CATEGORY))
         }
     }
@@ -144,7 +147,7 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
     }
 
     fun selectCategory(position: Int) {
-        _category.value = loadedList[position]
+        _category.value = categories[position]
     }
 
     fun finishLoading() {
@@ -167,7 +170,7 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
             name = title.value!!,
             description = description.value!!,
             sellerId = service.getThisUserUid()!!,
-            type = category.value!!,
+            type = category.value!!.id,
             imgUrls = emptyList(),
             qtyAvailable = quantityAvailable.value!!.toInt(),
             qtySold = 0,
@@ -214,8 +217,8 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
         }
     }
 
-    fun setCategory(string: String) {
-        _category.value = string
+    fun setCategory(category: Category) {
+        _category.value = category
     }
 
     fun updateLocation(lastLocation: MyLocation) {

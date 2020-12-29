@@ -46,7 +46,7 @@
                     android:paddingStart="@dimen/small_normal_margin"
                     android:paddingTop="@dimen/small_margin"
                     android:paddingBottom="@dimen/normal_margin"
-                    android:text="@{viewModel.category}"
+                    android:text="@{viewModel.category.type}"
                     android:textSize="18sp"
                     app:drawableRightCompat="@drawable/ic_baseline_arrow_drop_down_24"
                     app:layout_constraintEnd_toEndOf="parent"
