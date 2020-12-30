@@ -73,6 +73,16 @@ fun ImageView.loadImage(imageUri: Uri?) {
     }
 }
 
+@BindingAdapter("loadProductImage")
+fun ImageView.loadProductImage(image: ProductImage) {
+    when(image) {
+        is ImageUploaded -> this.loadImage(image.imageAddress)
+        is ImageDeleted -> { // leave image blank
+             }
+        is ImageAdded -> this.loadImage(imageUri = image.imageAddress)
+    }
+}
+
 
 @BindingAdapter("loadFirst")
 fun ImageView.loadFirstImage(imageUrls: List<String>) {

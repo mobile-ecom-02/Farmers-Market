@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.ilatyphi95.farmersmarket.R
+import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.databinding.FragmentPagerBinding
 import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
 import com.ilatyphi95.farmersmarket.utils.EventObserver
@@ -28,12 +29,14 @@ class PagerFragment : Fragment() {
         AdsFragmentViewModelFactory(ProductServices)
     }
 
+    private var product: Product? = null
+
     private val handleLocation = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
             findNavController().navigate(
-                PagerFragmentDirections.actionNavigationPagerToAddProductFragment(NEW_PRODUCT)
+                PagerFragmentDirections.actionNavigationPagerToAddProductFragment(product)
             )
         } else {
             Snackbar.make(
@@ -62,10 +65,11 @@ class PagerFragment : Fragment() {
                         android.Manifest.permission.ACCESS_FINE_LOCATION
                     ) == PackageManager.PERMISSION_GRANTED -> {
 
+                        product = viewmodel.getProduct(adId)
                         LocationUtils.checkLocationRequest(requireActivity()) {
                             findNavController().navigate(
                                 PagerFragmentDirections.actionNavigationPagerToAddProductFragment(
-                                    adId
+                                    product
                                 )
                             )
                         }

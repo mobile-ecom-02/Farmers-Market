@@ -5,6 +5,7 @@ import android.util.Log
 import com.google.common.io.Files.getFileExtension
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.toObject
@@ -12,12 +13,14 @@ import com.google.firebase.storage.FirebaseStorage
 import com.ilatyphi95.farmersmarket.data.entities.*
 import com.koalap.geofirestore.GeoFire
 import com.koalap.geofirestore.GeoLocation
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.coroutines.resume
@@ -282,8 +285,32 @@ object ProductServices {
         var productId: String? = null
 
         db.collection("ads").add(product).addOnCompleteListener {
-            if (it.isSuccessful) productId = it.result.id
+            if (it.isSuccessful) {
+                productId = it.result.id
+                product.location?.let { location ->
+                    val geoFire = GeoFire(db.collection("ads"))
+                    geoFire.setLocation(productId, GeoLocation(location.latitude, location.longitude))
+                }
+            }
         }.await()
+
+        return productId
+    }
+
+    suspend fun upDateAd(product: Product): String? {
+
+        var productId: String? = null
+
+        db.document("ads/${product.id}")
+            .set(product, SetOptions.merge()).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    productId = product.id
+                    product.location?.let { location ->
+                        val geoFire = GeoFire(db.collection("ads"))
+                        geoFire.setLocation(productId, GeoLocation(location.latitude, location.longitude))
+                    }
+                }
+            }.await()
 
         return productId
     }
@@ -306,5 +333,24 @@ object ProductServices {
             }.await()
 
         return productId
+    }
+
+    suspend fun removeImages(imagesNeededToBeRemoved: List<String>) {
+        val myList = imagesNeededToBeRemoved.toMutableList()
+
+        withContext(Dispatchers.IO) {
+            while (myList.isNotEmpty()) {
+                if (deleteFile(myList.first())) myList.removeFirst()
+            }
+        }
+    }
+
+    private suspend fun deleteFile(fileUrl: String): Boolean {
+        var isSuccessful = false
+        FirebaseStorage.getInstance().getReferenceFromUrl(fileUrl).delete()
+            .addOnCompleteListener {
+                isSuccessful = it.isSuccessful
+            }.await()
+        return isSuccessful
     }
 }

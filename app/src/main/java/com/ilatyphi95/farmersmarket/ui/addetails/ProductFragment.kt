@@ -19,10 +19,12 @@ import com.ilatyphi95.farmersmarket.data.universaladapter.attachSnapHelperWithLi
 import com.ilatyphi95.farmersmarket.databinding.FragmentProductBinding
 import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
 import com.ilatyphi95.farmersmarket.utils.EventObserver
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
  * ProductFragment to use to show product details
  */
+@ExperimentalCoroutinesApi
 class ProductFragment : Fragment() {
     private val args: ProductFragmentArgs by navArgs()
 

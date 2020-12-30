@@ -69,8 +69,10 @@
         android:name="com.ilatyphi95.farmersmarket.ui.modifyad.ModifyAdsFragment"
         android:label="AddProductFragment" >
         <argument
-            android:name="adsId"
-            app:argType="string" />
+            android:name="product"
+            app:argType="com.ilatyphi95.farmersmarket.data.entities.Product"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_addProductFragment_to_navigation_pager"
             app:destination="@id/navigation_pager" />

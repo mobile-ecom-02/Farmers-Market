@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.material.snackbar.Snackbar
@@ -36,9 +37,10 @@ import kotlin.collections.ArrayList
 
 @ExperimentalCoroutinesApi
 class ModifyAdsFragment : Fragment() {
+    private val args: ModifyAdsFragmentArgs by navArgs()
     private lateinit var binding: FragmentModifyAdsBinding
     private val viewmodel by viewModels<ModifyAdViewModel> {
-        AddProductViewModelFactory(ProductServices)
+        AddProductViewModelFactory(args.product, ProductServices)
     }
 
     private val handlePictures = registerForActivityResult(

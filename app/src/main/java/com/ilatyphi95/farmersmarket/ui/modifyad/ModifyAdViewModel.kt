@@ -22,9 +22,12 @@ enum class Loads {
     NAVIGATE_PRODUCT
 }
 
+const val SEPARATOR = '-'
+
 @ExperimentalCoroutinesApi
 @Suppress("UnstableApiUsage")
-class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
+class ModifyAdViewModel(private val product: Product?, private val service: ProductServices) :
+    ViewModel() {
 
     private val _category = MutableLiveData<Category>()
     val category: LiveData<Category>
@@ -67,22 +70,15 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
         get() = _eventNotification
 
 
-    private val _pictures = MutableLiveData<List<Uri?>>(listOf(null))
+    private val _pictures = MutableLiveData<List<ProductImage>>(emptyList())
     val pictures: LiveData<List<RecyclerItem>> = _pictures.map { list ->
-        list.map { pictureUri ->
-            val item: RecyclerItem?
 
-            if (pictureUri == null) {
-                item = AddIcon().apply {
-                    addItemHandler = { addPicture() }
+        preparePictureRecycler(
+            list.filter{ it !is ImageDeleted }.map { productImage ->
+                AddedProductPicture(productImage).apply {
+                    removeItemHandler = { removePicture(productImage) }
                 }.toRecyclerItem()
-            } else {
-                item = AddedProductPicture(pictureUri).apply {
-                    removeItemHandler = { removePicture(pictureUri) }
-                }.toRecyclerItem()
-            }
-            item
-        }
+            })
     }
 
     init {
@@ -94,11 +90,47 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
                 }
             }
         }
+
+        if (product != null) {
+            initializeProduct(product)
+        }
     }
 
-    private fun removePicture(imageUri: Uri?) {
+    private fun initializeProduct(product: Product) {
+        val currencyParts = product.priceStr.split(SEPARATOR)
+        // set category
+        viewModelScope.launch {
+            _category.postValue(service.getCategories().find { it.id == product.type })
+        }
+
+        // set currency
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                currency.postValue(loadValidCurrencies().find { it.currencyCode == currencyParts[0] })
+            }
+        }
+
+        title.postValue(product.name)
+        description.postValue(product.description)
+        price.postValue(currencyParts[1])
+        description.postValue(product.description)
+        quantityAvailable.postValue(product.qtyAvailable.toString())
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                val imageList: List<ImageUploaded> = product.imgUrls.map { ImageUploaded(it) }
+                _pictures.postValue(imageList)
+            }
+        }
+    }
+
+    private fun removePicture(image: ProductImage) {
         val oldList = _pictures.value.orEmpty().toMutableList()
-        oldList.remove(imageUri)
+        val position = oldList.indexOf(image)
+        oldList.removeAt(position)
+
+        if(image is ImageUploaded) {
+            oldList.add(position, ImageDeleted(image.imageAddress))
+        }
         _pictures.value = oldList
 
     }
@@ -117,11 +149,7 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
 
-                // remove old currencies
-                val unneededCurrencyPattern = "[0-9]{4}(-[0-9]{4})?".toRegex()
-                currencies = Currency.getAvailableCurrencies()
-                    .filter { !it.displayName.contains(unneededCurrencyPattern) }
-                    .sortedBy { it.displayName }
+                currencies = loadValidCurrencies()
 
                 loadedList = currencies.map {
                     "${it.displayName} (${it.symbol})"
@@ -132,13 +160,22 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
         }
     }
 
+    private fun loadValidCurrencies(): List<Currency> {
+        // remove old currencies
+        val unneededCurrencyPattern = "[0-9]{4}(-[0-9]{4})?".toRegex()
+
+        return Currency.getAvailableCurrencies()
+            .filter { !it.displayName.contains(unneededCurrencyPattern) }
+            .sortedBy { it.displayName }
+    }
+
     private fun addPicture() {
         _events.value = Event(Loads.ADD_PICTURES)
     }
 
     fun addImages(imageList: List<Uri>) {
         val oldList = _pictures.value.orEmpty().toMutableList()
-        oldList.addAll(imageList)
+        oldList.addAll(imageList.map { ImageAdded(it) })
         _pictures.value = oldList
     }
 
@@ -161,37 +198,78 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
         // keep the list of files that will be uploaded
         imageUriList.clear()
 
-        imageUriList.addAll(list.subList(1, list.size).filterNotNull())
+        //come back to rectify this
+        imageUriList.addAll((list.filterIsInstance<ImageAdded>()).map{it.imageAddress})
         pictureCount = imageUriList.size
 
         val keywords = getKeywords(title = title.value!!, description = description.value!!)
 
-        val myProduct = Product(
-            name = title.value!!,
-            description = description.value!!,
-            sellerId = service.getThisUserUid()!!,
-            type = category.value!!.id,
-            imgUrls = emptyList(),
-            qtyAvailable = quantityAvailable.value!!.toInt(),
-            qtySold = 0,
-            priceStr = "${currency.value!!.currencyCode}-${price.value!!}",
-            location = _location.value!!,
-            keywords = keywords
-        )
+        if(product == null) {
 
-        viewModelScope.launch {
-            val uploadId = service.uploadAd(myProduct)
-            finishLoading()
+            // add new product
+            val myProduct = Product(
+                name = title.value!!,
+                description = description.value!!,
+                sellerId = service.getThisUserUid()!!,
+                type = category.value!!.id,
+                imgUrls = emptyList(),
+                qtyAvailable = quantityAvailable.value!!.toInt(),
+                qtySold = 0,
+                priceStr = "${currency.value!!.currencyCode}$SEPARATOR${price.value!!}",
+                location = _location.value!!,
+                keywords = keywords
+            )
 
-            if (uploadId == null) {
-                // notify error
-                return@launch
+            viewModelScope.launch {
+                val uploadId = service.uploadAd(myProduct)
+                finishLoading()
+
+                if (uploadId == null) {
+                    // notify error
+                    return@launch
+                }
+
+                postNotification("Ad posted!")
+                _events.postValue(Event(Loads.NAVIGATE_PRODUCT))
+                documentAddress =
+                    FirebaseFirestore.getInstance().collection("ads").document(uploadId)
+                uploadImageToFirebaseStorage()
             }
+        } else {
+            // update product
 
-            postNotification("Ad posted!")
-            _events.postValue(Event(Loads.NAVIGATE_PRODUCT))
-            documentAddress = FirebaseFirestore.getInstance().collection("ads").document(uploadId)
-            uploadImageToFirebaseStorage()
+            val myProduct = product.copy(
+                name = title.value!!,
+                description = description.value!!,
+                sellerId = service.getThisUserUid()!!,
+                type = category.value!!.id,
+                imgUrls = list.filterIsInstance<ImageUploaded>().map { it.imageAddress },
+                qtyAvailable = quantityAvailable.value!!.toInt(),
+                priceStr = "${currency.value!!.currencyCode}$SEPARATOR${price.value!!}",
+                location = _location.value!!,
+                keywords = keywords
+            )
+
+            viewModelScope.launch {
+                val uploadId = service.upDateAd(myProduct)
+                finishLoading()
+
+                if (uploadId == null) {
+                    // notify error
+                    return@launch
+                }
+
+                postNotification("Ad Updated!")
+                _events.postValue(Event(Loads.NAVIGATE_PRODUCT))
+                documentAddress =
+                    FirebaseFirestore.getInstance().collection("ads").document(uploadId)
+
+
+                val imagesNeededToBeRemoved = list.filterIsInstance<ImageDeleted>().map{it.imageAddress}
+                service.removeImages(imagesNeededToBeRemoved)
+
+                uploadImageToFirebaseStorage()
+            }
         }
     }
 
@@ -217,6 +295,19 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
         }
     }
 
+    private fun preparePictureRecycler(list: List<RecyclerItem>): List<RecyclerItem> {
+
+        // the add icon is always the first item on the list
+        val addIcon = AddIcon().apply {
+            addItemHandler = { addPicture() }
+        }.toRecyclerItem()
+
+        val pictureList = mutableListOf(addIcon)
+        pictureList.addAll(list)
+
+        return pictureList
+    }
+
     fun setCategory(category: Category) {
         _category.value = category
     }
@@ -228,9 +319,12 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
 
 @ExperimentalCoroutinesApi
 @Suppress("UNCHECKED_CAST")
-class AddProductViewModelFactory(private val service: ProductServices) :
+class AddProductViewModelFactory(
+    private val product: Product?,
+    private val service: ProductServices
+) :
     ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        (ModifyAdViewModel(service) as T)
+        (ModifyAdViewModel(product, service) as T)
 }
