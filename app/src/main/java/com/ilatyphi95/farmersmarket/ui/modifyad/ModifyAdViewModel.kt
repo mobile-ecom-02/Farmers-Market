@@ -1,10 +1,11 @@
 package com.ilatyphi95.farmersmarket.ui.modifyad
 
+import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.ilatyphi95.farmersmarket.data.entities.Category
 import com.ilatyphi95.farmersmarket.data.entities.MyLocation
 import com.ilatyphi95.farmersmarket.data.entities.Product
@@ -26,8 +27,8 @@ const val SEPARATOR = '-'
 
 @ExperimentalCoroutinesApi
 @Suppress("UnstableApiUsage")
-class ModifyAdViewModel(private val product: Product?, private val service: ProductServices) :
-    ViewModel() {
+class ModifyAdViewModel(application: Application, private val product: Product?, private val service: ProductServices) :
+    AndroidViewModel(application) {
 
     private val _category = MutableLiveData<Category>()
     val category: LiveData<Category>
@@ -41,11 +42,6 @@ class ModifyAdViewModel(private val product: Product?, private val service: Prod
     val quantityAvailable = MutableLiveData<String>()
     val phone = MutableLiveData<String>()
     val description = MutableLiveData<String>()
-
-    private val imageUriList = mutableListOf<Uri>()
-    private lateinit var documentAddress: DocumentReference
-    private var pictureCount: Int = 0
-    private var currentPictureUpload: Int = 0
 
     private val _location = MutableLiveData<MyLocation>()
     val address: LiveData<String> = _location.map {
@@ -195,12 +191,7 @@ class ModifyAdViewModel(private val product: Product?, private val service: Prod
         _isLoading.value = true
         val list = _pictures.value!!
 
-        // keep the list of files that will be uploaded
-        imageUriList.clear()
-
-        //come back to rectify this
-        imageUriList.addAll((list.filterIsInstance<ImageAdded>()).map{it.imageAddress})
-        pictureCount = imageUriList.size
+        val imageList: List<Uri> = (list.filterIsInstance<ImageAdded>()).map{it.imageAddress}
 
         val keywords = getKeywords(title = title.value!!, description = description.value!!)
 
@@ -231,9 +222,8 @@ class ModifyAdViewModel(private val product: Product?, private val service: Prod
 
                 postNotification("Ad posted!")
                 _events.postValue(Event(Loads.NAVIGATE_PRODUCT))
-                documentAddress =
-                    FirebaseFirestore.getInstance().collection("ads").document(uploadId)
-                uploadImageToFirebaseStorage()
+
+                uploadImage(imageList, uploadId)
             }
         } else {
             // update product
@@ -261,38 +251,59 @@ class ModifyAdViewModel(private val product: Product?, private val service: Prod
 
                 postNotification("Ad Updated!")
                 _events.postValue(Event(Loads.NAVIGATE_PRODUCT))
-                documentAddress =
-                    FirebaseFirestore.getInstance().collection("ads").document(uploadId)
-
 
                 val imagesNeededToBeRemoved = list.filterIsInstance<ImageDeleted>().map{it.imageAddress}
                 service.removeImages(imagesNeededToBeRemoved)
 
-                uploadImageToFirebaseStorage()
+                uploadImage(imageList, uploadId)
             }
         }
+    }
+
+    private fun uploadImage(list: List<Uri>, productId: String) {
+        val uploadWorker = WorkManager.getInstance(getApplication())
+        val myList = list.toMutableList()
+
+        var continuation = uploadWorker.beginWith(
+            OneTimeWorkRequestBuilder<UploadWorker>()
+                .setInputData(createInputDataForUri(myList.removeFirst().toString(), true))
+                .build()
+        )
+
+        // queue up the image needed to be uploaded
+        for (i in myList) {
+
+            val uploadRequest = OneTimeWorkRequestBuilder<UploadWorker>()
+                .setInputData(createInputDataForUri(i.toString()))
+                .build()
+            continuation = continuation.then(uploadRequest)
+        }
+
+
+        val updateImageRequest = OneTimeWorkRequestBuilder<UpdateImageLinkWorker>()
+            .setInputData(Data.Builder().putString(KEY_PRODUCT_ID, productId).build())
+            .build()
+
+        // add product image link update
+        continuation = continuation.then(updateImageRequest)
+
+        continuation.enqueue()
+    }
+
+    private fun createInputDataForUri(imageUri: String, firstValue: Boolean = false) : Data {
+        val builder = Data.Builder()
+
+        builder.putString(KEY_IMAGE_URL, imageUri)
+
+        if(firstValue) {
+            builder.putStringArray(KEY_OUTPUT_URL_LIST, emptyArray())
+        }
+
+        return builder.build()
     }
 
     private fun postNotification(message: String) {
         _eventNotification.postValue(Event(message))
-    }
-
-    private fun uploadImageToFirebaseStorage() {
-        if (imageUriList.size > 0) {
-            val imageUri = imageUriList[0]
-
-            imageUriList.removeAt(0)
-            currentPictureUpload += 1
-            viewModelScope.launch {
-                service.uploadImage(imageUri)?.let {
-                    documentAddress.update("imgUrls", FieldValue.arrayUnion(it))
-                    postNotification("Image $currentPictureUpload/$pictureCount upload Successful!")
-
-                    // recursive call
-                    uploadImageToFirebaseStorage()
-                }
-            }
-        }
     }
 
     private fun preparePictureRecycler(list: List<RecyclerItem>): List<RecyclerItem> {
@@ -320,11 +331,12 @@ class ModifyAdViewModel(private val product: Product?, private val service: Prod
 @ExperimentalCoroutinesApi
 @Suppress("UNCHECKED_CAST")
 class AddProductViewModelFactory(
+    private val application: Application,
     private val product: Product?,
     private val service: ProductServices
 ) :
     ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        (ModifyAdViewModel(product, service) as T)
+        (ModifyAdViewModel(application, product, service) as T)
 }

@@ -150,6 +150,8 @@ dependencies {
     // Geohash library
     implementation 'com.koalap:geofirestore-android:1.2.2'
 
+    // work manager dependencies
+    implementation "androidx.work:work-runtime-ktx:2.4.0"
 
     testImplementation 'junit:junit:4.12'
     testImplementation "androidx.arch.core:core-testing:2.1.0"

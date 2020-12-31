@@ -289,7 +289,10 @@ object ProductServices {
                 productId = it.result.id
                 product.location?.let { location ->
                     val geoFire = GeoFire(db.collection("ads"))
-                    geoFire.setLocation(productId, GeoLocation(location.latitude, location.longitude))
+                    geoFire.setLocation(
+                        productId,
+                        GeoLocation(location.latitude, location.longitude)
+                    )
                 }
             }
         }.await()
@@ -307,7 +310,10 @@ object ProductServices {
                     productId = product.id
                     product.location?.let { location ->
                         val geoFire = GeoFire(db.collection("ads"))
-                        geoFire.setLocation(productId, GeoLocation(location.latitude, location.longitude))
+                        geoFire.setLocation(
+                            productId,
+                            GeoLocation(location.latitude, location.longitude)
+                        )
                     }
                 }
             }.await()
@@ -351,6 +357,17 @@ object ProductServices {
             .addOnCompleteListener {
                 isSuccessful = it.isSuccessful
             }.await()
+        return isSuccessful
+    }
+
+    suspend fun updateImageLink(productId: String, imageLinks: Array<String>): Boolean {
+        var isSuccessful = false
+        db.document("ads/$productId")
+            .update("imgUrls", FieldValue.arrayUnion(*imageLinks))
+            .addOnCompleteListener {
+                isSuccessful = it.isSuccessful
+            }.await()
+
         return isSuccessful
     }
 }

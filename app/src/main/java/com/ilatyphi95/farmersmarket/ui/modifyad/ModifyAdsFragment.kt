@@ -40,7 +40,7 @@ class ModifyAdsFragment : Fragment() {
     private val args: ModifyAdsFragmentArgs by navArgs()
     private lateinit var binding: FragmentModifyAdsBinding
     private val viewmodel by viewModels<ModifyAdViewModel> {
-        AddProductViewModelFactory(args.product, ProductServices)
+        AddProductViewModelFactory(requireActivity().application, args.product, ProductServices)
     }
 
     private val handlePictures = registerForActivityResult(
