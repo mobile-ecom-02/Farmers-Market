@@ -79,4 +79,10 @@
     <string name="not_matching_password">Password does not match</string>
     <string name="channel_name">message notifications</string>
     <string name="channel_description">channel for handling message notifications</string>
+    <string name="uploading_image">Uploading Image %d of %d</string>
+    <string name="image_upload_complete">Image Upload Complete!</string>
+    <string name="upload_channel_name">File upload notification</string>
+    <string name="upload_channel_description">channel for handling file upload notifications</string>
+    <string name="uploading_images">Uploading Images</string>
+    <string name="upload_complete">Upload Complete</string>
 </resources>

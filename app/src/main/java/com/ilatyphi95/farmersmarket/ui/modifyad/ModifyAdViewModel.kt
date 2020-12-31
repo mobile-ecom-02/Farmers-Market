@@ -266,7 +266,7 @@ class ModifyAdViewModel(application: Application, private val product: Product?,
 
         var continuation = uploadWorker.beginWith(
             OneTimeWorkRequestBuilder<UploadWorker>()
-                .setInputData(createInputDataForUri(myList.removeFirst().toString(), true))
+                .setInputData(createInputDataForUri(myList.removeFirst().toString(), true, list.size))
                 .build()
         )
 
@@ -290,13 +290,14 @@ class ModifyAdViewModel(application: Application, private val product: Product?,
         continuation.enqueue()
     }
 
-    private fun createInputDataForUri(imageUri: String, firstValue: Boolean = false) : Data {
+    private fun createInputDataForUri(imageUri: String, firstValue: Boolean = false, totalImage: Int = 1) : Data {
         val builder = Data.Builder()
 
         builder.putString(KEY_IMAGE_URL, imageUri)
 
         if(firstValue) {
             builder.putStringArray(KEY_OUTPUT_URL_LIST, emptyArray())
+            builder.putInt(KEY_TOTAL_IMAGE, totalImage)
         }
 
         return builder.build()
