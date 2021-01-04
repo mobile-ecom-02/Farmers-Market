@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
@@ -66,6 +67,16 @@ class HomeFragment : Fragment() {
             isLoading.observe(viewLifecycleOwner, {
             })
         }
+
+        activity?.onBackPressedDispatcher?.addCallback(this){
+
+            if(homeViewModel.showSearchRecycler.value == true) {
+                homeViewModel.closeSearchView()
+            } else {
+                this.handleOnBackPressed()
+            }
+        }
+
         return binding.root
     }
 }
