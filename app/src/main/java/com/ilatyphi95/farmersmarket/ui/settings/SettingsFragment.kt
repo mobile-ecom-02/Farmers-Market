@@ -87,7 +87,7 @@ class SettingsFragment : Fragment() {
 
 
             findNavController()
-                .navigate(SettingsFragmentDirections.actionNavigationSettingsToMainActivity())
+                .navigate(SettingsFragmentDirections.actionNavigationSettingsToLoginFragment2())
         }
         return root
     }

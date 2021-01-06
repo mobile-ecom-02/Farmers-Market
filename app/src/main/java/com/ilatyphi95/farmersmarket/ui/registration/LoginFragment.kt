@@ -79,7 +79,7 @@ class LoginFragment : Fragment(){
                     binding.treeImage to "treeImage"
                 )
                 findNavController().navigate(
-                    R.id.action_loginFragment_to_signUpFragment2,
+                    R.id.action_loginFragment2_to_signUpFragment2,
                     null,
                     null,
                     extras
@@ -159,7 +159,7 @@ class LoginFragment : Fragment(){
                     }
 
                     findNavController().navigate(
-                        LoginFragmentDirections.actionLoginFragmentToHomeActivity()
+                        LoginFragmentDirections.actionLoginFragment2ToNavigationHome()
                     )
                 } else {
                     sendVerificationEmail(requireView())

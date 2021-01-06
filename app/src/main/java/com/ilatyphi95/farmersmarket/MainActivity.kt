@@ -5,25 +5,24 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.multidex.MultiDex
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.api.LogDescriptor
 import com.google.firebase.auth.FirebaseAuth
 import com.ilatyphi95.farmersmarket.data.repository.MESSAGE_NOTIFICATION_CHANNEL_ID
 import com.ilatyphi95.farmersmarket.utils.NetworkAvailabilityUtils
 
 
 class MainActivity : AppCompatActivity() {
-    companion object{
-        private var navView : BottomNavigationView? = null
-        private var navController: NavController? = null
-    }
+
+    private lateinit var navController: NavController
 
     val tag = "MainActivity"
 
@@ -31,32 +30,36 @@ class MainActivity : AppCompatActivity() {
         super.attachBaseContext(newBase)
         MultiDex.install(this)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_home)
 
         createNotificationChannel()
 
-//        navView = findViewById(R.id.nav_view)
-//
-//        navController = findNavController(R.id.nav_host_fragment)
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_view)
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
+        navController = navHostFragment.navController
+
+        bottomNavigationView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener {_, destination, _ ->
+            when(destination.id) {
+                R.id.navigation_home, R.id.navigation_message,
+                R.id.navigation_pager, R.id.navigation_settings -> bottomNavigationView.visibility = View.VISIBLE
+
+                else -> bottomNavigationView.visibility = View.GONE
+            }
+
+        }
 
         NetworkAvailabilityUtils.setNetworkAvailabilityListener(this){
 
         }
 
     }
-
-    override fun onStop() {
-        Log.d(tag, "onStop: OnStopped Called")
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        finish()
-    }
-
 
     //Checks if user is logged in
     private fun verifyUserLoggedIn() {
@@ -73,8 +76,12 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_home, R.id.navigation_message, R.id.navigation_settings))
 
 //        setupActionBarWithNavController(navController, appBarConfiguration)
-            navView?.setupWithNavController(navController!!)
+//            navView?.setupWithNavController(navController!!)
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
     }
 
     private fun createNotificationChannel() {

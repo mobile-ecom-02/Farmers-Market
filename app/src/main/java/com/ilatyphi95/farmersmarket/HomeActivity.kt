@@ -26,7 +26,7 @@ class HomeActivity : AppCompatActivity() {
 
         bottomNavigationView.setupWithNavController(navController)
 
-        navController.addOnDestinationChangedListener{_, destination, _ ->
+        navController.addOnDestinationChangedListener {_, destination, _ ->
             when(destination.id) {
                 R.id.navigation_home, R.id.navigation_message,
                 R.id.navigation_pager, R.id.navigation_settings -> bottomNavigationView.visibility = View.VISIBLE
