@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.multidex.MultiDex
 import androidx.navigation.NavController
@@ -12,6 +13,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.api.LogDescriptor
 import com.google.firebase.auth.FirebaseAuth
 import com.ilatyphi95.farmersmarket.data.repository.MESSAGE_NOTIFICATION_CHANNEL_ID
 import com.ilatyphi95.farmersmarket.utils.NetworkAvailabilityUtils
@@ -22,6 +24,8 @@ class MainActivity : AppCompatActivity() {
         private var navView : BottomNavigationView? = null
         private var navController: NavController? = null
     }
+
+    val tag = "MainActivity"
 
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(newBase)
@@ -41,6 +45,16 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+    }
+
+    override fun onStop() {
+        Log.d(tag, "onStop: OnStopped Called")
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        finish()
     }
 
 

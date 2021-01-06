@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.addCallback
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
@@ -22,6 +22,14 @@ class HomeFragment : Fragment() {
 
     private val homeViewModel by viewModels<HomeViewModel> {
         HomeViewModelFactory(ProductServices)
+    }
+
+    private val backPressedCallback = object: OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if(homeViewModel.showSearchRecycler.value == true) {
+                homeViewModel.closeSearchView()
+            }
+        }
     }
 
     private val queryTextListener: OnQueryTextListener = object : OnQueryTextListener {
@@ -66,16 +74,14 @@ class HomeFragment : Fragment() {
 
             isLoading.observe(viewLifecycleOwner, {
             })
-        }
 
-        activity?.onBackPressedDispatcher?.addCallback(this){
-
-            if(homeViewModel.showSearchRecycler.value == true) {
-                homeViewModel.closeSearchView()
-            } else {
-                this.handleOnBackPressed()
+            showSearchRecycler.observe(viewLifecycleOwner) {isShown ->
+                backPressedCallback.isEnabled = isShown
             }
         }
+
+
+        activity?.onBackPressedDispatcher?.addCallback(backPressedCallback)
 
         return binding.root
     }
