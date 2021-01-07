@@ -3,9 +3,7 @@ package com.ilatyphi95.farmersmarket.ui.modifyad
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.ilatyphi95.farmersmarket.data.entities.Category
 import com.ilatyphi95.farmersmarket.data.entities.MyLocation
 import com.ilatyphi95.farmersmarket.data.entities.Product
@@ -266,6 +264,7 @@ class ModifyAdViewModel(application: Application, private val product: Product?,
 
         var continuation = uploadWorker.beginWith(
             OneTimeWorkRequestBuilder<UploadWorker>()
+                .setConstraints(uploadConstraint())
                 .setInputData(createInputDataForUri(myList.removeFirst().toString(), true, list.size))
                 .build()
         )
@@ -274,6 +273,7 @@ class ModifyAdViewModel(application: Application, private val product: Product?,
         for (i in myList) {
 
             val uploadRequest = OneTimeWorkRequestBuilder<UploadWorker>()
+                .setConstraints(uploadConstraint())
                 .setInputData(createInputDataForUri(i.toString()))
                 .build()
             continuation = continuation.then(uploadRequest)
@@ -288,6 +288,12 @@ class ModifyAdViewModel(application: Application, private val product: Product?,
         continuation = continuation.then(updateImageRequest)
 
         continuation.enqueue()
+    }
+
+    private fun uploadConstraint(): Constraints {
+        return Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
     }
 
     private fun createInputDataForUri(imageUri: String, firstValue: Boolean = false, totalImage: Int = 1) : Data {
