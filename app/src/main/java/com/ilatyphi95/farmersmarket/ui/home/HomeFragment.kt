@@ -5,20 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.ilatyphi95.farmersmarket.data.ProductAdapter
 import com.ilatyphi95.farmersmarket.databinding.FragmentHomeBinding
 import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
 import com.ilatyphi95.farmersmarket.utils.EventObserver
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 class HomeFragment : Fragment() {
 
     lateinit var binding : FragmentHomeBinding
+    private val productSearchAdapter = ProductAdapter()
 
     private val homeViewModel by viewModels<HomeViewModel> {
         HomeViewModelFactory(ProductServices)
@@ -34,8 +38,14 @@ class HomeFragment : Fragment() {
 
     private val queryTextListener: OnQueryTextListener = object : OnQueryTextListener {
         override fun onQueryTextSubmit(query: String?): Boolean {
-            homeViewModel.search(query)
-            homeViewModel.openSearchView()
+            query?.let {
+                lifecycleScope.launch {
+                    homeViewModel.productFlow(it).collectLatest {
+                        productSearchAdapter.submitData(it)
+                    }
+                }
+                homeViewModel.openSearchView()
+            }
             return true
         }
 
@@ -56,14 +66,8 @@ class HomeFragment : Fragment() {
         binding.apply {
             viewModel = homeViewModel
             lifecycleOwner = viewLifecycleOwner
+            rvProductSearch.adapter = productSearchAdapter
             searchView.setOnQueryTextListener(queryTextListener)
-            searchView.setOnCloseListener {
-                SearchView.OnCloseListener {
-                    homeViewModel.closeSearchView()
-                    true
-                }
-                true
-            }
         }
 
         homeViewModel.apply {
@@ -80,9 +84,16 @@ class HomeFragment : Fragment() {
             }
         }
 
-
-        activity?.onBackPressedDispatcher?.addCallback(backPressedCallback)
-
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity?.onBackPressedDispatcher?.addCallback(backPressedCallback)
+    }
+
+    override fun onPause() {
+        backPressedCallback.remove()
+        super.onPause()
     }
 }

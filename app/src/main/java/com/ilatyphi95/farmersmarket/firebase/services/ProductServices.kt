@@ -2,6 +2,9 @@ package com.ilatyphi95.farmersmarket.firebase.services
 
 import android.net.Uri
 import android.util.Log
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.google.common.io.Files.getFileExtension
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -10,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.FirebaseStorage
+import com.ilatyphi95.farmersmarket.data.ProductPagingSource
 import com.ilatyphi95.farmersmarket.data.entities.*
 import com.koalap.geofirestore.GeoFire
 import com.koalap.geofirestore.GeoLocation
@@ -369,5 +373,16 @@ object ProductServices {
             }.await()
 
         return isSuccessful
+    }
+
+    fun productPager(keyword: String): Flow<PagingData<Product>> {
+        val query = db.collection("ads").whereArrayContains("keywords", keyword)
+            .whereNotEqualTo("sellerId", getThisUserUid())
+
+        return Pager(
+            PagingConfig(pageSize = ProductPagingSource.PAGE_SIZE)
+        ) {
+            ProductPagingSource(query)
+        }.flow
     }
 }
