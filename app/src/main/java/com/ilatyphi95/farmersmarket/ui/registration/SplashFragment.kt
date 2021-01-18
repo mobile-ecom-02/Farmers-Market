@@ -1,6 +1,5 @@
 package com.ilatyphi95.farmersmarket.ui.registration
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +28,8 @@ class SplashFragment : Fragment() {
                 if (FirebaseAuth.getInstance().currentUser?.isEmailVerified == true) {
 
                     findNavController().navigate(
-                        SplashFragmentDirections.actionSplashFragmentToNavigationHome())
+                        SplashFragmentDirections.actionSplashFragmentToNavigationHome()
+                    )
 
                 } else {
                     sendVerificationEmail(requireView())
