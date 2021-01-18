@@ -56,6 +56,23 @@ fun toDate(context: Context, timeStamp: Timestamp) : String {
     }
 }
 
+fun toDay(context: Context, timeStamp: Timestamp) : String {
+    val beginOfToday = LocalDate.now(ZoneId.systemDefault()).atStartOfDay()
+    val yesterday = beginOfToday.minusDays(1)
+    val timeStampDate = timeStamp.toLocalDateTime()
+
+    return when {
+        beginOfToday < timeStampDate -> { context.getString(R.string.today) }
+
+        yesterday < timeStampDate && timeStampDate < beginOfToday -> {
+            context.getString(R.string.yesterday)
+        }
+        else -> {
+            timeStampDate.format(DateTimeFormatter.ofPattern("d/MM/yyyy"))
+        }
+    }
+}
+
 fun toShortTime(timeStamp: Long) : String {
     val timeStampDate = LocalDateTime
         .ofInstant(Instant.ofEpochMilli(timeStamp), ZoneId.systemDefault())

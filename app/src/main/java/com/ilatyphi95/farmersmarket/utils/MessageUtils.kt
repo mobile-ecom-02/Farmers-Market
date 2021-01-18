@@ -7,6 +7,8 @@ import com.ilatyphi95.farmersmarket.data.entities.ChatMessage
 import com.ilatyphi95.farmersmarket.data.entities.Message
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 
+const val DATE_SEPARATOR = "this-is-date-separator"
+
 sealed class ChatRecyclerViewModel(val chatMessage: ChatMessage, @LayoutRes val layoutId: Int)
 
 class  SentRecyclerViewModel(val chat: ChatMessage)
@@ -14,6 +16,9 @@ class  SentRecyclerViewModel(val chat: ChatMessage)
 
 class  ReceiveRecyclerViewModel(val chat: ChatMessage)
     : ChatRecyclerViewModel(chat, R.layout.chat_message_user)
+
+class DateGroupRecyclerViewModel(val chat: ChatMessage)
+    : ChatRecyclerViewModel(chat, R.layout.message_time_separator)
 
 fun ChatRecyclerViewModel.toRecyclerItem() = RecyclerItem(
     data = chatMessage,
