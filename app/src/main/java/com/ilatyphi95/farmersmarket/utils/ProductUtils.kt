@@ -1,10 +1,8 @@
 package com.ilatyphi95.farmersmarket.utils
 
-import android.net.Uri
-import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.BR
+import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.data.entities.AdItem
-import com.ilatyphi95.farmersmarket.data.entities.CloseByProduct
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 
@@ -50,11 +48,11 @@ fun ProductPicture.toRecyclerItem() = RecyclerItem(
     variableId = BR.viewModel
 )
 
-class CloseProductViewModel(val closeByProduct: CloseByProduct) {
-    lateinit var itemClickHander: (closeByProduct: CloseByProduct) -> Unit
+class CloseProductViewModel(val product: Product) {
+    lateinit var itemClickHandler: (product: Product) -> Unit
 
     fun onItemClick() {
-        itemClickHander(closeByProduct)
+        itemClickHandler(product)
     }
 }
 
@@ -64,11 +62,11 @@ fun CloseProductViewModel.toRecyclerItem() = RecyclerItem(
     variableId = BR.viewModel
 )
 
-sealed class PictureIconViewModel(val imageUrl: Uri?) {
-    lateinit var removeItemHandler: (imageUrl: Uri?) -> Unit
+sealed class PictureIconViewModel(val image: ProductImage?) {
+    lateinit var removeItemHandler: (image: ProductImage?) -> Unit
     lateinit var addItemHandler: () -> Unit
     open fun addItem() { addItemHandler() }
-    open fun removeItem() { removeItemHandler(imageUrl)}
+    open fun removeItem() { removeItemHandler(image)}
 }
 
 fun PictureIconViewModel.toRecyclerItem() = RecyclerItem(
@@ -85,7 +83,7 @@ class AddIcon : PictureIconViewModel(null) {
     }
 }
 
-class AddedProductPicture(imageUri: Uri) : PictureIconViewModel(imageUri) {
+class AddedProductPicture(image: ProductImage) : PictureIconViewModel(image) {
 
     // do nothing
     override fun addItem() {

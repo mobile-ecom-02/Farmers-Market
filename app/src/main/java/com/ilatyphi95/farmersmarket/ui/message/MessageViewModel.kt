@@ -12,17 +12,19 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class MessageViewModel(service: ProductServices) : ViewModel() {
 
     private val _messages = service.getMessageList().asLiveData()
-    val messages : LiveData<List<RecyclerItem>> = _messages.map { list ->
-        list.filter{ it.message.isNotEmpty() }.map {message ->
-            MessageItemViewModel(message).apply {
-                itemClickHandler = { messageClicked(message.id) }
+    val messages: LiveData<List<RecyclerItem>> = _messages.map { list ->
+        list.filter { it.message.isNotEmpty() }
+            .sortedByDescending { it.timeStamp }
+            .map { message ->
+                MessageItemViewModel(message).apply {
+                    itemClickHandler = { messageClicked(message.id) }
 
-            }.toRecyclerItem()
-        }
+                }.toRecyclerItem()
+            }
     }
 
     private val _eventMessage = MutableLiveData<Event<String>>()
-    val eventMessage : LiveData<Event<String>>
+    val eventMessage: LiveData<Event<String>>
         get() = _eventMessage
 
     private fun messageClicked(messageId: String) {
@@ -32,7 +34,8 @@ class MessageViewModel(service: ProductServices) : ViewModel() {
 
 @ExperimentalCoroutinesApi
 @Suppress("UNCHECKED_CAST")
-class MessageViewModelFactory(private val service: ProductServices) : ViewModelProvider.NewInstanceFactory(){
+class MessageViewModelFactory(private val service: ProductServices) :
+    ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
         (MessageViewModel(service) as T)

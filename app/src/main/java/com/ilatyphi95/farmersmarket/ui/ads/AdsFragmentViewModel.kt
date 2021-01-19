@@ -27,7 +27,8 @@ class AdsFragmentViewModel(private val service: ProductServices) : ViewModel() {
     val eventEditAds: LiveData<Event<String>>
         get() = _eventEditAds
 
-    val postedAdsList: LiveData<List<RecyclerItem>> = service.myItems().asLiveData().map { list ->
+    private val _postedAdsList = service.myItems().asLiveData()
+    val postedAdsList: LiveData<List<RecyclerItem>> = _postedAdsList.map { list ->
         list.map { item ->
             val timestamp = if (item.location != null) {
                 Timestamp(Date(item.location.time))
@@ -69,7 +70,14 @@ class AdsFragmentViewModel(private val service: ProductServices) : ViewModel() {
     fun postNewAd() {
         _eventEditAds.value = Event(NEW_PRODUCT)
     }
-}
+
+    fun getProduct(productId: String) : Product? {
+        if(productId == NEW_PRODUCT) {
+            return null
+        }
+        return _postedAdsList.value?.find {  it.id == productId  }
+    }
+ }
 
 @Suppress("UNCHECKED_CAST")
 @ExperimentalCoroutinesApi

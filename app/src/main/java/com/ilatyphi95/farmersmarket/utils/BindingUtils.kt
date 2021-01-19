@@ -15,6 +15,7 @@ import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.data.entities.CloseByProduct
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 import org.joda.money.Money
+import org.threeten.bp.format.DateTimeFormatter
 
 const val METERS_TO_MILES = 0.000621371
 
@@ -73,6 +74,16 @@ fun ImageView.loadImage(imageUri: Uri?) {
     }
 }
 
+@BindingAdapter("loadProductImage")
+fun ImageView.loadProductImage(image: ProductImage) {
+    when(image) {
+        is ImageUploaded -> this.loadImage(image.imageAddress)
+        is ImageDeleted -> { // leave image blank
+             }
+        is ImageAdded -> this.loadImage(imageUri = image.imageAddress)
+    }
+}
+
 
 @BindingAdapter("loadFirst")
 fun ImageView.loadFirstImage(imageUrls: List<String>) {
@@ -96,10 +107,23 @@ fun TextView.time(timeStamp: Timestamp?) {
         text = toDate(context, it)
     }
 }
+@BindingAdapter("compactTime")
+fun TextView.compactTime(timeStamp: Timestamp?) {
+    timeStamp?.let {
+        text = it.toLocalDateTime().format(DateTimeFormatter.ofPattern("hh:mma"))
+    }
+}
 
 @BindingAdapter("moneyString")
 fun TextView.moneyString(money: Money) {
     text = money.toString()
+}
+
+@BindingAdapter("toDay")
+fun TextView.toDay(timeStamp: Timestamp?) {
+    timeStamp?.let {
+        text = toDay(context, timeStamp)
+    }
 }
 
 @BindingAdapter("setInt")

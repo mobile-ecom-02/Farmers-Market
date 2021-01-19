@@ -13,10 +13,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
 import com.google.android.material.snackbar.Snackbar
 import com.ilatyphi95.farmersmarket.R
+import com.ilatyphi95.farmersmarket.data.entities.Category
 import com.ilatyphi95.farmersmarket.data.entities.MyLocation
 import com.ilatyphi95.farmersmarket.databinding.FragmentModifyAdsBinding
 import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
@@ -35,9 +37,10 @@ import kotlin.collections.ArrayList
 
 @ExperimentalCoroutinesApi
 class ModifyAdsFragment : Fragment() {
+    private val args: ModifyAdsFragmentArgs by navArgs()
     private lateinit var binding: FragmentModifyAdsBinding
     private val viewmodel by viewModels<ModifyAdViewModel> {
-        AddProductViewModelFactory(ProductServices)
+        AddProductViewModelFactory(requireActivity().application, args.product, ProductServices)
     }
 
     private val handlePictures = registerForActivityResult(
@@ -67,7 +70,7 @@ class ModifyAdsFragment : Fragment() {
                                 lastLocation.latitude,
                                 lastLocation.longitude,
                                 lastLocation.time,
-                                address.subAdminArea,
+                                address.locality ?: address.subAdminArea,
                                 address.adminArea,
                                 address.countryName))
                     } else {
@@ -137,7 +140,7 @@ class ModifyAdsFragment : Fragment() {
     }
 
     private fun initializeFields() {
-        viewmodel.setCategory(getString(R.string.select_category))
+        viewmodel.setCategory(Category(type = getString(R.string.select_category)))
         viewmodel.currency.value = CurrencyUnit.of(Locale.getDefault()).toCurrency()
     }
 

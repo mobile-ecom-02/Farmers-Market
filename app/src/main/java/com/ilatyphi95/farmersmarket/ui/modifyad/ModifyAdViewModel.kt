@@ -1,10 +1,10 @@
 package com.ilatyphi95.farmersmarket.ui.modifyad
 
+import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.work.*
+import com.ilatyphi95.farmersmarket.data.entities.Category
 import com.ilatyphi95.farmersmarket.data.entities.MyLocation
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
@@ -21,12 +21,15 @@ enum class Loads {
     NAVIGATE_PRODUCT
 }
 
+const val SEPARATOR = '-'
+
 @ExperimentalCoroutinesApi
 @Suppress("UnstableApiUsage")
-class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
+class ModifyAdViewModel(application: Application, private val product: Product?, private val service: ProductServices) :
+    AndroidViewModel(application) {
 
-    private val _category = MutableLiveData<String>()
-    val category: LiveData<String>
+    private val _category = MutableLiveData<Category>()
+    val category: LiveData<Category>
         get() = _category
 
     val title = MutableLiveData<String>()
@@ -38,11 +41,6 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
     val phone = MutableLiveData<String>()
     val description = MutableLiveData<String>()
 
-    private val imageUriList = mutableListOf<Uri>()
-    private lateinit var documentAddress: DocumentReference
-    private var pictureCount : Int = 0
-    private var currentPictureUpload: Int = 0
-
     private val _location = MutableLiveData<MyLocation>()
     val address: LiveData<String> = _location.map {
         "${it.city}, ${it.state}"
@@ -50,6 +48,7 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
 
     var loadedList: List<String> = emptyList()
     private lateinit var currencies: List<Currency>
+    private lateinit var categories: List<Category>
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean>
@@ -65,41 +64,67 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
         get() = _eventNotification
 
 
-    private val _pictures = MutableLiveData<List<Uri?>>(listOf(null))
+    private val _pictures = MutableLiveData<List<ProductImage>>(emptyList())
     val pictures: LiveData<List<RecyclerItem>> = _pictures.map { list ->
-        list.map { pictureUri ->
-            val item: RecyclerItem?
 
-            if (pictureUri == null) {
-                item = AddIcon().apply {
-                    addItemHandler = { addPicture() }
+        preparePictureRecycler(
+            list.filter{ it !is ImageDeleted }.map { productImage ->
+                AddedProductPicture(productImage).apply {
+                    removeItemHandler = { removePicture(productImage) }
                 }.toRecyclerItem()
-            } else {
-                item = AddedProductPicture(pictureUri).apply {
-                    removeItemHandler = { removePicture(pictureUri) }
-                }.toRecyclerItem()
-            }
-            item
-        }
+            })
     }
 
     init {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val user = service.getUser(service.getThisUserUid()!!)
-
-                user?.let {thisUser ->
+                service.getUser(service.getThisUserUid()!!)?.let { thisUser ->
                     if (thisUser.firstName.isNotBlank()) firstName.postValue(thisUser.firstName)
                     if (thisUser.lastName.isNotBlank()) lastName.postValue(thisUser.lastName)
-
                 }
+            }
+        }
+
+        if (product != null) {
+            initializeProduct(product)
+        }
+    }
+
+    private fun initializeProduct(product: Product) {
+        val currencyParts = product.priceStr.split(SEPARATOR)
+        // set category
+        viewModelScope.launch {
+            _category.postValue(service.getCategories().find { it.id == product.type })
+        }
+
+        // set currency
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                currency.postValue(loadValidCurrencies().find { it.currencyCode == currencyParts[0] })
+            }
+        }
+
+        title.postValue(product.name)
+        description.postValue(product.description)
+        price.postValue(currencyParts[1])
+        description.postValue(product.description)
+        quantityAvailable.postValue(product.qtyAvailable.toString())
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                val imageList: List<ImageUploaded> = product.imgUrls.map { ImageUploaded(it) }
+                _pictures.postValue(imageList)
             }
         }
     }
 
-    private fun removePicture(imageUri: Uri?) {
+    private fun removePicture(image: ProductImage) {
         val oldList = _pictures.value.orEmpty().toMutableList()
-        oldList.remove(imageUri)
+        val position = oldList.indexOf(image)
+        oldList.removeAt(position)
+
+        if(image is ImageUploaded) {
+            oldList.add(position, ImageDeleted(image.imageAddress))
+        }
         _pictures.value = oldList
 
     }
@@ -107,7 +132,8 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
     fun onClickCategory() {
         _isLoading.value = true
         viewModelScope.launch {
-            loadedList = service.getCategories().map { it.type }
+            categories = service.getCategories().sortedBy { it.type }
+            loadedList = categories.map { it.type }
             _events.postValue(Event(Loads.LOAD_CATEGORY))
         }
     }
@@ -117,11 +143,7 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
 
-                // remove old currencies
-                val unneededCurrencyPattern = "[0-9]{4}(-[0-9]{4})?".toRegex()
-                currencies = Currency.getAvailableCurrencies()
-                    .filter { !it.displayName.contains(unneededCurrencyPattern) }
-                    .sortedBy { it.displayName }
+                currencies = loadValidCurrencies()
 
                 loadedList = currencies.map {
                     "${it.displayName} (${it.symbol})"
@@ -132,13 +154,22 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
         }
     }
 
+    private fun loadValidCurrencies(): List<Currency> {
+        // remove old currencies
+        val unneededCurrencyPattern = "[0-9]{4}(-[0-9]{4})?".toRegex()
+
+        return Currency.getAvailableCurrencies()
+            .filter { !it.displayName.contains(unneededCurrencyPattern) }
+            .sortedBy { it.displayName }
+    }
+
     private fun addPicture() {
         _events.value = Event(Loads.ADD_PICTURES)
     }
 
     fun addImages(imageList: List<Uri>) {
         val oldList = _pictures.value.orEmpty().toMutableList()
-        oldList.addAll(imageList)
+        oldList.addAll(imageList.map { ImageAdded(it) })
         _pictures.value = oldList
     }
 
@@ -147,7 +178,7 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
     }
 
     fun selectCategory(position: Int) {
-            _category.value = loadedList[position]
+        _category.value = categories[position]
     }
 
     fun finishLoading() {
@@ -158,67 +189,145 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
         _isLoading.value = true
         val list = _pictures.value!!
 
-        // keep the list of files that will be uploaded
-        imageUriList.clear()
-
-        imageUriList.addAll(list.subList(1, list.size).filterNotNull())
-        pictureCount = imageUriList.size
+        val imageList: List<Uri> = (list.filterIsInstance<ImageAdded>()).map{it.imageAddress}
 
         val keywords = getKeywords(title = title.value!!, description = description.value!!)
 
-        val myProduct = Product(
-            name = title.value!!,
-            description = description.value!!,
-            sellerId = service.getThisUserUid()!!,
-            type = category.value!!,
-            imgUrls = emptyList(),
-            qtyAvailable = quantityAvailable.value!!.toInt(),
-            qtySold = 0,
-            priceStr = "${currency.value!!.currencyCode}-${price.value!!}",
-            location = _location.value!!,
-            keywords = keywords
+        if(product == null) {
+
+            // add new product
+            val myProduct = Product(
+                name = title.value!!,
+                description = description.value!!,
+                sellerId = service.getThisUserUid()!!,
+                type = category.value!!.id,
+                imgUrls = emptyList(),
+                qtyAvailable = quantityAvailable.value!!.toInt(),
+                qtySold = 0,
+                priceStr = "${currency.value!!.currencyCode}$SEPARATOR${price.value!!}",
+                location = _location.value!!,
+                keywords = keywords
+            )
+
+            viewModelScope.launch {
+                val uploadId = service.uploadAd(myProduct)
+                finishLoading()
+
+                if (uploadId == null) {
+                    // notify error
+                    return@launch
+                }
+
+                postNotification("Ad posted!")
+                _events.postValue(Event(Loads.NAVIGATE_PRODUCT))
+
+                uploadImage(imageList, uploadId)
+            }
+        } else {
+            // update product
+
+            val myProduct = product.copy(
+                name = title.value!!,
+                description = description.value!!,
+                sellerId = service.getThisUserUid()!!,
+                type = category.value!!.id,
+                imgUrls = list.filterIsInstance<ImageUploaded>().map { it.imageAddress },
+                qtyAvailable = quantityAvailable.value!!.toInt(),
+                priceStr = "${currency.value!!.currencyCode}$SEPARATOR${price.value!!}",
+                location = _location.value!!,
+                keywords = keywords
+            )
+
+            viewModelScope.launch {
+                val uploadId = service.upDateAd(myProduct)
+                finishLoading()
+
+                if (uploadId == null) {
+                    // notify error
+                    return@launch
+                }
+
+                postNotification("Ad Updated!")
+                _events.postValue(Event(Loads.NAVIGATE_PRODUCT))
+
+                val imagesNeededToBeRemoved = list.filterIsInstance<ImageDeleted>().map{it.imageAddress}
+                service.removeImages(imagesNeededToBeRemoved)
+
+                uploadImage(imageList, uploadId)
+            }
+        }
+    }
+
+    private fun uploadImage(list: List<Uri>, productId: String) {
+        val uploadWorker = WorkManager.getInstance(getApplication())
+        val myList = list.toMutableList()
+
+        var continuation = uploadWorker.beginWith(
+            OneTimeWorkRequestBuilder<UploadWorker>()
+                .setConstraints(uploadConstraint())
+                .setInputData(createInputDataForUri(myList.removeFirst().toString(), true, list.size))
+                .build()
         )
 
-        viewModelScope.launch {
-            val uploadId = service.uploadAd(myProduct)
-            finishLoading()
+        // queue up the image needed to be uploaded
+        for (i in myList) {
 
-            if(uploadId == null) {
-                // notify error
-                return@launch
-            }
-
-            postNotification("Ad posted!")
-            _events.postValue(Event(Loads.NAVIGATE_PRODUCT))
-           documentAddress = FirebaseFirestore.getInstance().collection("ads").document(uploadId)
-            uploadImageToFirebaseStorage()
+            val uploadRequest = OneTimeWorkRequestBuilder<UploadWorker>()
+                .setConstraints(uploadConstraint())
+                .setInputData(createInputDataForUri(i.toString()))
+                .build()
+            continuation = continuation.then(uploadRequest)
         }
+
+
+        val updateImageRequest = OneTimeWorkRequestBuilder<UpdateImageLinkWorker>()
+            .setInputData(Data.Builder().putString(KEY_PRODUCT_ID, productId).build())
+            .build()
+
+        // add product image link update
+        continuation = continuation.then(updateImageRequest)
+
+        continuation.enqueue()
+    }
+
+    private fun uploadConstraint(): Constraints {
+        return Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+    }
+
+    private fun createInputDataForUri(imageUri: String, firstValue: Boolean = false, totalImage: Int = 1) : Data {
+        val builder = Data.Builder()
+
+        builder.putString(KEY_IMAGE_URL, imageUri)
+
+        if(firstValue) {
+            builder.putStringArray(KEY_OUTPUT_URL_LIST, emptyArray())
+            builder.putInt(KEY_TOTAL_IMAGE, totalImage)
+        }
+
+        return builder.build()
     }
 
     private fun postNotification(message: String) {
         _eventNotification.postValue(Event(message))
     }
 
-    private fun uploadImageToFirebaseStorage() {
-        if (imageUriList.size > 0) {
-            val imageUri = imageUriList[0]
+    private fun preparePictureRecycler(list: List<RecyclerItem>): List<RecyclerItem> {
 
-            imageUriList.removeAt(0)
-            currentPictureUpload += 1
-            viewModelScope.launch {
-                service.uploadImage(imageUri)?.let {
-                    documentAddress.update("imgUrls", FieldValue.arrayUnion(it))
-                    postNotification("Image $currentPictureUpload/$pictureCount upload Successful!")
+        // the add icon is always the first item on the list
+        val addIcon = AddIcon().apply {
+            addItemHandler = { addPicture() }
+        }.toRecyclerItem()
 
-                    // recursive call
-                    uploadImageToFirebaseStorage()
-                }
-            }
-        }
+        val pictureList = mutableListOf(addIcon)
+        pictureList.addAll(list)
+
+        return pictureList
     }
 
-    fun setCategory(string: String) {
-        _category.value = string
+    fun setCategory(category: Category) {
+        _category.value = category
     }
 
     fun updateLocation(lastLocation: MyLocation) {
@@ -228,9 +337,13 @@ class ModifyAdViewModel(private val service: ProductServices) : ViewModel() {
 
 @ExperimentalCoroutinesApi
 @Suppress("UNCHECKED_CAST")
-class AddProductViewModelFactory(private val service: ProductServices) :
+class AddProductViewModelFactory(
+    private val application: Application,
+    private val product: Product?,
+    private val service: ProductServices
+) :
     ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        (ModifyAdViewModel(service) as T)
+        (ModifyAdViewModel(application, product, service) as T)
 }

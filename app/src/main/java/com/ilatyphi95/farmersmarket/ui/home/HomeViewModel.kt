@@ -1,15 +1,21 @@
 package com.ilatyphi95.farmersmarket.ui.home
 
 import androidx.lifecycle.*
-import com.google.firebase.auth.FirebaseAuth
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
 import com.ilatyphi95.farmersmarket.data.entities.AdItem
-import com.ilatyphi95.farmersmarket.data.entities.CloseByProduct
 import com.ilatyphi95.farmersmarket.data.entities.Product
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 import com.ilatyphi95.farmersmarket.firebase.addToRecent
 import com.ilatyphi95.farmersmarket.firebase.services.ProductServices
 import com.ilatyphi95.farmersmarket.utils.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @ExperimentalCoroutinesApi
 class HomeViewModel(private val service: ProductServices) : ViewModel() {
@@ -17,8 +23,6 @@ class HomeViewModel(private val service: ProductServices) : ViewModel() {
     private val _recentItems = service.recentItems().asLiveData()
 
     private val _showSearchResult = MutableLiveData(false)
-
-    private val user = FirebaseAuth.getInstance().currentUser
 
     val recentItems = _recentItems.map { list ->
 
@@ -29,21 +33,17 @@ class HomeViewModel(private val service: ProductServices) : ViewModel() {
         }.map { it.toRecyclerItem() }
     }
 
-    private val _closeBy = MutableLiveData<List<CloseByProduct>>()
+    private val _closeBy = MutableLiveData<List<Product>>()
     val closeBy: LiveData<List<RecyclerItem>> = _closeBy.map { list ->
             list.map {
                 CloseProductViewModel(it).apply {
-                    itemClickHander = { it -> productSelected(it.product) }
+                    itemClickHandler = { it -> productSelected(it) }
                 }
             }.map { it.toRecyclerItem() }
     }
 
     val showSearchRecycler = _showSearchResult.map { it }
     val showRecentScreen = showSearchRecycler.map { it.not() }
-
-    private val _searchProduct = MutableLiveData<List<RecyclerItem>>()
-    val searchProduct : LiveData<List<RecyclerItem>>
-        get() = _searchProduct
 
     private val _eventProductSelected = MutableLiveData<Event<Product>>()
     val eventProductSelected: LiveData<Event<Product>>
@@ -73,33 +73,12 @@ class HomeViewModel(private val service: ProductServices) : ViewModel() {
         }
     }
 
-    fun search(query: String?) {
-        query?.let {
-            loadSearch(query)
-        }
-    }
-
-    private fun loadSearch(query: String) {
-        val search = searchTerm(query)
-
-        viewModelScope.launch {
-            _searchProduct.value = service.searchProduct(search).map {
-                SearchProductViewModel(it).apply {
-                    itemClickHandler = { productSelected(product) }
-                }.toRecyclerItem()
-            }
-        }
-
-    }
-
     private fun updateCloseBy(list: List<Product>) {
 
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
-                val closeByList = list.filter { it.sellerId != user!!.uid }.map {
-                    CloseByProduct(it, 100.0f)
-                }
-                _closeBy.postValue(closeByList.sortedBy { it.distance })
+                val closeByList = list.filter { it.sellerId != service.getThisUserUid() }
+                _closeBy.postValue(closeByList)
             }
         }
     }
@@ -110,6 +89,18 @@ class HomeViewModel(private val service: ProductServices) : ViewModel() {
 
     fun openSearchView() {
         _showSearchResult.value = true
+    }
+
+    fun productFlow(query: String): Flow<PagingData<RecyclerItem>> {
+        return service.productPager(searchTerm(query))
+            .map { pagingProductList ->
+                pagingProductList.map {
+                    SearchProductViewModel(it).apply {
+                        itemClickHandler = { productSelected(product) }
+                    }.toRecyclerItem()
+                }
+            }
+            .cachedIn(viewModelScope)
     }
 }
 

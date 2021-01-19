@@ -1,11 +1,10 @@
 package com.ilatyphi95.farmersmarket.ui.registration
 
-
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
@@ -13,7 +12,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.databinding.FragmentSplashBinding
 import com.ilatyphi95.farmersmarket.utils.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SplashFragment : Fragment() {
 
@@ -26,24 +28,27 @@ class SplashFragment : Fragment() {
                 if (FirebaseAuth.getInstance().currentUser?.isEmailVerified == true) {
 
                     findNavController().navigate(
-                        SplashFragmentDirections.actionSplashFragment2ToHomeActivity())
+                        SplashFragmentDirections.actionSplashFragmentToNavigationHome()
+                    )
 
                 } else {
                     sendVerificationEmail(requireView())
                 }
             }
+
             UserSignedOut -> {
                 val extras = FragmentNavigatorExtras(
                     binding.treeImage to "treeImage",
                     binding.root to "headerContainer"
                 )
                 findNavController().navigate(
-                    R.id.action_splashFragment2_to_loginFragment,
+                    R.id.action_splashFragment_to_loginFragment2,
                     null,
                     null,
                     extras
                 )
             }
+
             UserUnknown -> {
                 // remain on splash screen
             }

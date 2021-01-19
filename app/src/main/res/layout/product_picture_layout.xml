@@ -23,7 +23,7 @@
             android:contentDescription="@string/product_picture"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:loadImage="@{viewModel.imageUrl}"
+            app:loadProductImage="@{viewModel.image}"
             tools:srcCompat="@tools:sample/avatars" />
 
         <ImageButton

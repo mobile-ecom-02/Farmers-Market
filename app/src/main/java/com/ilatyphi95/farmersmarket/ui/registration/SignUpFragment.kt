@@ -71,7 +71,7 @@ class SignUpFragment : Fragment(){
                     binding.treeImage to "treeImage"
                 )
                 findNavController().navigate(
-                    R.id.action_signUpFragment_to_loginFragment,
+                    R.id.action_signUpFragment2_to_loginFragment2,
                     null,
                     null,
                     extras

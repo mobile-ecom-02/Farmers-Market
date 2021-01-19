@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/navigation_home">
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/navigation_home"
@@ -31,8 +31,10 @@
         android:label="@string/title_settings"
         tools:layout="@layout/fragment_settings" >
         <action
-            android:id="@+id/action_navigation_settings_to_mainActivity"
-            app:destination="@id/mainActivity" />
+            android:id="@+id/action_navigation_settings_to_loginFragment2"
+            app:destination="@id/loginFragment2"
+            app:popUpTo="@id/mobile_navigation"
+            app:popUpToInclusive="true" />
     </fragment>
 
 <!--    for testing purpose don't forget to remove it-->
@@ -69,8 +71,10 @@
         android:name="com.ilatyphi95.farmersmarket.ui.modifyad.ModifyAdsFragment"
         android:label="AddProductFragment" >
         <argument
-            android:name="adsId"
-            app:argType="string" />
+            android:name="product"
+            app:argType="com.ilatyphi95.farmersmarket.data.entities.Product"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_addProductFragment_to_navigation_pager"
             app:destination="@id/navigation_pager" />
@@ -88,9 +92,36 @@
             android:name="messageId"
             app:argType="string" />
     </fragment>
-    <activity
-        android:id="@+id/mainActivity"
-        android:name="com.ilatyphi95.farmersmarket.MainActivity"
-        android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" />
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.ilatyphi95.farmersmarket.ui.registration.SplashFragment"
+        android:label="SplashFragment" >
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment2"
+            app:destination="@id/loginFragment2" />
+        <action
+            android:id="@+id/action_splashFragment_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment2"
+        android:name="com.ilatyphi95.farmersmarket.ui.registration.SignUpFragment"
+        android:label="SignUpFragment" >
+        <action
+            android:id="@+id/action_signUpFragment2_to_loginFragment2"
+            app:destination="@id/loginFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment2"
+        android:name="com.ilatyphi95.farmersmarket.ui.registration.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment2_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/mobile_navigation"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment2_to_signUpFragment2"
+            app:destination="@id/signUpFragment2" />
+    </fragment>
 </navigation>
