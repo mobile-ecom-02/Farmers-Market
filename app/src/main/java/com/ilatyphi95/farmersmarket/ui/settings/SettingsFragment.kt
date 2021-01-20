@@ -11,7 +11,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
@@ -86,8 +85,8 @@ class SettingsFragment : Fragment() {
             }
 
 
-            findNavController()
-                .navigate(SettingsFragmentDirections.actionNavigationSettingsToLoginFragment2())
+//            findNavController()
+//                .navigate(SettingsFragmentDirections.actionNavigationSettingsToLoginFragment2())
         }
         return root
     }

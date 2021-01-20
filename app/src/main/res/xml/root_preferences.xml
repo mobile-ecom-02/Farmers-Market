@@ -1,0 +1,12 @@
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.preference.ListPreference
+        android:entries="@array/dark_theme_mode"
+        android:entryValues="@array/night_mode_value"
+        android:key="@string/pref_key_night"
+        android:title="@string/pref_dark_theme_title"
+        app:summary="@string/pref_night_summary" />
+    <androidx.preference.PreferenceScreen
+        app:key="@string/key_log_out"
+        app:title="@string/log_out" />
+</androidx.preference.PreferenceScreen>

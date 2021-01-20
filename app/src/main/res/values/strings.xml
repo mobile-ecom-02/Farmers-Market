@@ -87,4 +87,20 @@
     <string name="upload_complete">Upload Complete</string>
     <string name="today">Today</string>
     <string name="sample_date">12/01/2021</string>
+
+
+    <string name="pref_key_night" translatable="false">key_night_mode</string>
+    <string name="pref_dark_theme_title">Dark theme</string>
+    <string name="pref_night_summary">Select a dark or light theme.</string>
+    <string name="pref_night_dialog">Set Night mode</string>
+    <string name="pref_night_auto" translatable="false">auto</string>
+    <string name="pref_dark_theme_on" translatable="false">on</string>
+    <string name="pref_dark_theme_off" translatable="false">off</string>
+    <string name="night_mode_auto">Automatic</string>
+    <string name="dark_theme_mode_on">Dark theme</string>
+    <string name="dark_theme_mode_off">Light theme</string>
+    <string name="title_preference">Preference</string>
+    <string name="log_out">Log Out</string>
+    <string name="key_log_out">pref log out</string>
+
 </resources>
