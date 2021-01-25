@@ -102,5 +102,14 @@
     <string name="title_preference">Preference</string>
     <string name="log_out">Log Out</string>
     <string name="key_log_out">pref log out</string>
+    <string name="pref_key_account">key_account</string>
+    <string name="title_account_details">Account details</string>
+    <string name="summary_account_details">Contact details, display picture</string>
+    <string name="display_name">Display Name</string>
+    <string name="refresh_location">Refresh location</string>
+    <string name="update">Update</string>
+    <string name="update_successful">User profile update successful!</string>
+    <string name="update_failed">User profile update failed!</string>
+    <string name="require_location">This feature require location to be turned on</string>
 
 </resources>

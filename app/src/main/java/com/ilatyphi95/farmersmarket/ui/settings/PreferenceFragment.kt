@@ -15,6 +15,8 @@ class PreferenceFragment : PreferenceFragmentCompat() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val nightPref = findPreference<ListPreference>(getString(R.string.pref_key_night))
+        val logout = findPreference<PreferenceScreen>(getString(R.string.key_log_out))
+        val account = findPreference<PreferenceScreen>(getString(R.string.pref_key_account))
 
         nightPref?.setOnPreferenceChangeListener{ _, newValue ->
             val night = getString(R.string.pref_dark_theme_on)
@@ -29,7 +31,6 @@ class PreferenceFragment : PreferenceFragmentCompat() {
             true
         }
 
-        val logout = findPreference<PreferenceScreen>(getString(R.string.key_log_out))
         logout?.setOnPreferenceClickListener {
 
             // remove device token from server
@@ -39,7 +40,14 @@ class PreferenceFragment : PreferenceFragmentCompat() {
             }
 
             findNavController().navigate(
-                R.id.action_preferenceFragment_to_loginFragment2
+                PreferenceFragmentDirections.actionPreferenceFragmentToLoginFragment2()
+            )
+            true
+        }
+
+        account?.setOnPreferenceClickListener {
+            findNavController().navigate(
+                R.id.action_preferenceFragment_to_userAccountFragment
             )
             true
         }

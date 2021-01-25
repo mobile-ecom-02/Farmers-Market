@@ -347,6 +347,7 @@ object ProductServices {
 
     suspend fun removeImages(imagesNeededToBeRemoved: List<String>) {
         val myList = imagesNeededToBeRemoved.toMutableList()
+        myList.removeAll{ it.isEmpty()}
 
         withContext(Dispatchers.IO) {
             while (myList.isNotEmpty()) {
@@ -386,5 +387,16 @@ object ProductServices {
         ) {
             ProductPagingSource(query)
         }.flow
+    }
+
+    suspend fun updateUser(user: User): Boolean {
+        var isSuccessful: Boolean = false
+
+        db.document("users/${user.id}")
+            .set(user, SetOptions.merge()).addOnCompleteListener {
+                isSuccessful = it.isSuccessful
+            }.await()
+
+        return isSuccessful
     }
 }

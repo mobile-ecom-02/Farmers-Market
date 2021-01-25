@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.ilatyphi95.farmersmarket.ui.settings.UserAccountViewModel" />
+
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark"
+        android:paddingTop="@dimen/normal_margin"
+        tools:context=".ui.settings.UserAccountFragment">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/shapeableImageView"
+                android:layout_width="@dimen/picture_size"
+                android:layout_height="@dimen/picture_size"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/roundImageView"
+                app:loadImage="@{viewmodel.updatedUserData.profilePicUrl}"
+                tools:srcCompat="@drawable/circle" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/loading_animation"
+                android:visibility="@{viewmodel.showLoadingImage}"
+                app:layout_constraintBottom_toBottomOf="@+id/shapeableImageView"
+                app:layout_constraintEnd_toEndOf="@+id/shapeableImageView"
+                app:layout_constraintStart_toStartOf="@+id/shapeableImageView"
+                app:layout_constraintTop_toTopOf="@+id/shapeableImageView" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/image_edit_button"
+                android:layout_width="@dimen/picture_inset_size"
+                android:layout_height="@dimen/picture_inset_size"
+                app:layout_constraintBottom_toBottomOf="@+id/shapeableImageView"
+                app:layout_constraintEnd_toEndOf="@+id/shapeableImageView"
+                app:srcCompat="@drawable/ic_baseline_add_a_photo_24" />
+
+            <TextView
+                android:id="@+id/txt_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/btn_update_location"
+                app:layout_constraintStart_toStartOf="@+id/layout_first_name"
+                app:layout_constraintTop_toTopOf="@+id/btn_update_location"
+                android:text="@{viewmodel.location}"
+                tools:text="Danville, Carlifornia" />
+
+            <ImageButton
+                android:id="@+id/btn_update_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_normal_margin"
+                android:contentDescription="@string/refresh_location"
+                app:layout_constraintEnd_toEndOf="@+id/layout_first_name"
+                app:layout_constraintTop_toBottomOf="@+id/shapeableImageView"
+                addDrawable="@{viewmodel.loadingImage}" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layout_first_name"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="@dimen/small_normal_margin"
+                android:layout_marginEnd="16dp"
+                app:boxBackgroundColor="@color/text_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_update_location">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txt_first_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/first_name"
+                    android:text="@{viewmodel.updatedUserData.firstName}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layout_last_name"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="@dimen/small_normal_margin"
+                android:layout_marginEnd="16dp"
+                app:boxBackgroundColor="@color/text_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_first_name"
+                tools:layout_editor_absoluteY="199dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txt_last_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/last_name"
+                    android:text="@{viewmodel.updatedUserData.lastName}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layout_display_name"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="@dimen/small_normal_margin"
+                android:layout_marginEnd="16dp"
+                app:boxBackgroundColor="@color/text_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_last_name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txt_display_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/display_name"
+                    android:text="@{viewmodel.updatedUserData.profileDisplayName}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layout_phone"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="@dimen/small_normal_margin"
+                android:layout_marginEnd="16dp"
+                android:orientation="horizontal"
+                app:boxBackgroundColor="@color/text_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_display_name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txt_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/phone_number"
+                    android:inputType="number|phone"
+                    android:text="@{viewmodel.updatedUserData.phone}" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="@dimen/button_size"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/normal_large_margin"
+                android:text="@string/update"
+                android:visibility="@{viewmodel.updateButtonState}"
+                android:onClick="@{() -> viewmodel.update()}"
+                app:layout_constraintEnd_toEndOf="@+id/layout_phone"
+                app:layout_constraintStart_toStartOf="@+id/layout_phone"
+                app:layout_constraintTop_toBottomOf="@id/layout_phone" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</layout>

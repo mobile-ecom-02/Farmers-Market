@@ -1,10 +1,12 @@
 package com.ilatyphi95.farmersmarket.utils
 
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.DrawableRes
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -72,6 +74,25 @@ fun ImageView.loadImage(imageUri: Uri?) {
                 .into(this)
         }
     }
+}
+@BindingAdapter("loadImage")
+fun ImageView.loadImage(drawable: Drawable?) {
+
+    if (drawable != null) {
+        this.context?.let {
+            Glide.with(it)
+                .load(drawable)
+                .apply(FarmersMarketApplication.requestOption)
+                .placeholder(R.drawable.loading_animation)
+                .error(R.drawable.ic_broken_image)
+                .into(this)
+        }
+    }
+}
+
+@BindingAdapter("addDrawable")
+fun ImageView.addDrawable(@DrawableRes resourceId: Int) {
+    this.setImageResource(resourceId)
 }
 
 @BindingAdapter("loadProductImage")

@@ -17,7 +17,7 @@
         android:fadingMode="fade_in"
         android:startDelay="1000">
         <targets>
-            <target android:targetId="@+id/emailTextLayout"/>
+            <target android:targetId="@+id/txt_first_name"/>
             <target android:targetId="@+id/emailEditText"/>
             <target android:targetId="@+id/welcomeTextView"/>
             <target android:targetId="@+id/signUpTextView"/>
