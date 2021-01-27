@@ -34,7 +34,7 @@ class UserAccountFragment : Fragment() {
     private lateinit var binding: UserAccountFragmentBinding
 
     private val viewModel by viewModels<UserAccountViewModel> {
-        UserAccountViewModelFactory(ProductServices)
+        UserAccountViewModelFactory(requireActivity().application, ProductServices)
     }
 
     private lateinit var locationUtils: LocationUtils
@@ -145,6 +145,10 @@ class UserAccountFragment : Fragment() {
 
             eventMessage.observe(viewLifecycleOwner, EventObserver {
                 Snackbar.make(requireView(), getString(it), Snackbar.LENGTH_LONG).show()
+            })
+
+            eventCloseAccount.observe(viewLifecycleOwner, EventObserver{
+                findNavController().navigateUp()
             })
         }
     }

@@ -251,7 +251,7 @@ class ModifyAdViewModel(application: Application, private val product: Product?,
                 _events.postValue(Event(Loads.NAVIGATE_PRODUCT))
 
                 val imagesNeededToBeRemoved = list.filterIsInstance<ImageDeleted>().map{it.imageAddress}
-                service.removeImages(imagesNeededToBeRemoved)
+                service.removeImages(getApplication(), imagesNeededToBeRemoved)
 
                 uploadImage(imageList, uploadId)
             }
