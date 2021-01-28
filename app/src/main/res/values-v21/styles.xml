@@ -6,8 +6,8 @@
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:windowTranslucentStatus">false</item>
-        <item name="colorPrimaryDark">@color/text_background</item>
-        <item name="colorAccent">@color/green_shade_1</item>
-        <item name="colorPrimary">@color/green_shade_1</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
     </style>
 </resources>

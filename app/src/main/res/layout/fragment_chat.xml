@@ -13,7 +13,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/light_green"
         tools:context=".ui.chat.ChatFragment">
 
 
@@ -47,7 +46,6 @@
                 android:layout_height="wrap_content"
                 android:text="@{viewModel.otherUser.profileDisplayName}"
                 android:layout_marginStart="@dimen/small_margin"
-                android:textColor="@color/text_background"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toTopOf="@+id/imageView"
@@ -56,13 +54,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout8"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/edit_text_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_margin"
             android:layout_marginEnd="@dimen/small_margin"
             android:layout_marginBottom="@dimen/small_margin"
-            android:background="@color/text_background"
             app:hintEnabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/floatingActionButton"

@@ -13,7 +13,6 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark"
         android:paddingTop="@dimen/normal_margin"
         tools:context=".ui.settings.UserAccountFragment">
 
@@ -76,13 +75,12 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_first_name"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="@dimen/small_normal_margin"
                 android:layout_marginEnd="16dp"
-                app:boxBackgroundColor="@color/text_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -99,13 +97,12 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_last_name"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="@dimen/small_normal_margin"
                 android:layout_marginEnd="16dp"
-                app:boxBackgroundColor="@color/text_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -123,13 +120,12 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_display_name"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="@dimen/small_normal_margin"
                 android:layout_marginEnd="16dp"
-                app:boxBackgroundColor="@color/text_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -146,14 +142,13 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_phone"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/edit_text_style"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="@dimen/small_normal_margin"
                 android:layout_marginEnd="16dp"
                 android:orientation="horizontal"
-                app:boxBackgroundColor="@color/text_background"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
