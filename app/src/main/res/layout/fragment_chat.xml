@@ -20,7 +20,6 @@
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/green_shade_4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -86,13 +85,11 @@
             android:clickable="true"
             android:focusable="true"
             android:onClick="@{() -> viewModel.sendMessage()}"
-            app:backgroundTint="@color/green_shade_2"
             app:fabCustomSize="@dimen/icon_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textInputLayout8"
             app:shapeAppearanceOverlay="@style/roundedImageView"
-            app:srcCompat="@drawable/ic_send"
-            app:tint="@color/green_shade_1" />
+            app:srcCompat="@drawable/ic_send" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chatRecyclerView"

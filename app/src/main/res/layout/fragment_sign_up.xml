@@ -29,7 +29,6 @@
             android:fontFamily="sans-serif-thin"
             android:text="@string/app_name"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@android:color/tertiary_text_light"
             android:textStyle="bold"
             android:transitionName="headerText" />
 
@@ -55,7 +54,6 @@
         android:fontFamily="@font/rufina"
         android:text="@string/create_new_account"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/green_shade_3"
         android:textSize="@dimen/large_text"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"

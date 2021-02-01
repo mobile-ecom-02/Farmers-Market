@@ -22,13 +22,11 @@
             android:clickable="true"
             android:focusable="true"
             android:onClick="@{() -> viewModel.addItem()}"
-            android:tint="@color/light_green"
             app:layout_constraintBottom_toTopOf="@+id/textView4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_baseline_add_circle_24"
-            app:tint="@color/green_shade_1" />
+            app:srcCompat="@drawable/ic_baseline_add_circle_24" />
 
         <TextView
             android:id="@+id/textView4"

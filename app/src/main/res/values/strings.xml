@@ -49,7 +49,7 @@
     <string name="select_category">Select category</string>
     <string name="sample_currency">USD</string>
     <string name="select_region">Select region</string>
-    <string name="update_location">Updating location…</string>
+    <string name="updating_location">Updating location…</string>
     <string name="no_title">Title cannot be empty</string>
     <string name="no_desc">Description of product cannot be empty</string>
     <string name="no_price">Fill price for item</string>
@@ -111,5 +111,6 @@
     <string name="update_successful">User profile update successful!</string>
     <string name="update_failed">User profile update failed!</string>
     <string name="require_location">This feature require location to be turned on</string>
+    <string name="update_location">Update location</string>
 
 </resources>

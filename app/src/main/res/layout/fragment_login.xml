@@ -30,7 +30,6 @@
             android:fontFamily="sans-serif-thin"
             android:text="@string/app_name"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@android:color/tertiary_text_light"
             android:textSize="@dimen/large_text"
             android:textStyle="bold"
             android:transitionName="headerText" />
@@ -57,7 +56,6 @@
         android:fontFamily="@font/rufina"
         android:text="@string/welcome"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/green_shade_3"
         android:textSize="@dimen/large_text"
         android:textStyle="bold"
         android:transitionName="welcome"
@@ -125,7 +123,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/small_margin"
         android:text="@string/forgot_password"
-        android:textColor="@color/green_shade_1"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/passwordLayout"
         app:layout_constraintTop_toBottomOf="@+id/passwordLayout" />
