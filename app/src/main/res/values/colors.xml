@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#93B193</color>
-    <color name="colorPrimaryDark">#648064</color>
-    <color name="colorAccent">#93B193</color>
-    <color name="title_text_color">#000000</color>
-    <color name="colorPrimaryLight">#c3e1c2</color>
-    <color name="grey">#99CCCCCC</color>
-    <color name="colorBackgroundHighlight">#f1f8e9</color>
-
-    <item name="text_background" type="color">#f5f5f5</item>
-    <item name="light_green" type="color">#DBDFDB</item>
-    <item name="green_shade_1" type="color">#485C48</item>
-    <item name="green_shade_2" type="color">#93B193</item>
-    <item name="green_shade_3" type="color">#6D7A6D</item>
-    <item name="green_shade_4" type="color">#596559</item>
-    <item name="green_shade_5" type="color">#247117</item>
-    <item name="green_shade_6" type="color">#003A00</item>
-    <item name="green_shade_7" type="color">#335855</item>
-    <item name="green_shade_8" type="color">#008579</item>
-    <item name="green_shade_9" type="color">#F2F6F2</item>
-    <item name="blue" type="color">#4293D5</item>
-    <item name="gray" type="color">#8C8C8C</item>
-    <item name="green_shade_2_transparent" type="color">#B093B193</item>
+    <color name="colorPrimary">#4CAF51</color>
+    <color name="colorPrimaryDark">#388e3d</color>
+    <color name="colorPrimaryLight">#a5d6a7</color>
+    <color name="colorPrimaryBackground1">@color/colorPrimaryLight</color>
+    <color name="colorPrimaryBackground2">#e8f5e9</color>
+    <color name="colorSecondary">#795548</color>
+    <color name="colorSecondaryDark">#5d4037</color>
+    <color name="colorSecondaryLight">#d7ccc8</color>
+    <color name="colorSecondaryBackground1">@color/colorSecondaryLight</color>
+    <color name="colorSecondaryBackground2">#efebe9</color>
+    <color name="colorOnPrimary">#ffffff</color>
+    <color name="colorOnSecondary">#ffffff</color>
 </resources>

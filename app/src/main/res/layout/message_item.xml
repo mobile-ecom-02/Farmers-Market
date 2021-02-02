@@ -41,12 +41,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/normal_margin"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textSize="12sp"
             android:typeface="normal"
-            app:time="@{viewModel.message.timeStamp}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/imageView2"
             app:layout_goneMarginEnd="@dimen/normal_margin"
+            app:time="@{viewModel.message.timeStamp}"
             tools:text="yesterday" />
 
         <TextView
@@ -68,8 +69,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/tiny_margin"
-            android:text="@{viewModel.message.message}"
             android:maxLines="1"
+            android:text="@{viewModel.message.message}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@+id/textView10"
             app:layout_constraintStart_toStartOf="@+id/textView10"
@@ -83,10 +85,12 @@
             android:layout_marginTop="@dimen/small_margin"
             android:background="@drawable/circle"
             android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textSize="12sp"
             android:visibility="@{viewModel.message.counter == 0 ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="@+id/textView8"
             app:layout_constraintTop_toBottomOf="@+id/textView8"
-            app:setInt="@{viewModel.message.counter}" />
+            app:setInt="@{viewModel.message.counter}"
+            tools:text="1" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

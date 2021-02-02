@@ -44,6 +44,7 @@
             android:layout_marginStart="@dimen/small_margin"
             android:paddingTop="@dimen/small_margin"
             android:text="@{viewModel.item.name}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintBottom_toTopOf="@+id/tvPrice"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView"
