@@ -82,7 +82,7 @@ class SignUpFragment : Fragment(){
                 super.updateDrawState(ds)
                 ds.apply {
                     isUnderlineText = false
-                    color = ContextCompat.getColor(activity!!.baseContext, R.color.green_shade_1)
+                    color = ContextCompat.getColor(activity!!.baseContext, R.color.colorInSentenceText)
                     typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
                 }
             }

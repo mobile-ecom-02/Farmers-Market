@@ -12,7 +12,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/green_shade_2_transparent"
         android:clickable="true"
         android:focusable="true"
         android:visibility="@{isLoading ? View.VISIBLE : View.GONE}"
@@ -23,7 +22,6 @@
             android:layout_height="2dp"
             android:indeterminate="true"
             app:layout_collapseMode="pin"
-            app:spb_color="@color/green_shade_1"
             app:spb_sections_count="3" />
     </FrameLayout>
 </layout>

@@ -32,13 +32,10 @@
             android:layout_marginEnd="@dimen/small_margin"
             android:layout_marginBottom="@dimen/normal_margin"
             android:onClick="@{()-> viewModel.postNewAd()}"
-            android:tint="@color/green_shade_1"
-            app:backgroundTint="@color/green_shade_1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:shapeAppearanceOverlay="@style/roundedImageView"
-            app:srcCompat="@drawable/ic_baseline_add_24"
-            app:tint="@android:color/white" />
+            app:srcCompat="@drawable/ic_baseline_add_24" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

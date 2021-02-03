@@ -47,12 +47,11 @@ class MainActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener {_, destination, _ ->
             when(destination.id) {
-                R.id.navigation_home, R.id.navigation_message,
-                R.id.navigation_pager, R.id.navigation_settings -> bottomNavigationView.visibility = View.VISIBLE
+                R.id.navigation_home, R.id.navigation_message, R.id.preferenceFragment,
+                R.id.navigation_pager -> bottomNavigationView.visibility = View.VISIBLE
 
                 else -> bottomNavigationView.visibility = View.GONE
             }
-
         }
 
         NetworkAvailabilityUtils.setNetworkAvailabilityListener(this){
@@ -73,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             // Passing each menu ID as a set of Ids because each
             // menu should be considered as top level destinations.
             val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_home, R.id.navigation_message, R.id.navigation_settings))
+                R.id.navigation_home, R.id.navigation_message, R.id.preferenceFragment))
 
 //        setupActionBarWithNavController(navController, appBarConfiguration)
 //            navView?.setupWithNavController(navController!!)

@@ -25,19 +25,7 @@
             app:destination="@id/chatFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/navigation_settings"
-        android:name="com.ilatyphi95.farmersmarket.ui.settings.SettingsFragment"
-        android:label="@string/title_settings"
-        tools:layout="@layout/fragment_settings" >
-        <action
-            android:id="@+id/action_navigation_settings_to_loginFragment2"
-            app:destination="@id/loginFragment2"
-            app:popUpTo="@id/mobile_navigation"
-            app:popUpToInclusive="true" />
-    </fragment>
-
-<!--    for testing purpose don't forget to remove it-->
+    <!--    for testing purpose don't forget to remove it-->
     <fragment
         android:id="@+id/productFragment"
         android:name="com.ilatyphi95.farmersmarket.ui.addetails.ProductFragment"
@@ -124,4 +112,22 @@
             android:id="@+id/action_loginFragment2_to_signUpFragment2"
             app:destination="@id/signUpFragment2" />
     </fragment>
+    <fragment
+        android:id="@+id/preferenceFragment"
+        android:name="com.ilatyphi95.farmersmarket.ui.settings.PreferenceFragment"
+        android:label="PreferenceFragment" >
+        <action
+            android:id="@+id/action_preferenceFragment_to_loginFragment2"
+            app:destination="@id/loginFragment2"
+            app:popUpTo="@id/mobile_navigation"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_preferenceFragment_to_userAccountFragment"
+            app:destination="@id/userAccountFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userAccountFragment"
+        android:name="com.ilatyphi95.farmersmarket.ui.settings.UserAccountFragment"
+        android:label="user_account_fragment"
+        tools:layout="@layout/user_account_fragment" />
 </navigation>

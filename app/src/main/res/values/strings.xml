@@ -49,7 +49,7 @@
     <string name="select_category">Select category</string>
     <string name="sample_currency">USD</string>
     <string name="select_region">Select region</string>
-    <string name="update_location">Updating location…</string>
+    <string name="updating_location">Updating location…</string>
     <string name="no_title">Title cannot be empty</string>
     <string name="no_desc">Description of product cannot be empty</string>
     <string name="no_price">Fill price for item</string>
@@ -87,4 +87,30 @@
     <string name="upload_complete">Upload Complete</string>
     <string name="today">Today</string>
     <string name="sample_date">12/01/2021</string>
+
+
+    <string name="pref_key_night" translatable="false">key_night_mode</string>
+    <string name="pref_dark_theme_title">Dark theme</string>
+    <string name="pref_night_summary">Select a dark or light theme.</string>
+    <string name="pref_night_dialog">Set Night mode</string>
+    <string name="pref_night_auto" translatable="false">auto</string>
+    <string name="pref_dark_theme_on" translatable="false">on</string>
+    <string name="pref_dark_theme_off" translatable="false">off</string>
+    <string name="night_mode_auto">Automatic</string>
+    <string name="dark_theme_mode_on">Dark theme</string>
+    <string name="dark_theme_mode_off">Light theme</string>
+    <string name="title_preference">Preference</string>
+    <string name="log_out">Log Out</string>
+    <string name="key_log_out">pref log out</string>
+    <string name="pref_key_account">key_account</string>
+    <string name="title_account_details">Account details</string>
+    <string name="summary_account_details">Contact details, display picture</string>
+    <string name="display_name">Display Name</string>
+    <string name="refresh_location">Refresh location</string>
+    <string name="update">Update</string>
+    <string name="update_successful">User profile update successful!</string>
+    <string name="update_failed">User profile update failed!</string>
+    <string name="require_location">This feature require location to be turned on</string>
+    <string name="update_location">Update location</string>
+
 </resources>

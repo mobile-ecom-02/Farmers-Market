@@ -77,7 +77,7 @@ class LocationUtils(val context: FragmentActivity,
 
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    private fun startLocationUpdates() {
+    fun startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -94,7 +94,7 @@ class LocationUtils(val context: FragmentActivity,
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    private fun stopLocationUpdates() {
+    fun stopLocationUpdates() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 }

@@ -13,7 +13,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/light_green"
         tools:context=".ui.chat.ChatFragment">
 
 
@@ -21,7 +20,7 @@
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/green_shade_4"
+            android:background="@color/colorPrimaryBackground2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -45,9 +44,8 @@
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{viewModel.otherUser.profileDisplayName}"
                 android:layout_marginStart="@dimen/small_margin"
-                android:textColor="@color/white"
+                android:text="@{viewModel.otherUser.profileDisplayName}"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
                 app:layout_constraintTop_toTopOf="@+id/imageView"
@@ -56,13 +54,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout8"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/edit_text_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/small_margin"
             android:layout_marginEnd="@dimen/small_margin"
             android:layout_marginBottom="@dimen/small_margin"
-            android:background="@android:color/white"
             app:hintEnabled="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/floatingActionButton"
@@ -89,18 +86,18 @@
             android:clickable="true"
             android:focusable="true"
             android:onClick="@{() -> viewModel.sendMessage()}"
-            app:backgroundTint="@color/green_shade_2"
             app:fabCustomSize="@dimen/icon_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textInputLayout8"
             app:shapeAppearanceOverlay="@style/roundedImageView"
-            app:srcCompat="@drawable/ic_send"
-            app:tint="@color/green_shade_1" />
+            app:srcCompat="@drawable/ic_send" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chatRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="@dimen/tiny_margin"
+            android:layout_marginBottom="@dimen/tiny_margin"
             android:paddingLeft="@dimen/normal_margin"
             android:paddingRight="@dimen/normal_margin"
             app:items="@{viewModel.chatRecycler}"

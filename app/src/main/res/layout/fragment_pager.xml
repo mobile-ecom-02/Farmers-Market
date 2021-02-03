@@ -11,10 +11,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:tabIndicatorHeight="3dp"
-        app:tabTextColor="@color/gray"
-        app:tabBackground="@color/green_shade_9"
-        app:tabSelectedTextColor="@color/green_shade_8"
-        app:tabIndicatorColor="@color/green_shade_8"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

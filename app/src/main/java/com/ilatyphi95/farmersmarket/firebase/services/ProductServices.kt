@@ -1,10 +1,12 @@
 package com.ilatyphi95.farmersmarket.firebase.services
 
+import android.app.Application
 import android.net.Uri
 import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.work.*
 import com.google.common.io.Files.getFileExtension
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -13,18 +15,19 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageException
+import com.ilatyphi95.farmersmarket.data.DeleteImageWorker
 import com.ilatyphi95.farmersmarket.data.ProductPagingSource
 import com.ilatyphi95.farmersmarket.data.entities.*
+import com.ilatyphi95.farmersmarket.ui.modifyad.KEY_IMAGE_URL
 import com.koalap.geofirestore.GeoFire
 import com.koalap.geofirestore.GeoLocation
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.coroutines.resume
@@ -59,14 +62,9 @@ object ProductServices {
     suspend fun createMessage(product: Product): String? {
         val buyerId = getThisUserUid()!!
         val messageId =
-            product.id.substring(0, 10) + product.sellerId.substring(0, 10) + buyerId.substring(
-                0,
-                10
-            )
+            product.id.substring(0, 10) + product.sellerId.substring(0, 10) + buyerId.substring(0, 10)
 
-        val messageShell = MessageShell(
-            productId = product.id,
-            imgUrl = product.imgUrls[0],
+        val messageShell = MessageShell(productId = product.id, imgUrl = product.imgUrls[0],
             participants = listOf(product.sellerId, buyerId)
         )
 
@@ -115,10 +113,7 @@ object ProductServices {
 
     fun addChat(messageId: String, message: String) {
         db.collection("messages/$messageId/chatMessages").add(
-            ChatMessage(
-                msg = message,
-                senderId = FirebaseAuth.getInstance().uid!!
-            )
+            ChatMessage(msg = message, senderId = FirebaseAuth.getInstance().uid!!)
         )
     }
 
@@ -345,23 +340,47 @@ object ProductServices {
         return productId
     }
 
-    suspend fun removeImages(imagesNeededToBeRemoved: List<String>) {
+    fun removeImages(application: Application, imagesNeededToBeRemoved: List<String>) {
         val myList = imagesNeededToBeRemoved.toMutableList()
+        myList.removeAll{ it.isEmpty()}
 
-        withContext(Dispatchers.IO) {
-            while (myList.isNotEmpty()) {
-                if (deleteFile(myList.first())) myList.removeFirst()
-            }
+        if(myList.isEmpty())
+            return
+
+        val deleteWorker = WorkManager.getInstance(application)
+        var continuation = deleteWorker.beginWith(
+            OneTimeWorkRequestBuilder<DeleteImageWorker>()
+                .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+                .setInputData(Data.Builder().putString(KEY_IMAGE_URL, myList.removeFirst()).build())
+                .build()
+        )
+
+        while (myList.isNotEmpty()) {
+            val deleteRequest = OneTimeWorkRequestBuilder<DeleteImageWorker>()
+                .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+                .setInputData(Data.Builder().putString(KEY_IMAGE_URL, myList.removeFirst()).build())
+                .build()
+
+            continuation = continuation.then(deleteRequest)
         }
+
+        continuation.enqueue()
     }
 
-    private suspend fun deleteFile(fileUrl: String): Boolean {
+    suspend fun deleteFile(fileUrl: String): Boolean {
         var isSuccessful = false
-        FirebaseStorage.getInstance().getReferenceFromUrl(fileUrl).delete()
-            .addOnCompleteListener {
-                isSuccessful = it.isSuccessful
-            }.await()
-        return isSuccessful
+        try {
+            FirebaseStorage.getInstance().getReferenceFromUrl(fileUrl).delete()
+                .addOnCompleteListener {
+                    isSuccessful = it.isSuccessful
+                }.await()
+        } catch (exception: StorageException) {
+            Log.d("Delete Image", exception.toString())
+        } catch (exception: java.lang.Exception) {
+            Log.d("Delete Image", exception.toString())
+        } finally {
+            return isSuccessful
+        }
     }
 
     suspend fun updateImageLink(productId: String, imageLinks: Array<String>): Boolean {
@@ -373,8 +392,6 @@ object ProductServices {
             }.await()
 
         return isSuccessful
-
-
     }
 
     fun productPager(keyword: String): Flow<PagingData<Product>> {
@@ -386,5 +403,16 @@ object ProductServices {
         ) {
             ProductPagingSource(query)
         }.flow
+    }
+
+    suspend fun updateUser(user: User): Boolean {
+        var isSuccessful = false
+
+        db.document("users/${user.id}")
+            .set(user, SetOptions.merge()).addOnCompleteListener {
+                isSuccessful = it.isSuccessful
+            }.await()
+
+        return isSuccessful
     }
 }
