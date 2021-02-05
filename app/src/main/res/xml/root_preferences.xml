@@ -8,11 +8,11 @@
         app:title="@string/title_account_details" />
     <androidx.preference.ListPreference
         android:entries="@array/dark_theme_mode"
-        android:entryValues="@array/night_mode_value"
-        android:key="@string/pref_key_night"
+        android:entryValues="@array/dark_theme_mode_value"
+        android:key="@string/pref_key_dark_mode"
         android:title="@string/pref_dark_theme_title"
         app:iconSpaceReserved="false"
-        app:summary="@string/pref_night_summary" />
+        app:summary="@string/pref_dark_mode_summary" />
     <androidx.preference.PreferenceScreen
         app:iconSpaceReserved="false"
         app:key="@string/key_log_out"

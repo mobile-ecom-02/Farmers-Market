@@ -14,7 +14,7 @@ class PreferenceFragment : PreferenceFragmentCompat() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val nightPref = findPreference<ListPreference>(getString(R.string.pref_key_night))
+        val nightPref = findPreference<ListPreference>(getString(R.string.pref_key_dark_mode))
         val logout = findPreference<PreferenceScreen>(getString(R.string.key_log_out))
         val account = findPreference<PreferenceScreen>(getString(R.string.pref_key_account))
 
