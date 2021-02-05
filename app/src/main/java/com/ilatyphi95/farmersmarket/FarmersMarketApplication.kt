@@ -18,8 +18,8 @@ class FarmersMarketApplication: Application() {
         AndroidThreeTen.init(this)
         val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         preferences.getString(
-            getString(R.string.pref_key_night),
-            getString(R.string.pref_night_auto)
+            getString(R.string.pref_key_dark_mode),
+            getString(R.string.pref_dark_theme_off)
         )?.apply {
             val mode = NightMode.valueOf(this.toUpperCase(Locale.US))
             AppCompatDelegate.setDefaultNightMode(mode.value)
