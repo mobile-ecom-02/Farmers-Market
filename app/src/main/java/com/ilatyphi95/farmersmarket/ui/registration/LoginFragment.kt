@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
@@ -30,6 +31,7 @@ import kotlinx.android.synthetic.main.fragment_login.*
 class LoginFragment : Fragment(){
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
+    private val viewmodel: LoginViewModel by viewModels()
 
     companion object{
         const val TAG = "LOGIN"
@@ -49,6 +51,8 @@ class LoginFragment : Fragment(){
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewmodel
         startFadeInAnimation()
         spanText()
 
@@ -142,10 +146,11 @@ class LoginFragment : Fragment(){
             return
         }
 
-
+        viewmodel.startLoading()
 
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { 
+            .addOnCompleteListener {
+                viewmodel.stopLoading()
                 if(!it.isSuccessful) return@addOnCompleteListener
 
                 Log.d(TAG, "logged in user ${it.result?.user?.uid}")

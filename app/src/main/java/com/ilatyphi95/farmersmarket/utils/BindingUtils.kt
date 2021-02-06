@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.Timestamp
 import com.ilatyphi95.farmersmarket.FarmersMarketApplication
-import com.ilatyphi95.farmersmarket.data.universaladapter.DataBindingRecyclerAdapter
 import com.ilatyphi95.farmersmarket.R
 import com.ilatyphi95.farmersmarket.data.entities.CloseByProduct
+import com.ilatyphi95.farmersmarket.data.universaladapter.DataBindingRecyclerAdapter
 import com.ilatyphi95.farmersmarket.data.universaladapter.RecyclerItem
 import org.joda.money.Money
 import org.threeten.bp.format.DateTimeFormatter

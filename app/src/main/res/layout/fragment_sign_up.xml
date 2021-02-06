@@ -9,55 +9,45 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/headerContainer"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/custom_header_background"
-        android:transitionName="headerContainer"
-        app:layout_constraintBottom_toTopOf="@+id/guideline5"
+        app:layout_constraintBottom_toTopOf="@+id/createAccountTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/headerContainerStyle">
 
         <TextView
             android:id="@+id/headerText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/large_margin"
-            android:fontFamily="sans-serif-thin"
+            style="@style/headerTextStyle"
             android:text="@string/app_name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textStyle="bold"
-            android:transitionName="headerText" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/treeImage"
-            android:layout_width="@dimen/flower_width"
-            android:layout_height="@dimen/flower_width"
-            android:layout_below="@id/headerText"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="@dimen/normal_margin"
-            android:layout_marginBottom="@dimen/normal_large_margin"
+            style="@style/treeImageHeaderStyle"
             android:src="@drawable/splash"
-            android:transitionName="treeImage" />
-
-    </RelativeLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/headerText" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/createAccountTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/normal_margin"
-        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginBottom="@dimen/small_normal_margin"
         android:fontFamily="@font/rufina"
         android:text="@string/create_new_account"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textSize="@dimen/large_text"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerContainer" />
+        app:layout_constraintBottom_toTopOf="@+id/emailTextLayout"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -77,7 +67,8 @@
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email_hint" />
+            android:hint="@string/email_hint"
+            android:inputType="textEmailAddress" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -147,18 +138,11 @@
         app:layout_constraintVertical_bias="0.2" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.29138166" />
-
-    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6497948" />
+        app:layout_constraintGuide_percent="0.67" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

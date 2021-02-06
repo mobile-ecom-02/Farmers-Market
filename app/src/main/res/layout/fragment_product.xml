@@ -11,11 +11,6 @@
 
     </data>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.addetails.ProductFragment">
-
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -29,12 +24,12 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:orientation="horizontal"
+                    app:items="@{viewmodel.imgUrls}"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintDimensionRatio="H,16:9"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:items="@{viewmodel.imgUrls}"
                     tools:itemCount="10"
                     tools:listitem="@layout/picture_item"
                     tools:src="@tools:sample/backgrounds/scenic" />
@@ -61,27 +56,27 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCall"
+                    style="@style/button_style"
+                    android:layout_marginStart="@dimen/small_margin"
                     android:layout_marginEnd="@dimen/normal_margin"
                     android:enabled="@{viewmodel.enablePhone}"
                     android:onClick="@{() -> viewmodel.callSeller()}"
                     android:text="@string/call"
-                    style="@style/button_style"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
-                    app:layout_constraintTop_toTopOf="@+id/btnMessage"
-                    android:layout_marginStart="@dimen/small_margin" />
+                    app:layout_constraintTop_toTopOf="@+id/btnMessage" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMessage"
+                    style="@style/button_style"
                     android:layout_marginStart="@dimen/normal_margin"
                     android:layout_marginTop="4dp"
+                    android:layout_marginEnd="@dimen/small_margin"
                     android:onClick="@{() -> viewmodel.chatSeller()}"
                     android:text="@string/chat"
-                    style="@style/button_style"
                     app:layout_constraintEnd_toStartOf="@+id/guideline"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/include"
-                    android:layout_marginEnd="@dimen/small_margin" />
+                    app:layout_constraintTop_toBottomOf="@+id/include" />
 
                 <TextView
                     android:id="@+id/textView6"
@@ -110,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/normal_margin"
                     app:layout_constraintTop_toBottomOf="@+id/tvDesc"
-                    app:showView ="@{viewmodel.isSimilarItemVisible}"
+                    app:showView="@{viewmodel.isSimilarItemVisible}"
                     bind:productViewModel="@{viewmodel}" />
 
                 <androidx.constraintlayout.widget.Guideline
@@ -122,6 +117,4 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
-
-    </FrameLayout>
 </layout>

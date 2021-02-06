@@ -7,6 +7,7 @@
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        <item name="imageButtonStyle">@style/image_button_style</item>
     </style>
 
     <style name="title_heading">
@@ -67,7 +68,41 @@
         <item name="cornerRadius">@dimen/normal_card_radius</item>
     </style>
 
+
     <style name="edit_text_style" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="image_button_style" parent="Widget.AppCompat.ImageButton">
+        <item name="android:background">@drawable/image_button</item>
+        <item name="android:tint">@color/colorPrimary</item>
+    </style>
+
+    <style name="headerTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/small_normal_margin</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
+        <item name="android:textSize">@dimen/large_text</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:transitionName">headerText</item>
+    </style>
+
+    <style name="headerContainerStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_marginBottom">@dimen/tiny_margin</item>
+        <item name="android:background">@drawable/custom_header_background</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:transitionName">headerContainer</item>
+    </style>
+
+    <style name="treeImageHeaderStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_marginTop">@dimen/large_margin</item>
+        <item name="android:layout_marginBottom">@dimen/large_margin</item>
+        <item name="android:transitionName">treeImage</item>
     </style>
 </resources>
