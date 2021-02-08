@@ -23,8 +23,7 @@
             android:id="@+id/nestedScrollView2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="@dimen/normal_margin"
-            android:visibility="@{viewModel.isLoading() ? View.INVISIBLE : View.VISIBLE}">
+            android:paddingBottom="@dimen/normal_margin">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -146,6 +145,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="@dimen/small_margin"
+                    android:background="@drawable/image_button"
                     android:gravity="center_vertical"
                     android:onClick="@{() -> viewModel.onClickCurrency()}"
                     android:padding="@dimen/small_margin"
@@ -235,6 +235,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btSubmit"
                     style="@style/button_style"
+                    android:layout_marginTop="@dimen/normal_large_margin"
                     android:text="@string/post_ad"
                     app:layout_constraintEnd_toEndOf="@+id/textInputLayout5"
                     app:layout_constraintStart_toStartOf="@+id/textInputLayout5"
@@ -244,7 +245,7 @@
         </androidx.core.widget.NestedScrollView>
 
         <include
-            layout="@layout/progress_view"
+            layout="@layout/progress_view_full"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             bind:isLoading="@{viewModel.isLoading()}" />

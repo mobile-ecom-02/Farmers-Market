@@ -13,6 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.onNavDestinationSelected
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -23,6 +24,7 @@ import com.ilatyphi95.farmersmarket.utils.NetworkAvailabilityUtils
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
 
     val tag = "MainActivity"
 
@@ -37,6 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         createNotificationChannel()
 
+        toolbar = findViewById(R.id.toolbar)
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.nav_view)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -44,13 +47,26 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         bottomNavigationView.setupWithNavController(navController)
+        setSupportActionBar(toolbar)
+        setupActionBarWithNavController(navController)
 
         navController.addOnDestinationChangedListener {_, destination, _ ->
             when(destination.id) {
                 R.id.navigation_home, R.id.navigation_message, R.id.preferenceFragment,
-                R.id.navigation_pager -> bottomNavigationView.visibility = View.VISIBLE
+                R.id.navigation_pager -> {
+                    bottomNavigationView.visibility = View.VISIBLE
+                    toolbar.visibility = View.GONE
+                }
 
-                else -> bottomNavigationView.visibility = View.GONE
+                R.id.splashFragment, R.id.chatFragment, R.id.loginFragment2, R.id.signUpFragment2 -> {
+                    bottomNavigationView.visibility = View.GONE
+                    toolbar.visibility = View.GONE
+                }
+
+                else -> {
+                    bottomNavigationView.visibility = View.GONE
+                    toolbar.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -58,6 +74,10 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
     //Checks if user is logged in

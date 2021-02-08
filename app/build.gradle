@@ -141,7 +141,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:17.1.0"
 
     //Spinner Dialogue
-    implementation "com.github.MdFarhanRaja:SearchableSpinner:2.0"
+    implementation "com.github.MdFarhanRaja:SearchableSpinner:2.1"
 
     //Smooth progress bar dependency
     implementation "com.github.castorflex.smoothprogressbar:library:1.1.0"

@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
+    android:label="@string/chat"
     app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.ilatyphi95.farmersmarket.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_navigation_home_to_productFragment"
             app:destination="@id/productFragment" />
@@ -19,7 +20,7 @@
         android:id="@+id/navigation_message"
         android:name="com.ilatyphi95.farmersmarket.ui.message.MessageFragment"
         android:label="@string/title_message"
-        tools:layout="@layout/fragment_message" >
+        tools:layout="@layout/fragment_message">
         <action
             android:id="@+id/action_navigation_message_to_chatFragment"
             app:destination="@id/chatFragment" />
@@ -29,7 +30,7 @@
     <fragment
         android:id="@+id/productFragment"
         android:name="com.ilatyphi95.farmersmarket.ui.addetails.ProductFragment"
-        android:label="ProductFragment" >
+        android:label="@string/string_product_details">
         <action
             android:id="@+id/action_productFragment_self"
             app:destination="@id/productFragment"
@@ -45,8 +46,8 @@
     <fragment
         android:id="@+id/navigation_pager"
         android:name="com.ilatyphi95.farmersmarket.ui.ads.PagerFragment"
-        android:label="fragment_pager"
-        tools:layout="@layout/fragment_pager" >
+        android:label="@string/ads"
+        tools:layout="@layout/fragment_pager">
         <action
             android:id="@+id/action_navigation_pager_to_productFragment"
             app:destination="@id/productFragment" />
@@ -57,12 +58,12 @@
     <fragment
         android:id="@+id/modifyAdFragment"
         android:name="com.ilatyphi95.farmersmarket.ui.modifyad.ModifyAdsFragment"
-        android:label="AddProductFragment" >
+        android:label="@string/new_ad">
         <argument
             android:name="product"
+            android:defaultValue="@null"
             app:argType="com.ilatyphi95.farmersmarket.data.entities.Product"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
         <action
             android:id="@+id/action_addProductFragment_to_navigation_pager"
             app:destination="@id/navigation_pager" />
@@ -71,8 +72,7 @@
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.ilatyphi95.farmersmarket.ui.chat.ChatFragment"
-        android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" >
+        tools:layout="@layout/fragment_chat">
         <action
             android:id="@+id/action_chatFragment_to_productFragment"
             app:destination="@id/productFragment" />
@@ -83,26 +83,32 @@
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.ilatyphi95.farmersmarket.ui.registration.SplashFragment"
-        android:label="SplashFragment" >
+        android:label=" ">
         <action
             android:id="@+id/action_splashFragment_to_loginFragment2"
-            app:destination="@id/loginFragment2" />
+            app:destination="@id/loginFragment2"
+            app:popUpTo="@id/mobile_navigation"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_splashFragment_to_navigation_home"
-            app:destination="@id/navigation_home" />
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/mobile_navigation"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment2"
         android:name="com.ilatyphi95.farmersmarket.ui.registration.SignUpFragment"
-        android:label="SignUpFragment" >
+        android:label="@string/sign_up">
         <action
             android:id="@+id/action_signUpFragment2_to_loginFragment2"
-            app:destination="@id/loginFragment2" />
+            app:destination="@id/loginFragment2"
+            app:popUpTo="@id/mobile_navigation"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment2"
         android:name="com.ilatyphi95.farmersmarket.ui.registration.LoginFragment"
-        android:label="LoginFragment" >
+        android:label="@string/login">
         <action
             android:id="@+id/action_loginFragment2_to_navigation_home"
             app:destination="@id/navigation_home"
@@ -115,7 +121,7 @@
     <fragment
         android:id="@+id/preferenceFragment"
         android:name="com.ilatyphi95.farmersmarket.ui.settings.PreferenceFragment"
-        android:label="PreferenceFragment" >
+        android:label="@string/title_settings">
         <action
             android:id="@+id/action_preferenceFragment_to_loginFragment2"
             app:destination="@id/loginFragment2"
@@ -128,6 +134,6 @@
     <fragment
         android:id="@+id/userAccountFragment"
         android:name="com.ilatyphi95.farmersmarket.ui.settings.UserAccountFragment"
-        android:label="user_account_fragment"
+        android:label="@string/string_user_account"
         tools:layout="@layout/user_account_fragment" />
 </navigation>

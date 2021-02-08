@@ -65,13 +65,13 @@
 
             <ImageButton
                 android:id="@+id/btn_update_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                addDrawable="@{viewmodel.loadingImage}"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
                 android:layout_marginTop="@dimen/small_normal_margin"
                 android:contentDescription="@string/refresh_location"
                 app:layout_constraintEnd_toEndOf="@+id/layout_first_name"
-                app:layout_constraintTop_toBottomOf="@+id/shapeableImageView"
-                addDrawable="@{viewmodel.loadingImage}" />
+                app:layout_constraintTop_toBottomOf="@+id/shapeableImageView" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_first_name"

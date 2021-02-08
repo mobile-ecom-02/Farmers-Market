@@ -13,15 +13,14 @@
         android:layout_width="@dimen/picture_size"
         android:layout_height="@dimen/picture_size"
         android:layout_marginStart="@dimen/normal_margin"
-        android:layout_marginEnd="@dimen/small_margin">
+        android:layout_marginEnd="@dimen/small_margin"
+        android:onClick="@{() -> viewModel.addItem()}"
+        android:background="@drawable/image_button">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/image"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:onClick="@{() -> viewModel.addItem()}"
             app:layout_constraintBottom_toTopOf="@+id/textView4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

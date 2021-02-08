@@ -10,6 +10,7 @@
     <color name="colorSecondaryLight">#bcaaa4</color>
     <color name="colorSecondaryBackground1">@color/colorSecondaryLight</color>
     <color name="colorSecondaryBackground2">#efebe9</color>
+    <color name="colorTransparentBackground">#4Dbcaaa4</color>
     <color name="colorInSentenceText">#1b5e1f</color>
     <color name="colorOnPrimary">#ffffff</color>
     <color name="colorOnSecondary">#ffffff</color>

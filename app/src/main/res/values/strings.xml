@@ -112,5 +112,9 @@
     <string name="update_failed">User profile update failed!</string>
     <string name="require_location">This feature require location to be turned on</string>
     <string name="update_location">Update location</string>
+    <string name="string_user_account">User Account</string>
+    <string name="string_product_details">Product Details</string>
+    <string name="new_ad">New Ad</string>
+    <string name="modify_ad">Modify Ad</string>
 
 </resources>

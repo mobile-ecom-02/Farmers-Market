@@ -90,6 +90,8 @@ class ModifyAdsFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_modify_ads, container, false)
 
+        setTitle()
+
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = viewmodel
@@ -137,6 +139,15 @@ class ModifyAdsFragment : Fragment() {
 
         initializeFields()
         return binding.root
+    }
+
+    private fun setTitle() {
+        val toolbar = requireActivity().findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+        if(args.product == null) {
+            toolbar.title = getString(R.string.new_ad)
+        } else {
+            toolbar.title = getString(R.string.modify_ad)
+        }
     }
 
     private fun initializeFields() {
